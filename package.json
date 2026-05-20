@@ -1,6 +1,6 @@
 {
   "name": "sakura-pos",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Sakura Sushi Fulya - Restoran Yonetim ve POS Sistemi",
   "main": "electron/main.js",
   "scripts": {

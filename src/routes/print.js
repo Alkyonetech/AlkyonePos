@@ -8,7 +8,7 @@ const {
   getProfile,
   clearDiscoveryCache,
 } = require('../services/printer');
-const { resolveTemplate, formatCodepageTest, listEncodings } = require('../services/escpos');
+const { resolveTemplate, formatCodepageTest, listEncodings, paymentLabel } = require('../services/escpos');
 const { resolveProfile, sendBuffer } = require('../services/printer');
 const { listWindowsPrinters } = require('../services/printer-discovery');
 const { scanNetwork, getLocalSubnets } = require('../services/network-printer-discovery');
@@ -344,7 +344,7 @@ function formatReceiptHTML(order, settings) {
     parts.push(`<p>KDV (%${rate}): ${vat.toFixed(2)} TL</p>`);
   }
   parts.push(`<p style="font-size:1.2em"><strong>TOPLAM: ${(order.total || 0).toFixed(2)} TL</strong></p>`);
-  if (t.showPaymentMethod && order.payment) parts.push(`<p>Odeme: ${escapeHtml(order.payment.method || '')}</p>`);
+  if (t.showPaymentMethod && order.payment) parts.push(`<p>Ödeme: ${escapeHtml(paymentLabel(order.payment.method))}</p>`);
   parts.push('<hr>');
   if (Array.isArray(t.footerLines)) {
     for (const ln of t.footerLines) if (ln) parts.push(`<p style="text-align:center;margin:2px 0">${escapeHtml(ln)}</p>`);

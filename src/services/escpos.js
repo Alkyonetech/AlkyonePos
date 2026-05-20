@@ -48,13 +48,14 @@ const WPC1254_MAP = {
   'ü': 0xFC, 'Ü': 0xDC,
   'ö': 0xF6, 'Ö': 0xD6,
 };
+// Standart IBM CP857 (DOS Turkce, Latin-5) byte degerleri.
 const PC857_MAP = {
-  'ı': 0xDD, 'İ': 0x98,
-  'ç': 0xE7, 'Ç': 0xC7,
+  'ı': 0x8D, 'İ': 0x98,
+  'ç': 0x87, 'Ç': 0x80,
   'ğ': 0xA7, 'Ğ': 0xA6,
   'ş': 0x9F, 'Ş': 0x9E,
-  'ü': 0xFC, 'Ü': 0x9A,
-  'ö': 0xF6, 'Ö': 0x99,
+  'ü': 0x81, 'Ü': 0x9A,
+  'ö': 0x94, 'Ö': 0x99,
 };
 
 // Kod sayfasi adayi listesi — POS-80C / XPrinter firmware'lerinde Turkce
@@ -178,6 +179,15 @@ function resolveTemplate(settings) {
   return { ...DEFAULT_TEMPLATE, ...(settings?.receiptTemplate || {}) };
 }
 
+function paymentLabel(method) {
+  const m = String(method || '').toLowerCase().trim();
+  if (m === 'nakit' || m === 'cash') return 'NAKİT';
+  if (m === 'kart' || m === 'kredi' || m === 'kredi karti' || m === 'kredi kartı' || m === 'card') return 'KREDİ KARTI';
+  if (m === 'havale' || m === 'eft') return 'HAVALE/EFT';
+  if (!m) return '-';
+  return method.toUpperCase();
+}
+
 function formatReceipt(order, settings) {
   const r = settings.restaurant || {};
   const t = resolveTemplate(settings);
@@ -265,7 +275,7 @@ function formatReceipt(order, settings) {
 
   if (t.showPaymentMethod && order.payment) {
     p.hr('-').tall(true);
-    p.line('Ödeme   : ' + (order.payment.method || ''));
+    p.line('Ödeme   : ' + paymentLabel(order.payment.method));
     p.tall(false);
   }
 
@@ -391,4 +401,5 @@ module.exports = {
   listEncodings,
   DEFAULT_TEMPLATE,
   resolveTemplate,
+  paymentLabel,
 };

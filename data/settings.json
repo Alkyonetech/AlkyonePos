@@ -32,7 +32,7 @@
     "connection": "usb",
     "device": "auto",
     "paperWidth": 58,
-    "encoding": "CP1254_18"
+    "encoding": "PC857"
   },
   "printers": {
     "receipt": {
@@ -41,14 +41,14 @@
       "connection": "usb",
       "device": "auto",
       "paperWidth": 80,
-      "encoding": "CP1254_18"
+      "encoding": "PC857"
     },
     "kitchen": {
       "enabled": true,
       "connection": "usb",
       "device": "auto",
       "paperWidth": 58,
-      "encoding": "CP1254_18"
+      "encoding": "PC857"
     }
   },
   "receiptTemplate": {
