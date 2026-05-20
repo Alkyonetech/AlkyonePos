@@ -97,8 +97,10 @@ function ensureDataDir() {
     }
   };
 
-  // userData'da dosya yoksa: ONCE paketteki extraResources'tan kopyala (gercek
-  // menu, masalar, ayarlar dahil), yoksa bos default'a dus.
+  // userData'da dosya yoksa: paketteki extraResources'tan kopyala — fakat
+  // menu.json HARIC. Her restoran kendi menusunu admin panelden kurar; eski
+  // bir restoranin menusu yeni kuruluma sizmasin diye paketteki menu.json
+  // ASLA seed olarak kullanilmaz; yoksa bos default ile baslar.
   // Production'da: process.resourcesPath/data/<file>
   // Dev'de: <repo>/data/<file>
   const bundledDir = isDev
@@ -107,44 +109,20 @@ function ensureDataDir() {
   for (const [file, data] of Object.entries(defaults)) {
     const fp = path.join(DATA_DIR, file);
     if (fs.existsSync(fp)) continue;
-    const bundled = path.join(bundledDir, file);
-    if (fs.existsSync(bundled)) {
-      try {
-        fs.copyFileSync(bundled, fp);
-        console.log(`[Veri] ${file} paketten kopyalandi`);
-        continue;
-      } catch (e) {
-        console.warn(`[Veri] ${file} paketten kopyalanamadi: ${e.message}`);
+    if (file !== 'menu.json') {
+      const bundled = path.join(bundledDir, file);
+      if (fs.existsSync(bundled)) {
+        try {
+          fs.copyFileSync(bundled, fp);
+          console.log(`[Veri] ${file} paketten kopyalandi`);
+          continue;
+        } catch (e) {
+          console.warn(`[Veri] ${file} paketten kopyalanamadi: ${e.message}`);
+        }
       }
     }
     fs.writeFileSync(fp, JSON.stringify(data, null, 2));
     console.log(`[Veri] ${file} bos default ile olusturuldu`);
-  }
-
-  // OZEL DURUM: Kullanici eski bir surumden upgrade ediyorsa userData'da
-  // BOS bir menu.json kalmis olabilir (paketleme bug'i, eski version vb.).
-  // Boyle bir durumda paketteki dolu menuyu yedeklenip uzerine yaz.
-  try {
-    const menuFp = path.join(DATA_DIR, 'menu.json');
-    if (fs.existsSync(menuFp)) {
-      const cur = JSON.parse(fs.readFileSync(menuFp, 'utf8'));
-      const isEmpty = !cur.categories || cur.categories.length === 0;
-      if (isEmpty) {
-        const bundledMenu = path.join(bundledDir, 'menu.json');
-        if (fs.existsSync(bundledMenu)) {
-          const bundled = JSON.parse(fs.readFileSync(bundledMenu, 'utf8'));
-          if (bundled.categories && bundled.categories.length > 0) {
-            // Eski (bos) menuyu yedekle
-            const backupFp = path.join(DATA_DIR, `menu.empty-${Date.now()}.json`);
-            fs.copyFileSync(menuFp, backupFp);
-            fs.copyFileSync(bundledMenu, menuFp);
-            console.log(`[Veri] Bos menu.json paketteki ${bundled.categories.length} kategorili menu ile degistirildi`);
-          }
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('[Veri] menu.json bos kontrol hatasi:', e.message);
   }
 }
 

@@ -69,8 +69,8 @@
     "footerLines": ["Teşekkür ederiz!"],
     "footerFeedLines": 3
   },
-  "appVersion": "1.8.1",
-  "apkVersion": "1.8.1",
+  "appVersion": "1.8.2",
+  "apkVersion": "1.8.2",
   "minApkVersion": "1.0.0",
   "setupCompleted": false
 }
