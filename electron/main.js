@@ -72,7 +72,7 @@ function ensureDataDir() {
       auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: 'alkyone-' + Date.now(), pinChangedAt: null },
       setupCompleted: false,
       operations: { dayCloseHour: 4, vatRate: 10, currency: 'TL' },
-      printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'PC857' },
+      printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'ASCII' },
       startup: { autoStart: true, kioskMode: false, kioskUrl: '/pos' },
       printers: {
         receipt: {

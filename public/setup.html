@@ -117,14 +117,14 @@
       </div>
       <div class="form-group"><label>Karakter Kod Sayfasi (Turkce)</label>
         <select id="s-encoding">
-          <option value="PC857">PC857 (DOS Turkce, en yaygin)</option>
+          <option value="ASCII">ASCII (Turkce harf donusumlu — onerilen)</option>
+          <option value="PC857">PC857 (DOS Turkce)</option>
           <option value="CP1254_18">CP1254 n=18 (XPrinter)</option>
           <option value="CP1254_32">CP1254 n=32</option>
           <option value="CP1254_33">CP1254 n=33</option>
           <option value="CP1254_44">CP1254 n=44 (Yeni XPrinter)</option>
-          <option value="ASCII">ASCII (Turkce harf donusumlu)</option>
         </select>
-        <div class="hint">Emin degilseniz: "Test Cikti" basin, hangi satirda CSGUOI dogru ciktiysa onu secin.</div>
+        <div class="hint">POS-80C ve cogu Cin yazicisi standart Turkce kod sayfalarini desteklemiyor. ASCII en guvenlisi (s/u/c gibi basar). "Test Cikti" basin, daha iyi calisan baska bir secenek varsa onu secin.</div>
       </div>
       <div class="actions" style="justify-content:space-between">
         <button class="btn btn-sec" onclick="printCodepageTest()">Test Cikti Bas</button>
