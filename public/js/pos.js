@@ -1146,10 +1146,7 @@ async function submitExternalOrder() {
       items: extOrder.items
     };
     await api('POST', '/api/orders/external', payload);
-    const msg = extOrder.source === 'getir'
-      ? 'Getir Yemek siparisi kaydedildi'
-      : 'Harici siparis kaydedildi ve mutfaga gonderildi';
-    showToast(msg, 'success');
+    showToast('Harici siparis kaydedildi', 'success');
     extOrder = { source: extOrder.source, items: [] };
     document.getElementById('ext-order-no').value = '';
     document.getElementById('ext-customer').value = '';
@@ -1200,6 +1197,245 @@ async function deleteExternalOrder(id) {
   } catch (err) {
     showToast('Hata: ' + err.message, 'error');
   }
+}
+
+// ===== EVE TESLIM (Telefonla siparis) =====
+let dlvOrder = { items: [], paymentMethod: 'nakit' };
+let dlvSelectedCat = null;
+
+function openDeliveryOrders() {
+  dlvOrder = { items: [], paymentMethod: 'nakit' };
+  openModal('delivery-modal');
+  document.getElementById('dlv-customer').value = '';
+  document.getElementById('dlv-phone').value = '';
+  document.getElementById('dlv-address').value = '';
+  document.getElementById('dlv-note').value = '';
+  dlvSelectPayment('nakit');
+  renderDlvCart();
+  loadDeliveryList();
+}
+
+function dlvSelectPayment(method) {
+  dlvOrder.paymentMethod = method;
+  document.querySelectorAll('#delivery-modal .payment-btn[data-dlv-pay]').forEach(b => {
+    b.classList.toggle('active', b.dataset.dlvPay === method);
+  });
+}
+
+function openDlvItemPicker() {
+  openModal('delivery-item-modal');
+  dlvSelectedCat = dlvSelectedCat || (menu.categories[0] && menu.categories[0].id);
+  renderDlvMenuCategories();
+}
+
+function renderDlvMenuCategories() {
+  const c = document.getElementById('dlv-menu-categories');
+  if (!menu.categories || menu.categories.length === 0) {
+    c.innerHTML = '<p style="color:var(--text-muted);font-size:0.8rem;padding:8px;">Menu bos</p>';
+    document.getElementById('dlv-menu-items').innerHTML = '';
+    return;
+  }
+  c.innerHTML = menu.categories.map(cat => `
+    <button class="cat-btn ${cat.id === dlvSelectedCat ? 'active' : ''}"
+            onclick="selectDlvCategory('${cat.id}')">${cat.name}</button>
+  `).join('');
+  renderDlvMenuItems();
+}
+
+function selectDlvCategory(catId) {
+  dlvSelectedCat = catId;
+  document.querySelectorAll('#dlv-menu-categories .cat-btn').forEach(b => b.classList.remove('active'));
+  renderDlvMenuCategories();
+}
+
+function renderDlvMenuItems() {
+  const container = document.getElementById('dlv-menu-items');
+  const term = (document.getElementById('dlv-menu-search').value || '').toLowerCase();
+  let items = [];
+  if (term) {
+    for (const cat of menu.categories) {
+      for (const item of (cat.items || [])) {
+        if (item.name.toLowerCase().includes(term)) items.push(item);
+      }
+    }
+  } else {
+    const cat = menu.categories.find(c => c.id === dlvSelectedCat);
+    items = cat ? (cat.items || []) : [];
+  }
+  const visible = items.filter(i => i.visible !== false);
+  container.innerHTML = visible.map(item =>
+    `<div class="menu-item-card" onclick="dlvAddItem(${item.id})">
+       <div class="menu-item-name">${item.name}</div>
+       <div class="menu-item-price">${item.price} TL</div>
+     </div>`
+  ).join('') || '<p style="color:var(--text-muted);font-size:0.85rem;padding:20px;grid-column:1/-1;text-align:center;">Urun bulunamadi</p>';
+}
+
+function dlvAddItem(itemId) {
+  const mi = findMenuItem(itemId);
+  if (!mi) return;
+  const existing = dlvOrder.items.find(i => i.itemId === itemId);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    dlvOrder.items.push({ itemId, name: mi.name, unitPrice: mi.price, qty: 1, note: '' });
+  }
+  showToast(`${mi.name} eklendi`, 'success');
+  renderDlvCart();
+}
+
+function dlvChangeQty(idx, delta) {
+  const it = dlvOrder.items[idx];
+  if (!it) return;
+  it.qty = Math.max(1, it.qty + delta);
+  renderDlvCart();
+}
+
+function dlvRemove(idx) {
+  dlvOrder.items.splice(idx, 1);
+  renderDlvCart();
+}
+
+function renderDlvCart() {
+  const el = document.getElementById('dlv-cart');
+  if (dlvOrder.items.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;padding:8px;">Henuz urun eklenmedi</p>';
+    document.getElementById('dlv-total').textContent = '0.00 TL';
+    return;
+  }
+  el.innerHTML = dlvOrder.items.map((it, idx) => `
+    <div class="order-item">
+      <div class="item-info"><div class="item-name">${it.name}</div></div>
+      <div class="item-qty-ctrl">
+        <button class="qty-btn" onclick="dlvChangeQty(${idx},-1)">-</button>
+        <span class="qty-value">${it.qty}</span>
+        <button class="qty-btn" onclick="dlvChangeQty(${idx},1)">+</button>
+      </div>
+      <div class="item-price">${(it.qty * it.unitPrice).toFixed(0)} TL</div>
+      <button class="item-remove" onclick="dlvRemove(${idx})" title="Sil">&times;</button>
+    </div>
+  `).join('');
+  const total = dlvOrder.items.reduce((s, i) => s + i.qty * i.unitPrice, 0);
+  document.getElementById('dlv-total').textContent = total.toFixed(2) + ' TL';
+}
+
+async function submitDeliveryOrder() {
+  if (dlvOrder.items.length === 0) {
+    showToast('En az bir urun ekleyin', 'warning');
+    return;
+  }
+  const address = document.getElementById('dlv-address').value.trim();
+  if (!address) {
+    showToast('Teslimat adresi zorunludur', 'warning');
+    return;
+  }
+  try {
+    const payload = {
+      customer: document.getElementById('dlv-customer').value.trim(),
+      phone: document.getElementById('dlv-phone').value.trim(),
+      address,
+      note: document.getElementById('dlv-note').value.trim(),
+      paymentMethod: dlvOrder.paymentMethod,
+      items: dlvOrder.items
+    };
+    const order = await api('POST', '/api/orders/delivery', payload);
+    showToast('Eve teslim siparisi kaydedildi', 'success');
+
+    // Adisyonu otomatik bas
+    try {
+      const r = await api('POST', `/api/print/receipt/${order.id}`, {});
+      if (r && r.method === 'html' && r.receipt) {
+        printHtmlFallback(r.receipt);
+      }
+    } catch (e) {
+      showToast('Adisyon basilamadi: ' + e.message, 'warning');
+    }
+
+    dlvOrder = { items: [], paymentMethod: dlvOrder.paymentMethod };
+    document.getElementById('dlv-customer').value = '';
+    document.getElementById('dlv-phone').value = '';
+    document.getElementById('dlv-address').value = '';
+    document.getElementById('dlv-note').value = '';
+    renderDlvCart();
+    loadDeliveryList();
+  } catch (err) {
+    showToast('Hata: ' + err.message, 'error');
+  }
+}
+
+async function loadDeliveryList() {
+  const el = document.getElementById('dlv-list');
+  try {
+    const res = await api('GET', '/api/orders/delivery/list');
+    const list = res.orders || [];
+    if (list.length === 0) {
+      el.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;padding:8px;">Bugun eve teslim siparisi yok</p>';
+      return;
+    }
+    el.innerHTML = list.map(o => {
+      const t = new Date(o.openedAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      const cnt = (o.items || []).filter(i => i.status === 'active').length;
+      const canDel = userRole === 'yonetici';
+      const who = o.customer || 'Musteri';
+      const phone = o.phone ? ' - ' + o.phone : '';
+      const addr = (o.address || '').replace(/</g, '&lt;');
+      const kitchenSent = (o.items || []).some(i => i.printedAt);
+      const kitchenLabel = kitchenSent ? 'Mutfak ✓' : 'Mutfaga Gonder';
+      return `<div class="order-item" style="align-items:flex-start;flex-wrap:wrap;gap:6px;">
+        <div class="item-info" style="flex:1;min-width:0;">
+          <div class="item-name">${who}${phone}</div>
+          <div class="item-note">${t} - ${cnt} kalem</div>
+          <div class="item-note" style="white-space:normal;">${addr}</div>
+        </div>
+        <div class="item-price">${(o.total || 0).toFixed(0)} TL</div>
+        <button class="action-btn secondary" onclick="sendDeliveryToKitchen('${o.id}')" title="Mutfaga Gonder" style="padding:6px 10px;font-size:0.8rem;">${kitchenLabel}</button>
+        <button class="action-btn secondary" onclick="reprintDeliveryReceipt('${o.id}')" title="Adisyon Bas" style="padding:6px 10px;font-size:0.8rem;">Adisyon</button>
+        ${canDel ? `<button class="item-remove" onclick="deleteDeliveryOrder('${o.id}')" title="Iptal">&times;</button>` : ''}
+      </div>`;
+    }).join('');
+  } catch (err) {
+    el.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;padding:8px;">Liste yuklenemedi: ${err.message}</p>`;
+  }
+}
+
+async function sendDeliveryToKitchen(id) {
+  try {
+    await api('POST', `/api/print/kitchen/${id}`, { onlyNewItems: true });
+    showToast('Mutfaga gonderildi', 'success');
+    loadDeliveryList();
+  } catch (e) {
+    showToast('Mutfak fisi basilamadi: ' + e.message, 'error');
+  }
+}
+
+async function reprintDeliveryReceipt(id) {
+  try {
+    const r = await api('POST', `/api/print/receipt/${id}`, {});
+    if (r && r.method === 'html' && r.receipt) {
+      printHtmlFallback(r.receipt);
+    }
+    showToast('Adisyon yazdirildi', 'success');
+  } catch (e) {
+    showToast('Adisyon basilamadi: ' + e.message, 'error');
+  }
+}
+
+async function deleteDeliveryOrder(id) {
+  if (!confirm('Bu eve teslim siparisini iptal etmek istediginize emin misiniz?')) return;
+  try {
+    await api('DELETE', `/api/orders/delivery/${id}`);
+    showToast('Eve teslim siparisi iptal edildi', 'info');
+    loadDeliveryList();
+  } catch (err) {
+    showToast('Hata: ' + err.message, 'error');
+  }
+}
+
+function printHtmlFallback(html) {
+  const w = window.open('', '_blank', 'width=380,height=600');
+  if (!w) return;
+  w.document.write('<html><head><title>Adisyon</title></head><body onload="window.print();setTimeout(()=>window.close(),300);">' + html + '</body></html>');
+  w.document.close();
 }
 
 // ===== UTILITIES =====

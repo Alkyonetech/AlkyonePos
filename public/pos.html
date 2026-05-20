@@ -139,6 +139,7 @@
     <!-- ALT BAR -->
     <footer class="bottom-bar">
       <button class="bottom-btn" onclick="openExternalOrders()">Harici Siparisler</button>
+      <button class="bottom-btn" onclick="openDeliveryOrders()">Eve Teslim</button>
       <button class="bottom-btn" onclick="openReports()">Raporlar</button>
       <button class="bottom-btn" onclick="openMenuManager()">Menu Yonet</button>
       <button class="bottom-btn" onclick="window.open('/admin','_blank')">Admin</button>
@@ -363,7 +364,7 @@
             </div>
           </div>
 
-          <button class="action-btn primary" onclick="submitExternalOrder()" style="margin-top:12px;">Kaydet ve Mutfaga Gonder</button>
+          <button class="action-btn primary" onclick="submitExternalOrder()" style="margin-top:12px;">Kaydet</button>
         </div>
 
         <strong style="color:var(--text);font-size:0.95rem;">Bugunku Harici Siparisler</strong>
@@ -386,6 +387,68 @@
         <div class="menu-layout">
           <div class="menu-categories" id="ext-menu-categories"></div>
           <div class="menu-items" id="ext-menu-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVE TESLIM SIPARISLERI MODALI -->
+  <div class="modal hidden" id="delivery-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Eve Teslim Siparisleri</h3>
+        <button class="modal-close" onclick="closeModal('delivery-modal')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height:78vh;overflow-y:auto;">
+
+        <div style="background:var(--bg-card,#1a1a2e);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+          <strong style="color:var(--text);font-size:0.95rem;">Yeni Eve Teslim Siparisi</strong>
+
+          <input type="text" id="dlv-customer" placeholder="Musteri adi" class="note-input" style="margin-top:10px;">
+          <input type="tel" id="dlv-phone" placeholder="Telefon" class="note-input" style="margin-top:8px;">
+          <textarea id="dlv-address" placeholder="Teslimat adresi (zorunlu)" class="note-input" style="margin-top:8px;min-height:60px;resize:vertical;"></textarea>
+          <input type="text" id="dlv-note" placeholder="Siparis notu (opsiyonel)" class="note-input" style="margin-top:8px;">
+
+          <div class="payment-methods" style="margin-top:10px;">
+            <button class="payment-btn active" data-dlv-pay="nakit" onclick="dlvSelectPayment('nakit')">Nakit</button>
+            <button class="payment-btn" data-dlv-pay="kart" onclick="dlvSelectPayment('kart')">Kart</button>
+            <button class="payment-btn" data-dlv-pay="havale" onclick="dlvSelectPayment('havale')">Havale</button>
+          </div>
+
+          <button class="action-btn secondary" onclick="openDlvItemPicker()" style="margin-top:12px;">+ Urun Ekle</button>
+
+          <div id="dlv-cart" style="margin-top:12px;"></div>
+
+          <div class="order-totals" style="margin-top:12px;">
+            <div class="total-row total-grand">
+              <span>TOPLAM</span>
+              <span id="dlv-total">0.00 TL</span>
+            </div>
+          </div>
+
+          <button class="action-btn primary" onclick="submitDeliveryOrder()" style="margin-top:12px;">Kaydet ve Adisyon Bas</button>
+        </div>
+
+        <strong style="color:var(--text);font-size:0.95rem;">Bugunku Eve Teslim Siparisleri</strong>
+        <div id="dlv-list" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVE TESLIM - URUN SECME MODALI -->
+  <div class="modal hidden" id="delivery-item-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Urun Sec</h3>
+        <button class="modal-close" onclick="closeModal('delivery-item-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="menu-search">
+          <input type="text" id="dlv-menu-search" placeholder="Urun ara..." oninput="renderDlvMenuItems()">
+        </div>
+        <div class="menu-layout">
+          <div class="menu-categories" id="dlv-menu-categories"></div>
+          <div class="menu-items" id="dlv-menu-items"></div>
         </div>
       </div>
     </div>

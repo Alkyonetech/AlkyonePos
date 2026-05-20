@@ -314,7 +314,14 @@ function formatReceiptHTML(order, settings) {
 
   const info = [];
   if (t.showDateTime) info.push('Tarih: ' + new Date(order.closedAt || order.openedAt || Date.now()).toLocaleString('tr-TR'));
-  if (t.showTableNo) info.push('Masa: ' + (order.tableId ?? '-'));
+  if (order.source === 'eve') {
+    info.push('** EVE TESLIM **');
+    if (order.customer) info.push('Müşteri: ' + escapeHtml(order.customer));
+    if (order.phone)    info.push('Telefon: ' + escapeHtml(order.phone));
+    if (order.address)  info.push('Adres: ' + escapeHtml(order.address));
+  } else if (t.showTableNo) {
+    info.push('Masa: ' + (order.tableId ?? '-'));
+  }
   if (t.showOrderId) info.push('Adisyon: ' + escapeHtml(order.id || '-'));
   if (info.length) parts.push(`<p>${info.join('<br>')}</p><hr>`);
 

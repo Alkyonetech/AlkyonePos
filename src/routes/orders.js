@@ -31,9 +31,10 @@ router.get('/', garsonRequired, (req, res) => {
 });
 
 // ===== HARICI SIPARISLER (Trendyol / Yemeksepeti / Getir Yemek — manuel giris) =====
+// Bu kaynaklarda yazici tetiklenmez — sadece ciro/takip icin kayit tutulur
 const EXTERNAL_SOURCES = ['trendyol', 'yemeksepeti', 'getir'];
-// Bu kaynaklarda mutfaga fis basilmaz, sadece kayit tutulur
-const NO_KITCHEN_SOURCES = ['getir'];
+// Eve teslim — ayri akis (telefonla siparis, adres + adisyon basimi)
+const DELIVERY_SOURCES = ['eve'];
 
 // GET /api/orders/external/list — bugunku harici siparisler
 router.get('/external/list', garsonRequired, (req, res) => {
@@ -104,11 +105,7 @@ router.post('/external', garsonRequired, (req, res) => {
   broadcast('order:created', order);
   broadcast('order:closed', order);
   res.json(order);
-
-  // Mutfak fisini arka planda gonder (Getir Yemek haric — sadece kaydedilir)
-  if (!NO_KITCHEN_SOURCES.includes(source)) {
-    autoKitchenPrint(order.id, lines.map(l => l.lineId));
-  }
+  // Harici siparislerde otomatik mutfak fisi yok — yalnizca kayit/takip
 });
 
 // DELETE /api/orders/external/:id — hatali harici siparisi iptal et (yonetici)
@@ -117,6 +114,95 @@ router.delete('/external/:id', yoneticiRequired, (req, res) => {
   const order = (data.orders || []).find(o => o.id === req.params.id && EXTERNAL_SOURCES.includes(o.source));
   if (!order) {
     return res.status(404).json({ error: 'Harici siparis bulunamadi' });
+  }
+  order.status = 'cancelled';
+  order.closedAt = new Date().toISOString();
+  saveOrders(data);
+  broadcast('order:closed', order);
+  res.json({ cancelled: true, id: order.id });
+});
+
+// ===== EVE TESLIM (Telefonla siparis) =====
+
+// GET /api/orders/delivery/list — bugunku eve teslim siparisleri
+router.get('/delivery/list', garsonRequired, (req, res) => {
+  const data = loadOrders();
+  const today = new Date().toISOString().slice(0, 10);
+  const list = (data.orders || [])
+    .filter(o => DELIVERY_SOURCES.includes(o.source)
+      && (o.openedAt || '').slice(0, 10) === today
+      && o.status !== 'cancelled')
+    .sort((a, b) => new Date(b.openedAt) - new Date(a.openedAt));
+  res.json({ orders: list });
+});
+
+// POST /api/orders/delivery — yeni eve teslim siparisi
+router.post('/delivery', garsonRequired, (req, res) => {
+  const { customer, phone, address, note, items, paymentMethod } = req.body;
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'En az bir urun gerekli' });
+  }
+  if (!address || !String(address).trim()) {
+    return res.status(400).json({ error: 'Teslimat adresi gerekli' });
+  }
+
+  const now = new Date().toISOString();
+  const lines = items.map(it => {
+    const qty = Math.max(1, parseInt(it.qty) || 1);
+    const unitPrice = Number(it.unitPrice) || 0;
+    return {
+      lineId: generateLineId(),
+      itemId: it.itemId,
+      name: it.name,
+      qty,
+      unitPrice,
+      lineTotal: qty * unitPrice,
+      ikram: false,
+      note: it.note || '',
+      addedAt: now,
+      addedBy: req.user.role,
+      status: 'active'
+    };
+  });
+
+  const order = {
+    id: generateOrderId(),
+    tableId: null,
+    source: 'eve',
+    customer: customer || '',
+    phone: String(phone || '').trim(),
+    address: String(address).trim(),
+    openedAt: now,
+    closedAt: now,
+    status: 'closed',
+    version: 1,
+    openedBy: req.user.role,
+    items: lines,
+    subtotal: 0,
+    discount: 0,
+    total: 0,
+    note: note || '',
+    payment: { method: paymentMethod || 'nakit', paidAt: now }
+  };
+  recalcOrder(order);
+
+  const data = loadOrders();
+  data.orders.push(order);
+  saveOrders(data);
+
+  broadcast('order:created', order);
+  broadcast('order:closed', order);
+  res.json(order);
+  // Mutfak fisi otomatik gonderilmez — kullanici listeden manuel tetikler
+});
+
+// DELETE /api/orders/delivery/:id — eve teslim siparisini iptal et (yonetici)
+router.delete('/delivery/:id', yoneticiRequired, (req, res) => {
+  const data = loadOrders();
+  const order = (data.orders || []).find(o => o.id === req.params.id && DELIVERY_SOURCES.includes(o.source));
+  if (!order) {
+    return res.status(404).json({ error: 'Eve teslim siparisi bulunamadi' });
   }
   order.status = 'cancelled';
   order.closedAt = new Date().toISOString();

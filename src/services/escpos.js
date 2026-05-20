@@ -208,10 +208,17 @@ function formatReceipt(order, settings) {
     const dt = new Date(order.closedAt || order.openedAt || Date.now());
     p.line('Tarih   : ' + dt.toLocaleString('tr-TR'));
   }
-  if (t.showTableNo) p.line('Masa    : ' + (order.tableId ?? '-'));
+  if (order.source === 'eve') {
+    p.line('** EVE TESLIM **');
+    if (order.customer) p.line('Müşteri : ' + order.customer);
+    if (order.phone)    p.line('Telefon : ' + order.phone);
+    if (order.address)  p.line('Adres   : ' + order.address);
+  } else if (t.showTableNo) {
+    p.line('Masa    : ' + (order.tableId ?? '-'));
+  }
   if (t.showOrderId) p.line('Adisyon : ' + (order.id || '-'));
   p.tall(false);
-  if (t.showDateTime || t.showTableNo || t.showOrderId) p.hr('-');
+  if (t.showDateTime || t.showTableNo || t.showOrderId || order.source === 'eve') p.hr('-');
 
   // Kalemler (ikramlar hariç)
   const activeItems = (order.items || []).filter(i => i.status === 'active');
@@ -291,10 +298,13 @@ function formatKitchenTicket(order, settings, opts = {}) {
     const label = order.source === 'trendyol' ? 'TRENDYOL'
       : order.source === 'yemeksepeti' ? 'YEMEKSEPETİ'
       : order.source === 'getir' ? 'GETİR YEMEK'
+      : order.source === 'eve' ? 'EVE TESLIM'
       : String(order.source).toUpperCase();
     p.tall(false).double(true).line('** ' + label + ' **').double(false).tall(true);
     if (order.platformOrderNo) p.line('Sip. No : ' + order.platformOrderNo);
     if (order.customer) p.line('Müşteri : ' + order.customer);
+    if (order.source === 'eve' && order.phone) p.line('Telefon : ' + order.phone);
+    if (order.source === 'eve' && order.address) p.line('Adres   : ' + order.address);
   } else {
     p.line('Masa    : ' + (order.tableId ?? '-'));
   }
