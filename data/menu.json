@@ -1,0 +1,1410 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "corbalar",
+      "name": "Çorbalar",
+      "nameEn": "Soups",
+      "items": [
+        {
+          "id": 1,
+          "name": "Wonton Çorbası",
+          "nameEn": "Wonton Soup",
+          "price": 360,
+          "desc": "2 adet  mantı, havuç, kabak, lahana, kapya biberi, susam yağı",
+          "visible": true
+        },
+        {
+          "id": 2,
+          "name": "Tavuklu Mısır Çorbası",
+          "nameEn": "Chicken and Corn Soup",
+          "price": 320,
+          "desc": "Tavuk, mısır, yumurta, oyster sos, susam yağı",
+          "visible": true
+        },
+        {
+          "id": 3,
+          "name": "Sebzeli Acılı Ekşili Çorba",
+          "nameEn": "Spicy Sour Soup with Vegetables",
+          "price": 295,
+          "desc": "Havuç, kabak, beyaz lahana, kapya biber, soğan, yeşil biber, yumurta",
+          "visible": true
+        },
+        {
+          "id": 4,
+          "name": "Sebzeli Udon Çorbası",
+          "nameEn": "Udon Soup with Vegetables",
+          "price": 330,
+          "desc": "Beyaz lahana, kapya biberi, kabak, havuç, yeşil soğan, istiridye mantarı, taze soğan, susam yağı",
+          "visible": true
+        },
+        {
+          "id": 5,
+          "name": "Dana Etli Udon Çorbası",
+          "nameEn": "Udon Soup with Beef",
+          "price": 380,
+          "desc": "Beyaz lahana, kapya biberi, kabak, havuç, yeşil soğan, istiridye mantarı, taze soğan, dana eti, susam yağı",
+          "visible": true
+        },
+        {
+          "id": 6,
+          "name": "Tavuklu Udon Çorbası",
+          "nameEn": "Chicken Udon Soup",
+          "price": 370,
+          "desc": "Beyaz lahana, kapya biberi, kabak, havuç, yeşil soğan, istiridye mantarı, taze soğan, tavuk, susam yağı",
+          "visible": true
+        },
+        {
+          "id": 7,
+          "name": "Karidesli Udon Çorbası",
+          "nameEn": "Udon Soup with Shrimp",
+          "price": 380,
+          "desc": "Beyaz lahana, kapya biberi, kabak, havuç, yeşil soğan, istiridye mantarı, taze soğan, karides, susam yağı",
+          "visible": true
+        },
+        {
+          "id": 8,
+          "name": "Tavuklu Acılı Ekşili Çorbası",
+          "nameEn": "Spicy Sour Soup with Chicken",
+          "price": 350,
+          "desc": "Beyaz lahana, kapya biberi, yeşil biber, kabak, havuç, yeşil soğan, tavuk, yumurta",
+          "visible": true
+        },
+        {
+          "id": 9,
+          "name": "Karidesli Acılı Ekşili Çorbası",
+          "nameEn": "Spicy Sour Soup with Shrimp",
+          "price": 340,
+          "desc": "Beyaz lahana, kapya biberi, kabak, havuç, yeşil soğan, karides, yumurta",
+          "visible": true
+        },
+        {
+          "id": 10,
+          "name": "Dana Etli Acılı Ekşili Çorbası",
+          "nameEn": "Beef Hot and Sour Soup with Beef",
+          "price": 380,
+          "desc": "Beyaz lahana, kapya biberi, yeşil biber, kabak, havuç, yeşil soğan, dana eti, yumurta",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "baslangiclar",
+      "name": "Başlangıçlar",
+      "nameEn": "Beginnings",
+      "items": [
+        {
+          "id": 11,
+          "name": "Sebzeli Gyoza",
+          "nameEn": "Vegetable Gyoza",
+          "price": 330,
+          "desc": "4 adet olarak servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 12,
+          "name": "Dana Etli Gyoza",
+          "nameEn": "Beff Gyoza",
+          "price": 380,
+          "desc": "4 adet olarak servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 13,
+          "name": "Levrek Carpaccio",
+          "nameEn": "Sea Bass Carpaccio",
+          "price": 449,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 14,
+          "name": "Tuna Carpaccio",
+          "nameEn": "Tuna Carpaccio",
+          "price": 439,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 15,
+          "name": "Somon Carpaccio",
+          "nameEn": "Salmon Carpaccio",
+          "price": 429,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 16,
+          "name": "Karides Cips",
+          "nameEn": "Shrimp Chips",
+          "price": 190,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 17,
+          "name": "Fish Cips",
+          "nameEn": "Fish Cips",
+          "price": 730,
+          "desc": "Kızarmış patates ve tartar sosuyla servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 18,
+          "name": "Dinamit Soslu Karides",
+          "nameEn": "Shrimp with Dynamite Sauce",
+          "price": 530,
+          "desc": "Çıtır karidesler dinamit sosuyla servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 19,
+          "name": "Dinamit Soslu Tavuk",
+          "nameEn": "Chicken with Dynamite Sauce",
+          "price": 390,
+          "desc": "Çıtır tavuklar dinamit sosuyla servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 20,
+          "name": "Çıtır Karides",
+          "nameEn": "Crispy Shrimp",
+          "price": 530,
+          "desc": "6 adet karides dinamit sosuyla servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 21,
+          "name": "Etli Çıtır Çin Böreği",
+          "nameEn": "Crispy Chinese Pastry with Meat",
+          "price": 320,
+          "desc": "Sweet Chili Sos ile 2 adet servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 22,
+          "name": "Sebzeli Çin Böreği",
+          "nameEn": "Chinese Pastry with Vegetables",
+          "price": 269,
+          "desc": "Sweet Chili Sos ile 2 adet servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 23,
+          "name": "Çıtır Çin Mantısı",
+          "nameEn": "Crispy Chinese Dumpling",
+          "price": 360,
+          "desc": "Sweet Chili Sos ile 4 adet servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 24,
+          "name": "Buharda Çin Mantısı",
+          "nameEn": "Steamed Chinese Dumpling",
+          "price": 380,
+          "desc": "4 adet sarımsaklı soya sos ile servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 25,
+          "name": "Edamame Acılı",
+          "nameEn": "Spicy Edamame",
+          "price": 270,
+          "desc": "Soya fasulyesi, Himalaya tuzu ve çin acı sos ile servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 26,
+          "name": "Edamame",
+          "nameEn": "Edamame",
+          "price": 260,
+          "desc": "Soya fasulyesi ve  Himalaya tuzu ile servis edilir.",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "bowler",
+      "name": "Bowler",
+      "nameEn": "Bowls",
+      "items": [
+        {
+          "id": 27,
+          "name": "Weggie Bowl",
+          "nameEn": "Weggie Bowl",
+          "price": 379,
+          "desc": "Sushi Pirinci, Avakoda, Salatalık, Edamame, Domates, Mısır, Trüfli Mayonez",
+          "visible": true
+        },
+        {
+          "id": 28,
+          "name": "Ebi Bowl",
+          "nameEn": "Ebi Bowl",
+          "price": 498,
+          "desc": "Tempure Karides, Sushi pirinci, Avakado, Salatalık, Taze Soğan, Dinamit Sos, Tiryaki Sos",
+          "visible": true
+        },
+        {
+          "id": 29,
+          "name": "Tavuklu Bowl",
+          "nameEn": "Chicken Bowl",
+          "price": 450,
+          "desc": "Tavuk, Sushi pirinci, Kırmızı Lahana, Salatalık, Special Acı Sos",
+          "visible": true
+        },
+        {
+          "id": 30,
+          "name": "Tiryaki Soslu Somon Bowl",
+          "nameEn": "Salmon Bowl with Tiryaki  Sauce",
+          "price": 525,
+          "desc": "Tiryaki Soslu Somon, Avakado, Sushi pirinci, Nori Tempra, Domates, Salatalık",
+          "visible": true
+        },
+        {
+          "id": 31,
+          "name": "Somon Bowl",
+          "nameEn": "Salmon Bowl",
+          "price": 495,
+          "desc": "Baharatlı Somon, Tofu, Brokoli, Taze Soğan, Sushi pirinci, salatalık",
+          "visible": true
+        },
+        {
+          "id": 32,
+          "name": "Dana Etli Bowl",
+          "nameEn": "Beef Bowl",
+          "price": 565,
+          "desc": "Dana Eti, Suıshi pirinci, Sivri Biber, Kırmızı Soğan, Soya Filizi, Salatalık",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "ramen",
+      "name": "Ramen",
+      "nameEn": "Ramen",
+      "items": [
+        {
+          "id": 33,
+          "name": "Dana Etli Ramen",
+          "nameEn": "Beef Ramen",
+          "price": 580,
+          "desc": "Dana eti, brokoli, rafadan yumurta, baby mısır, soya filizi, edamame",
+          "visible": true
+        },
+        {
+          "id": 34,
+          "name": "Tütsülenmiş Tofu Ramen",
+          "nameEn": "Smoked Tofu Ramen",
+          "price": 450,
+          "desc": "Tofu, noodle, soya filizi, ıspanak, wakame, baby mısır, edamame, brokoli, taze soğan",
+          "visible": true
+        },
+        {
+          "id": 35,
+          "name": "Karidesli Ramen",
+          "nameEn": "Shrimp Ramen",
+          "price": 580,
+          "desc": "Jumbo karides, brokoli, ıspanak, baby mısır, soya filizi, haşlanmış yumurta, wakame",
+          "visible": true
+        },
+        {
+          "id": 36,
+          "name": "Tavuklu Ramen",
+          "nameEn": "Chicken Ramen",
+          "price": 530,
+          "desc": "Tavuk, haşlanmış yumurta, ıspanak, taze soğan, baby mısır, brokoli istiridye mantarı, soya filizi",
+          "visible": true
+        },
+        {
+          "id": 37,
+          "name": "Wonton Ramen",
+          "nameEn": "Wonton Ramen",
+          "price": 530,
+          "desc": "Wonton, brokoli, mantar, edamame",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "bun",
+      "name": "Bun",
+      "nameEn": "Bun",
+      "items": [
+        {
+          "id": 38,
+          "name": "Tavuklu Bun",
+          "nameEn": "Chicken Bun",
+          "price": 395,
+          "desc": "Tavuk, Kırmızı Lahana, Kırmızı Soğan, havuç, oyster sos (2 adet)",
+          "visible": true
+        },
+        {
+          "id": 39,
+          "name": "Ördek Bun",
+          "nameEn": "Duck Bun",
+          "price": 540,
+          "desc": "Sivri Biber, Kırmızı Soğan, oyster sos (2 ad)",
+          "visible": true
+        },
+        {
+          "id": 40,
+          "name": "Dana Etli Bun",
+          "nameEn": "Beef Bun",
+          "price": 450,
+          "desc": "İnce Dilimlenmiş Dana Eti, Sivri biber, Havuç,Kırmızı soğan oyster sos (2 ad)",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "salatalar",
+      "name": "Salatalar",
+      "nameEn": "Salads",
+      "items": [
+        {
+          "id": 41,
+          "name": "Deniz Mahsulleri Salatası",
+          "nameEn": "Seafood Salad",
+          "price": 350,
+          "desc": "Karides, Somon, Karışık Yeşillik, Domates, Baby mısır, Teriyaki Sos",
+          "visible": true
+        },
+        {
+          "id": 42,
+          "name": "Sakura Special Salatası",
+          "nameEn": "Sakura Special Salad",
+          "price": 420,
+          "desc": "Somon Tempra 2 adet, Levrek Tempra 2 ad, Avakado, Domates, Karışık Yeşillik, Özel Sos",
+          "visible": true
+        },
+        {
+          "id": 43,
+          "name": "Gomae Salatası",
+          "nameEn": "Gomae Salad",
+          "price": 295,
+          "desc": "Karışık Yeşillik, Fıstık, Avakado, Domates, Salatalık, Susam, Soya Sosu",
+          "visible": true
+        },
+        {
+          "id": 44,
+          "name": "Kani Salatası",
+          "nameEn": "Kani Salad",
+          "price": 395,
+          "desc": "Yengeç Surumi, Karışık Yeşillik, Avakado, Mayonez, Susam",
+          "visible": true
+        },
+        {
+          "id": 45,
+          "name": "Vakami Salatası",
+          "nameEn": "Vakami Salad",
+          "price": 280,
+          "desc": "Vakamı, Susam, Tobiko",
+          "visible": true
+        },
+        {
+          "id": 46,
+          "name": "Acılı Lahana Salatası",
+          "nameEn": "Spicy Cabbage Salad",
+          "price": 185,
+          "desc": "Kırmızı Lahana, Havuç, Salatalık, Domates, Çin acı Sos, Limon, Susam Yağı",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "noodle",
+      "name": "Noodle",
+      "nameEn": "Noodle",
+      "items": [
+        {
+          "id": 47,
+          "name": "Dana Etli Karidesli Yumurtalı Noodle",
+          "nameEn": "Beef, Shrimp and Egg Noodles",
+          "price": 575,
+          "desc": "Dana Eti, Karides, Yumurta, Fıstık, Brokoli, Beyaz Lahana, Yeşil Biber, Kabak, Havuç, Soya Filizi, Taze Soğan, Kapya Biber, Noodle Sos",
+          "visible": true
+        },
+        {
+          "id": 48,
+          "name": "Körili Singapur Noodle",
+          "nameEn": "Curry Singapore Noodles",
+          "price": 575,
+          "desc": "Erişte, Tavuk bonfile, Karides, Brokoli, Havuç, Beyaz Lahana, Yeşil Biber, Kabak, Salatalık, Soya Filizi, Taze soğan, Kapya Biber, Yumurta, Köri Noodle Sos",
+          "visible": true
+        },
+        {
+          "id": 49,
+          "name": "Karidesli Noodle",
+          "nameEn": "Shrimp Noodles",
+          "price": 550,
+          "desc": "Erişte, Karides, Brokoli, Havuç, Beyaz Lahana, Yeşil Biber, Kabak, Soya filizi, Kapya Biber, Taze Soğan, Noodle Sos",
+          "visible": true
+        },
+        {
+          "id": 50,
+          "name": "Dana Etli Noodle",
+          "nameEn": "Beff Noodle",
+          "price": 550,
+          "desc": "Erişte, Dana eti, Brokoli, Havuç, Beyaz Lahana, Yeşil Biber, Kabak, Soya Filizi, Taze Soğan, Kapya Biber, Noodle Sos",
+          "visible": true
+        },
+        {
+          "id": 51,
+          "name": "Tavuklu Noodle",
+          "nameEn": "Chicken Noodles",
+          "price": 490,
+          "desc": "Erişte, Tavuk, Brokoli, Havuç, Beyaz Lahana, Yeşil Biber, Kabak, Soya filizi, Taze Soğan, Kapya biber, Noodle sos",
+          "visible": true
+        },
+        {
+          "id": 52,
+          "name": "Sebzeli Noodle",
+          "nameEn": "Vegetable Noodles",
+          "price": 420,
+          "desc": "Erişte, Brokoli, Havuç, Soya Filizi, Beyaz Lahana, Yeşil Biber, Kabak, Taze Soğan, Kapya Biber, Noodle Sos",
+          "visible": true
+        },
+        {
+          "id": 53,
+          "name": "Sade Noodle",
+          "nameEn": "Plain Noodles",
+          "price": 330,
+          "desc": "Erişte, Noodle Sos",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "pilavlar",
+      "name": "Pilavlar",
+      "nameEn": "Rice",
+      "items": [
+        {
+          "id": 54,
+          "name": "Karidesli Pilav",
+          "nameEn": "Rice with Shrimp",
+          "price": 350,
+          "desc": "Basmati pilavı, Karides, Bezelye, Yumurta, Havuç, Mısır, Taze Soğan",
+          "visible": true
+        },
+        {
+          "id": 55,
+          "name": "Sakura Special Pilav",
+          "nameEn": "Sakura Special Rice",
+          "price": 370,
+          "desc": "Dana Eti, Karides, Fıstık, Yumurta, Bezelye, Havuç, Mısır, Taze Soğan",
+          "visible": true
+        },
+        {
+          "id": 56,
+          "name": "Dana Etli Körili Pilav",
+          "nameEn": "Beef Curry Rice",
+          "price": 370,
+          "desc": "Basmati pilavı, Dana Eti, Bezelye, Havuç, Mısır, Taze Soğan",
+          "visible": true
+        },
+        {
+          "id": 57,
+          "name": "Yumurtalı Pilav",
+          "nameEn": "Egg Rice",
+          "price": 249,
+          "desc": "Basmati Pilavı, Bezelye, Havuç, Mısır, Yumurta, Taze Soğan",
+          "visible": true
+        },
+        {
+          "id": 58,
+          "name": "Tavuklu Pilav",
+          "nameEn": "Chicken Rice",
+          "price": 269,
+          "desc": "Basmati Pilavı, Bezelye, Tavuk, Yumurta, Havuç, Mısır, Taze Soğan",
+          "visible": true
+        },
+        {
+          "id": 59,
+          "name": "Sebzeli Pilav",
+          "nameEn": "Rice with Vegetables",
+          "price": 249,
+          "desc": "Basmati Pilavı, Bezelye, Havuç, Mısır, Yumurta",
+          "visible": true
+        },
+        {
+          "id": 60,
+          "name": "Sade Pilav",
+          "nameEn": "Plain Rice",
+          "price": 198,
+          "desc": "Basmati pirinci",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "deniz-mahsulleri",
+      "name": "Deniz Mahsulleri",
+      "nameEn": "Seafood",
+      "items": [
+        {
+          "id": 61,
+          "name": "Karışık Sebzeli Karides",
+          "nameEn": "Shrimp with Mixed Vegetables",
+          "price": 620,
+          "desc": "Brokoli, Havuç, Kabak, Baby Mısır, Beyaz Lahana, Kültür Mantarı, Kırmızı Sarı Kapya Biber",
+          "visible": true
+        },
+        {
+          "id": 62,
+          "name": "Teriyaki Soslu Somon",
+          "nameEn": "Salmon with Teriyaki Sauce",
+          "price": 660,
+          "desc": "Somon, Yeşillik, Salatalık, Çeri Domates, Havuç, Tiryaki Sos",
+          "visible": true
+        },
+        {
+          "id": 63,
+          "name": "Tatlı Ekşi Soslu Karides",
+          "nameEn": "Shrimp with Sweet and Sour Sauce",
+          "price": 620,
+          "desc": "Ananas, Kırmızı Kapya Biber, Yeşil Biber, Kuru Soğan, Tatlı Ekşi Sos",
+          "visible": true
+        },
+        {
+          "id": 64,
+          "name": "Zencefilli Çıtır Levrek",
+          "nameEn": "Crispy Sea Bass with Ginger",
+          "price": 660,
+          "desc": "Taze Soğan, kırmızı soğan, sarı kapya biberi, salkım biber, çin acı sos",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "dana-etliler",
+      "name": "Dana Etliler",
+      "nameEn": "Veal Meat",
+      "items": [
+        {
+          "id": 65,
+          "name": "Karışık Sebzeli Dana Eti",
+          "nameEn": "Beef with Mixed Vegetables",
+          "price": 585,
+          "desc": "Dana Eti, renkli, biber,kabak havuç lahana  kültür mantarı şhiitake mantarı Salkım Biber",
+          "visible": true
+        },
+        {
+          "id": 66,
+          "name": "Üç Mantarlı Dana Eti",
+          "nameEn": "Beef with Three Mushrooms",
+          "price": 595,
+          "desc": "Dana Eti, Kültür Mantarı, Shiitake Mantarı, İstiridye Mantarı, Susam",
+          "visible": true
+        },
+        {
+          "id": 67,
+          "name": "Dana Etli Kung Pao",
+          "nameEn": "Beef Kung Pao",
+          "price": 585,
+          "desc": "Dana Eti, Sivri Biber, Kapya Biber, Taze Soğan, Kırmızı Soğan, Yer Fıstığı, salkım biber, acı çin sosu",
+          "visible": true
+        },
+        {
+          "id": 68,
+          "name": "Dana Etli Brokoli",
+          "nameEn": "Broccoli with Beef",
+          "price": 585,
+          "desc": "Dana Eti, Brokoli, Havuç, Sivri Biber, Lahana, Çin acı Sos",
+          "visible": true
+        },
+        {
+          "id": 69,
+          "name": "Yeşil Biberli Dana Eti",
+          "nameEn": "Beef with Green Peppers",
+          "price": 595,
+          "desc": "Dana Eti, Kabak, Dolmalık Biber, Havuç, Sarımsak Sos",
+          "visible": true
+        },
+        {
+          "id": 70,
+          "name": "Sakura Special Dana Eti",
+          "nameEn": "Sakura Special Beef",
+          "price": 585,
+          "desc": "Dana Eti, Tofu, Kabak, Havuç, Brokoli, Kültür Mantarı, Kapya Biber, Salkım Biber, Çin acı Sos",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "tavuklar",
+      "name": "Tavuklar",
+      "nameEn": "Chickens",
+      "items": [
+        {
+          "id": 71,
+          "name": "Karışık Sebzeli Tavuk",
+          "nameEn": "Chicken with Mixed Vegetables",
+          "price": 495,
+          "desc": "Tavuk, sarı-kırmızı kapya biber, brokoli, kabak ve havuç",
+          "visible": true
+        },
+        {
+          "id": 72,
+          "name": "Thai Usulü Kaju Fıstıklı Tavuk",
+          "nameEn": "Thai-Style Cashew Chicken",
+          "price": 495,
+          "desc": "Tavuk, Ananas, Dolmalık biber, kapya biber, kuru soğan, lahana ve kaju fıstık",
+          "visible": true
+        },
+        {
+          "id": 73,
+          "name": "Mançuryan Usulü Tavuk",
+          "nameEn": "Manchurian-style chicken",
+          "price": 495,
+          "desc": "tavuk, kabak, shiitake mantarı, sivri biber, yer fıstığı, salkım biber, havuç ve Çin acı sos",
+          "visible": true
+        },
+        {
+          "id": 74,
+          "name": "Zencefilli Soslu Çıtır Tavuk",
+          "nameEn": "Crispy Chicken with Ginger Sauce",
+          "price": 495,
+          "desc": "Pane tavuk bonfile; taze soğan, salkım biber, zencefilli Çin acı sos",
+          "visible": true
+        },
+        {
+          "id": 75,
+          "name": "General Taso",
+          "nameEn": "General Taso",
+          "price": 495,
+          "desc": "Pane tavuk but; Çin acı sos, taze soğan, susam",
+          "visible": true
+        },
+        {
+          "id": 76,
+          "name": "Tatlı Ekşili Tavuk",
+          "nameEn": "Sweet and Sour Chicken",
+          "price": 495,
+          "desc": "Tavuk, ananas, dolmalık biber, kuru soğan, kırmızı kapya biber ve tatlı-ekşi sos",
+          "visible": true
+        },
+        {
+          "id": 77,
+          "name": "Kung Pao Tavuk",
+          "nameEn": "Kung Pao Chicken",
+          "price": 495,
+          "desc": "Tavuk, sivri biber, kapya biber, taze soğan, kırmızı soğan, yer fıstığı, salkım biber, çin acı sosu",
+          "visible": true
+        },
+        {
+          "id": 78,
+          "name": "Ballı Kore Tavuk",
+          "nameEn": "Honey Korean Chicken",
+          "price": 495,
+          "desc": "Ballı ve yer fıstıklı; gochujang soslu, tavuk",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "sushi-uramaki",
+      "name": "Sushi Uramaki",
+      "nameEn": "Sushi Uramaki",
+      "items": [
+        {
+          "id": 79,
+          "name": "California Roll (8 Ad)",
+          "nameEn": "California Roll (8 Ad)",
+          "price": 530,
+          "desc": "Yengeç, avokado, salatalık, tobiko, mayonez",
+          "visible": true
+        },
+        {
+          "id": 80,
+          "name": "Ying Yang Roll (8 Ad)",
+          "nameEn": "Ying Yang Roll (8 Ad)",
+          "price": 650,
+          "desc": "Somon, karides, krem peyniri, salatalık, avokado",
+          "visible": true
+        },
+        {
+          "id": 81,
+          "name": "California Susami Roll (8 Ad)",
+          "nameEn": "California Susami Roll (8 Ad)",
+          "price": 490,
+          "desc": "Yengeç surimi, avokado, salatalık, baharatlı mayonez; susam kaplama",
+          "visible": true
+        },
+        {
+          "id": 82,
+          "name": "Double Sake  Roll (8 Ad)",
+          "nameEn": "Double Sake  Roll (8 Ad)",
+          "price": 550,
+          "desc": "Somon, salatalık, krem peyniri, avokado, tiryaki sos",
+          "visible": true
+        },
+        {
+          "id": 83,
+          "name": "Kyota Roll (8 Ad)",
+          "nameEn": "Kyota Roll (8 Ad)",
+          "price": 550,
+          "desc": "Karides, avokado, salatalık, baharatlı mayonez ve kraker cipsi dokunuşu",
+          "visible": true
+        },
+        {
+          "id": 84,
+          "name": "Canadian Roll (8 Ad)",
+          "nameEn": "Canadian Roll (8 Ad)",
+          "price": 630,
+          "desc": "Somon, avokado, salatalık, krem peyniri, yılan balığı sosu ve mix susam",
+          "visible": true
+        },
+        {
+          "id": 85,
+          "name": "Tiger Roll (8 Ad)",
+          "nameEn": "Tiger Roll (8 Ad)",
+          "price": 620,
+          "desc": "Ebi karides, avokado, salatalık, krem peyniri, yılan balığı sosu ve tobiko",
+          "visible": true
+        },
+        {
+          "id": 86,
+          "name": "Wakame Roll (8 Ad)",
+          "nameEn": "Wakame Roll (8 Ad)",
+          "price": 450,
+          "desc": "Karides, Wakame (deniz yosunu) salatası, avokado, salatalık, krem peyniri",
+          "visible": true
+        },
+        {
+          "id": 87,
+          "name": "Dragon Roll (8 Ad)",
+          "nameEn": "Dragon Roll (8 Ad)",
+          "price": 620,
+          "desc": "Yılan balığı, avokado, salatalık, krem peyniri, mix susam ve teriyaki sos",
+          "visible": true
+        },
+        {
+          "id": 88,
+          "name": "Rainbow Roll (8 Ad)",
+          "nameEn": "Rainbow Roll (8 Ad)",
+          "price": 650,
+          "desc": "Yengeç surumi, avokado, krem peyniri, salatalık, levrek, yılan balığı,ebi karides, somon, tuna maguro",
+          "visible": true
+        },
+        {
+          "id": 89,
+          "name": "Sake Avokado Roll (8 Ad)",
+          "nameEn": "Sake Avokado Roll (8 Ad)",
+          "price": 540,
+          "desc": "Somon, avokado, salatalık, krem peyniri ve çörek otu",
+          "visible": true
+        },
+        {
+          "id": 90,
+          "name": "Avokado Maguro Roll (8 Ad)",
+          "nameEn": "Avokado Maguro Roll (8 Ad)",
+          "price": 540,
+          "desc": "Ton balığı, avokado, salatalık, krem peyniri, susam",
+          "visible": true
+        },
+        {
+          "id": 91,
+          "name": "Vejetaryen Roll (8 Ad)",
+          "nameEn": "Vejetaryen Roll (8 Ad)",
+          "price": 400,
+          "desc": "Avokado, salatalık, krem peyniri, nori, mix susam",
+          "visible": true
+        },
+        {
+          "id": 92,
+          "name": "Spicy Tuna Roll (8 Ad)",
+          "nameEn": "Spicy Tuna Roll (8 Ad)",
+          "price": 530,
+          "desc": "Tuna, spicy mayonez, salatalık, avokado, çörek otu",
+          "visible": true
+        },
+        {
+          "id": 93,
+          "name": "Spicy Sake Roll (8 Ad)",
+          "nameEn": "Spicy Sake Roll (8 Ad)",
+          "price": 530,
+          "desc": "Somon, avokado, salatalık, spicy mayonez, çörek otu",
+          "visible": true
+        },
+        {
+          "id": 94,
+          "name": "Kani Avokado Roll (8 Ad)",
+          "nameEn": "Kani Avokado Roll (8 Ad)",
+          "price": 500,
+          "desc": "Yengeç, avokado, salatalık, ve çörek otu",
+          "visible": true
+        },
+        {
+          "id": 95,
+          "name": "Philadelphia Roll (8 Ad)",
+          "nameEn": "Philadelphia Roll (8 Ad)",
+          "price": 530,
+          "desc": "Somon, avokado, salatalık, krem peyniri",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "sushi-tempra",
+      "name": "Sushi Tempra",
+      "nameEn": "Sushi Tempra",
+      "items": [
+        {
+          "id": 96,
+          "name": "Cheff Special (8 adet)",
+          "nameEn": "Cheff Special (8 adet)",
+          "price": 640,
+          "desc": "Karides, avokado, krem peyniri, tütsülenmiş somon, tiryaki sos, spicy mayonez",
+          "visible": true
+        },
+        {
+          "id": 97,
+          "name": "Sakura Special Roll (8 Ad)",
+          "nameEn": "Sakura Special Roll (8 Ad)",
+          "price": 640,
+          "desc": "yengeç tempura, maguro, somon, yılan balığı, avokado, krem peyniri, mix susam",
+          "visible": true
+        },
+        {
+          "id": 98,
+          "name": "Zen Roll Tempra",
+          "nameEn": "Zen Roll Tempra",
+          "price": 530,
+          "desc": "Yengeç tempra, tütsülenmiş somon, tobikko, krem peyniri, avokado, tiryaki sos",
+          "visible": true
+        },
+        {
+          "id": 99,
+          "name": "Crunchy Sake Roll (8 Ad)",
+          "nameEn": "Crunchy Sake Roll (8 Ad)",
+          "price": 530,
+          "desc": "somon tempura krem peyniri, avokado, tiryaki sos",
+          "visible": true
+        },
+        {
+          "id": 100,
+          "name": "Crunchy Roll (5 Ad)",
+          "nameEn": "Crunchy Roll (5 Ad)",
+          "price": 480,
+          "desc": "Yengeç surimi, avokado, krem peyniri, sweet chili, tiryaki sos",
+          "visible": true
+        },
+        {
+          "id": 101,
+          "name": "Crispy Unagi Roll (8 Ad)",
+          "nameEn": "Crispy Unagi Roll (8 Ad)",
+          "price": 630,
+          "desc": "Yılan balığı, avokado; krem peyniri; teriyaki sos",
+          "visible": true
+        },
+        {
+          "id": 102,
+          "name": "Crispy Crab Roll (8 Ad)",
+          "nameEn": "Crispy Crab Roll (8 Ad)",
+          "price": 530,
+          "desc": "Yengeç surimi ,avokado, krem peyniri, teriyaki sos",
+          "visible": true
+        },
+        {
+          "id": 103,
+          "name": "Crazy Salmon Roll (5 Ad)",
+          "nameEn": "Crazy Salmon Roll (5 Ad)",
+          "price": 575,
+          "desc": "Yengeç surimi, avokado, krem peynir, tempura somon, teriyaki ve soya sos",
+          "visible": true
+        },
+        {
+          "id": 104,
+          "name": "Green Roll (8 Ad)",
+          "nameEn": "Green Roll (8 Ad)",
+          "price": 530,
+          "desc": "Karides tempura, avokado, krem peynir, mix susam",
+          "visible": true
+        },
+        {
+          "id": 105,
+          "name": "Ebi California Roll (8 Ad)",
+          "nameEn": "Ebi California Roll (8 Ad)",
+          "price": 575,
+          "desc": "Karides tempura, salatalık, tobiko, baharatlı mayonez",
+          "visible": true
+        },
+        {
+          "id": 106,
+          "name": "İstanbul Roll (5 adet)",
+          "nameEn": "İstanbul Roll (5 adet)",
+          "price": 575,
+          "desc": "Tuna tempra, somon tempra, salatalık, avokado, tobiko, tiryaki sos",
+          "visible": true
+        },
+        {
+          "id": 107,
+          "name": "Samurai Roll",
+          "nameEn": "Samurai Roll",
+          "price": 630,
+          "desc": "Somon, karides, avokado, krem peyniri, saltalık, sriracha chili sos, sweet chili",
+          "visible": true
+        },
+        {
+          "id": 108,
+          "name": "Crunchy Tuna Roll (8 Ad)",
+          "nameEn": "Crunchy Tuna Roll (8 Ad)",
+          "price": 530,
+          "desc": "Tuna tempura, avokado, krem peynir, Japon yufkası, teriyaki sos, tobiko",
+          "visible": true
+        },
+        {
+          "id": 109,
+          "name": "Ebi Tempura Roll (8 Ad)",
+          "nameEn": "Ebi Tempura Roll (8 Ad)",
+          "price": 575,
+          "desc": "Karides tempura, krem peyniri, avokado, teriyaki sos, japon yufkası",
+          "visible": true
+        },
+        {
+          "id": 110,
+          "name": "Suzuki Tempura Roll (8 Ad)",
+          "nameEn": "Suzuki Tempura Roll (8 Ad)",
+          "price": 530,
+          "desc": "Levrek tempura, krem peyniri, avokado, teriyaki sos, spicy mayonez, susam",
+          "visible": true
+        },
+        {
+          "id": 111,
+          "name": "Kani Tempura Roll (8 Ad)",
+          "nameEn": "Kani Tempura Roll (8 Ad)",
+          "price": 510,
+          "desc": "Yengeç tempra, krem peyniri, avokado, spicy mayonez, tiryaki sos, japon yufkası",
+          "visible": true
+        },
+        {
+          "id": 112,
+          "name": "Sake Tempura Roll (8 Ad)",
+          "nameEn": "Sake Tempura Roll (8 Ad)",
+          "price": 510,
+          "desc": "Somon tempura, avokado, krem peyniri, tiryaki sos, spice sos, japon yufkası",
+          "visible": true
+        },
+        {
+          "id": 113,
+          "name": "Bef Tataki (8 adet)",
+          "nameEn": "Bef Tataki (8 adet)",
+          "price": 570,
+          "desc": "Pişmiş bonfile, avokado, salatalık, kırmızı sarı kırmızıbiber, tiryaki sos, Japon yufkası",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "sushi-setler",
+      "name": "Sushi Setler",
+      "nameEn": "Sushi Sets",
+      "items": [
+        {
+          "id": 114,
+          "name": "Nikko Set",
+          "nameEn": "Nikko Set",
+          "price": 1300,
+          "desc": "20 Ad • Spicy Tuna Roll 8, Salmon Nigiri 2, Unagi Nigiri 2, Suzuki Nigiri 2, Ebi Maki 6",
+          "visible": true
+        },
+        {
+          "id": 115,
+          "name": "Maki Set",
+          "nameEn": "Maki Set",
+          "price": 1700,
+          "desc": "36 Ad • Tuna Maki 6, Sake Maki 6, Unagi Maki 6, Suzuki Maki 6, Avokado Maki 6, Kappa Maki 6",
+          "visible": true
+        },
+        {
+          "id": 116,
+          "name": "Weggie Set",
+          "nameEn": "Weggie Set",
+          "price": 1000,
+          "desc": "20 Ad • Kappa Maki 6, Avokado Maki 6, Weggie Roll 8",
+          "visible": true
+        },
+        {
+          "id": 117,
+          "name": "Tempure Set",
+          "nameEn": "Tempure Set",
+          "price": 2050,
+          "desc": "36 Ad • Sake Tempura 8, Crispy Unagi 8, Crunchy Roll 6, Ebi Tempura Roll 8, Crazy Salmon Roll 6",
+          "visible": true
+        },
+        {
+          "id": 118,
+          "name": "Sakura Set",
+          "nameEn": "Sakura Set",
+          "price": 1450,
+          "desc": "24 Ad • Dragon Roll 4, California Roll 4, Crispy Crab Roll 8, Wakimi Roll 4, Tiger Roll 4",
+          "visible": true
+        },
+        {
+          "id": 119,
+          "name": "Tokyo Set",
+          "nameEn": "Tokyo Set",
+          "price": 1500,
+          "desc": "28 Ad • Kyota Roll 8, Philadelphia Roll 8, Tuna Maki 6, Avokado Maki 6",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "sashimi",
+      "name": "Sashimi",
+      "nameEn": "Sashimi",
+      "items": [
+        {
+          "id": 120,
+          "name": "Suzuki (Levrek) Sashimi",
+          "nameEn": "Suzuki (Levrek) Sashimi",
+          "price": 345,
+          "desc": "4 Adet",
+          "visible": true
+        },
+        {
+          "id": 121,
+          "name": "Unagi Sashimi",
+          "nameEn": "Unagi Sashimi",
+          "price": 439,
+          "desc": "4 Adet",
+          "visible": true
+        },
+        {
+          "id": 122,
+          "name": "Sake (Somon) Sashimi",
+          "nameEn": "Sake (Somon) Sashimi",
+          "price": 345,
+          "desc": "4 Adet",
+          "visible": true
+        },
+        {
+          "id": 123,
+          "name": "Magura (Tuna) Sashimi",
+          "nameEn": "Magura (Tuna) Sashimi",
+          "price": 345,
+          "desc": "4 Adet",
+          "visible": true
+        },
+        {
+          "id": 124,
+          "name": "Ebi Sashimi",
+          "nameEn": "Ebi Sashimi",
+          "price": 345,
+          "desc": "4 Adet",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "nigiri",
+      "name": "Nigiri",
+      "nameEn": "Nigiri",
+      "items": [
+        {
+          "id": 125,
+          "name": "Kani Nigiri",
+          "nameEn": "Kani Nigiri",
+          "price": 249,
+          "desc": "2 Adet",
+          "visible": true
+        },
+        {
+          "id": 126,
+          "name": "Avokado Nigiri",
+          "nameEn": "Avokado Nigiri",
+          "price": 196,
+          "desc": "2 Adet",
+          "visible": true
+        },
+        {
+          "id": 127,
+          "name": "Ebi Nigiri",
+          "nameEn": "Ebi Nigiri",
+          "price": 265,
+          "desc": "2 Adet",
+          "visible": true
+        },
+        {
+          "id": 128,
+          "name": "Suzuki Nigiri",
+          "nameEn": "Suzuki Nigiri",
+          "price": 265,
+          "desc": "2 Adet",
+          "visible": true
+        },
+        {
+          "id": 129,
+          "name": "Eel (Unagi) Nigiri",
+          "nameEn": "Eel (Unagi) Nigiri",
+          "price": 349,
+          "desc": "2 Adet",
+          "visible": true
+        },
+        {
+          "id": 130,
+          "name": "Tuna Nigiri",
+          "nameEn": "Tuna Nigiri",
+          "price": 296,
+          "desc": "2 Adet",
+          "visible": true
+        },
+        {
+          "id": 131,
+          "name": "Salmon Nigiri",
+          "nameEn": "Salmon Nigiri",
+          "price": 265,
+          "desc": "2 Adet",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "tatlilar",
+      "name": "Tatlılar",
+      "nameEn": "Desserts",
+      "items": [
+        {
+          "id": 132,
+          "name": "Ballı Kızarmış Ceviz",
+          "nameEn": "Honey Roasted Walnuts",
+          "price": 360,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 133,
+          "name": "Kızarmış Muz",
+          "nameEn": "Fried Banana",
+          "price": 290,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 134,
+          "name": "Kızarmış Dondurma (Vanilyalı)",
+          "nameEn": "Fried Ice Cream (Vanilla Flavored)",
+          "price": 290,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 135,
+          "name": "Kızarmış Dondurma (Çikolatalı)",
+          "nameEn": "Kızarmış Dondurma (Çikolatalı)",
+          "price": 290,
+          "desc": "",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "i-cecekler",
+      "name": "İçecekler",
+      "nameEn": "Beverages",
+      "items": [
+        {
+          "id": 136,
+          "name": "Damla Su (Pet Şişe)",
+          "nameEn": "Damla Su (Pet Şişe)",
+          "price": 30,
+          "desc": "50 cl",
+          "visible": true
+        },
+        {
+          "id": 137,
+          "name": "Damla Soda",
+          "nameEn": "Damla Soda",
+          "price": 45,
+          "desc": "20 cl",
+          "visible": true
+        },
+        {
+          "id": 138,
+          "name": "Red Bull Sugar Free",
+          "nameEn": "Red Bull Sugar Free",
+          "price": 160,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 139,
+          "name": "Red Bull",
+          "nameEn": "Red Bull",
+          "price": 160,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 140,
+          "name": "Cappy Karışık",
+          "nameEn": "Cappy Karışık",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 141,
+          "name": "Fuse Tea Mango Ananas",
+          "nameEn": "Fuse Tea Mango Ananas",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 142,
+          "name": "Fuse Tea Şeftali",
+          "nameEn": "Fuse Tea Şeftali",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 143,
+          "name": "Fuse Tea Limon",
+          "nameEn": "Fuse Tea Limon",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 144,
+          "name": "Fanta",
+          "nameEn": "Fanta",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 145,
+          "name": "Sprite",
+          "nameEn": "Sprite",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 146,
+          "name": "Coca Cola Zero",
+          "nameEn": "Coca Cola Zero",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 147,
+          "name": "Coca Cola Light",
+          "nameEn": "Coca Cola Light",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        },
+        {
+          "id": 148,
+          "name": "Coca Cola",
+          "nameEn": "Coca Cola",
+          "price": 95,
+          "desc": "33 cl",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "maki",
+      "name": "Maki",
+      "nameEn": "Maki",
+      "items": [
+        {
+          "id": 149,
+          "name": "Sake Cheese Maki",
+          "nameEn": "Sake Cheese Maki",
+          "price": 335,
+          "desc": "6 adet olarak servis edilir.",
+          "visible": true
+        },
+        {
+          "id": 150,
+          "name": "Unagi Maki",
+          "nameEn": "Unagi Maki",
+          "price": 390,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 151,
+          "name": "Tuna Maki",
+          "nameEn": "Tuna Maki",
+          "price": 319,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 152,
+          "name": "Spicy Tuna Maki",
+          "nameEn": "Spicy Tuna Maki",
+          "price": 319,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 153,
+          "name": "Suzuki Maki",
+          "nameEn": "Suzuki Maki",
+          "price": 329,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 154,
+          "name": "Sake Avokado Maki",
+          "nameEn": "Sake Avokado Maki",
+          "price": 330,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 155,
+          "name": "Sake Maki",
+          "nameEn": "Sake Maki",
+          "price": 329,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 156,
+          "name": "Kappa Maki",
+          "nameEn": "Kappa Maki",
+          "price": 229,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 157,
+          "name": "Kani Maki",
+          "nameEn": "Kani Maki",
+          "price": 295,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 158,
+          "name": "Ebi Maki",
+          "nameEn": "Ebi Maki",
+          "price": 329,
+          "desc": "6 Adet",
+          "visible": true
+        },
+        {
+          "id": 159,
+          "name": "Avokado Maki",
+          "nameEn": "Avokado Maki",
+          "price": 289,
+          "desc": "6 Adet",
+          "visible": true
+        }
+      ]
+    }
+  ]
+}

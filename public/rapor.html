@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura POS - Raporlar</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/css/rapor.css">
+</head>
+<body>
+
+  <!-- PIN -->
+  <div id="pin-screen" class="screen">
+    <div class="pin-box">
+      <div class="pin-logo">Sakura Raporlar</div>
+      <div class="pin-sub">Yonetici PIN giriniz</div>
+      <div class="pin-dots" id="pin-dots">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="pin-err" id="pin-err"></div>
+      <div class="pin-pad">
+        <button onclick="pi('1')">1</button><button onclick="pi('2')">2</button><button onclick="pi('3')">3</button>
+        <button onclick="pi('4')">4</button><button onclick="pi('5')">5</button><button onclick="pi('6')">6</button>
+        <button onclick="pi('7')">7</button><button onclick="pi('8')">8</button><button onclick="pi('9')">9</button>
+        <button class="c" onclick="pc()">C</button><button onclick="pi('0')">0</button><button class="e" onclick="ps()">&#10003;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAPOR ANA -->
+  <div id="main" class="screen hidden">
+    <header class="top">
+      <span class="logo">Sakura Raporlar</span>
+      <div class="nav-tabs">
+        <button class="nav active" data-v="today" onclick="switchView('today')">Bugun</button>
+        <button class="nav" data-v="history" onclick="switchView('history')">Gecmis</button>
+        <button class="nav" data-v="monthly" onclick="switchView('monthly')">Aylik</button>
+        <button class="nav" data-v="yearly" onclick="switchView('yearly')">Yillik</button>
+      </div>
+      <button class="back-btn" onclick="window.close()">Kapat</button>
+    </header>
+
+    <!-- BUGUN -->
+    <div class="view" id="view-today">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Ciro</div>
+          <div class="stat-value" id="s-revenue">0 TL</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Adisyon</div>
+          <div class="stat-value" id="s-orders">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Urun</div>
+          <div class="stat-value" id="s-items">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pik Saat</div>
+          <div class="stat-value" id="s-peak">-</div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-box wide">
+          <h3>Saatlik Yogunluk</h3>
+          <canvas id="chart-hourly"></canvas>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-box wide">
+          <h3>Kanal Dagilimi (Salon / Trendyol / Yemeksepeti / Getir Yemek)</h3>
+          <div class="top-products" id="today-channels"></div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-box">
+          <h3>En Cok Satan 10 Urun</h3>
+          <div class="top-products" id="top-products"></div>
+        </div>
+        <div class="chart-box">
+          <h3>Canli Aktivite</h3>
+          <div class="activity-feed" id="activity-feed">
+            <p class="muted">Bugun henuz veri yok</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GECMIS -->
+    <div class="view hidden" id="view-history">
+      <div class="history-layout">
+        <div class="history-left">
+          <h3>Rapor Tarihi Sec</h3>
+          <div class="report-list" id="report-list"></div>
+        </div>
+        <div class="history-right" id="history-detail">
+          <p class="muted">Soldan bir tarih secin</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AYLIK -->
+    <div class="view hidden" id="view-monthly">
+      <div class="month-select">
+        <button class="arrow" onclick="changeMonth(-1)">&#8249;</button>
+        <span id="month-label">Nisan 2026</span>
+        <button class="arrow" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="stats-row" id="monthly-stats"></div>
+      <div class="charts-row">
+        <div class="chart-box wide">
+          <h3>Gunluk Ciro</h3>
+          <canvas id="chart-monthly"></canvas>
+        </div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-box wide">
+          <h3>En Cok Satan 20 Urun</h3>
+          <div class="top-products" id="monthly-products"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- YILLIK -->
+    <div class="view hidden" id="view-yearly">
+      <div class="month-select">
+        <button class="arrow" onclick="changeYear(-1)">&#8249;</button>
+        <span id="year-label">2026</span>
+        <button class="arrow" onclick="changeYear(1)">&#8250;</button>
+      </div>
+      <div class="charts-row">
+        <div class="chart-box wide">
+          <h3>Aylik Ciro Karsilastirmasi</h3>
+          <canvas id="chart-yearly"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/time-sync.js"></script>
+  <script src="/js/rapor.js"></script>
+</body>
+</html>

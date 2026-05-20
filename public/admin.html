@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura POS - Admin</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- PIN -->
+  <div id="pin-screen" class="screen">
+    <div class="pin-box">
+      <div class="pin-logo">Sakura Admin</div>
+      <div class="pin-sub">Yonetici PIN giriniz</div>
+      <div class="pin-dots" id="pin-dots"><span></span><span></span><span></span><span></span></div>
+      <div class="pin-err" id="pin-err"></div>
+      <div class="pin-pad">
+        <button onclick="pi('1')">1</button><button onclick="pi('2')">2</button><button onclick="pi('3')">3</button>
+        <button onclick="pi('4')">4</button><button onclick="pi('5')">5</button><button onclick="pi('6')">6</button>
+        <button onclick="pi('7')">7</button><button onclick="pi('8')">8</button><button onclick="pi('9')">9</button>
+        <button class="c" onclick="pc()">C</button><button onclick="pi('0')">0</button><button class="e" onclick="ps()">&#10003;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN ANA -->
+  <div id="main" class="screen hidden">
+    <header class="top">
+      <span class="logo">Sakura Admin</span>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <button class="nav-btn active" data-s="tables" onclick="switchSection('tables')">Masalar</button>
+        <button class="nav-btn" data-s="pins" onclick="switchSection('pins')">PIN</button>
+        <button class="nav-btn" data-s="printer" onclick="switchSection('printer')">Yazici</button>
+        <button class="nav-btn" data-s="receipt" onclick="switchSection('receipt')">Adisyon</button>
+        <button class="nav-btn" data-s="backup" onclick="switchSection('backup')">Yedek</button>
+        <button class="nav-btn" data-s="system" onclick="switchSection('system')">Sistem</button>
+        <button class="nav-btn" data-s="theme" onclick="switchSection('theme')">Tema</button>
+        <button class="nav-btn" data-s="about" onclick="switchSection('about')">Hakkinda</button>
+      </nav>
+    </header>
+
+    <div class="content">
+
+      <!-- MASA YONETIMI -->
+      <section class="section" id="sec-tables">
+        <div class="sec-header">
+          <h2>Masa Yonetimi</h2>
+          <button class="btn-primary" onclick="addTable()">+ Masa Ekle</button>
+        </div>
+        <div class="tables-editor" id="tables-editor"></div>
+      </section>
+
+      <!-- PIN AYARLARI -->
+      <section class="section hidden" id="sec-pins">
+        <h2>PIN Ayarlari</h2>
+        <div class="form-group">
+          <label>Garson PIN</label>
+          <input type="text" id="garson-pin" maxlength="4" placeholder="4 haneli">
+        </div>
+        <div class="form-group">
+          <label>Yonetici PIN</label>
+          <input type="text" id="yonetici-pin" maxlength="4" placeholder="4 haneli">
+        </div>
+        <button class="btn-primary" onclick="savePins()">Kaydet</button>
+      </section>
+
+      <!-- YAZICI -->
+      <section class="section hidden" id="sec-printer">
+        <h2>Yazici Ayarlari</h2>
+
+        <div class="printer-card">
+          <h3>Adisyon Yazicisi (Musteri Fisi)</h3>
+          <div class="form-group">
+            <label>Durum</label>
+            <select id="receipt-enabled"><option value="true">Aktif</option><option value="false">Devre Disi</option></select>
+          </div>
+          <div class="form-group">
+            <label>Model (otomatik bulma)</label>
+            <input type="text" id="receipt-model" placeholder="Sunlux RP8020">
+          </div>
+          <div class="form-group">
+            <label>Cihaz Yolu (bos = otomatik)</label>
+            <input type="text" id="receipt-device" placeholder="auto veya \\BILGISAYAR\RP8020">
+          </div>
+          <div class="form-group">
+            <label>Kagit Genisligi</label>
+            <select id="receipt-width"><option value="58">58mm</option><option value="80">80mm</option></select>
+          </div>
+          <div class="form-group">
+            <label>Kod Sayfasi (Turkce karakterler bozuk basiyorsa "Kod Sayfasi Testi"ne bas, duzgun basanin adini buraya yaz)</label>
+            <select id="receipt-encoding">
+              <option value="CP1254_18">CP1254_18 (XPrinter cogu)</option>
+              <option value="CP1254_32">CP1254_32</option>
+              <option value="CP1254_33">CP1254_33</option>
+              <option value="CP1254_44">CP1254_44</option>
+              <option value="WPC1254">WPC1254 (eski)</option>
+              <option value="PC857">PC857 (DOS)</option>
+              <option value="ASCII">ASCII (karakter yerine c,s,g,u,o,i)</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <button class="btn-primary" onclick="savePrinterProfile('receipt')">Kaydet</button>
+            <button class="btn-secondary" onclick="testPrinterProfile('receipt')">Test Yazdir</button>
+            <button class="btn-secondary" onclick="codepageTest('receipt')" title="Tum kod sayfalarini tek seferde basar; duzgun basanin adini yukaridaki Kod Sayfasi alaninda sec.">Kod Sayfasi Testi</button>
+          </div>
+          <p class="printer-status" id="receipt-status"></p>
+        </div>
+
+        <div class="printer-card">
+          <h3>Mutfak Yazicisi (Mutfak Fisi)</h3>
+          <div class="form-group">
+            <label>Durum</label>
+            <select id="kitchen-enabled"><option value="true">Aktif</option><option value="false">Devre Disi</option></select>
+          </div>
+          <div class="form-group">
+            <label>Model (opsiyonel)</label>
+            <input type="text" id="kitchen-model" placeholder="(bos birakirsaniz otomatik)">
+          </div>
+          <div class="form-group">
+            <label>Cihaz Yolu (bos = otomatik)</label>
+            <input type="text" id="kitchen-device" placeholder="auto">
+          </div>
+          <div class="form-group">
+            <label>Kagit Genisligi</label>
+            <select id="kitchen-width"><option value="58">58mm</option><option value="80">80mm</option></select>
+          </div>
+          <div class="form-group">
+            <label>Kod Sayfasi</label>
+            <select id="kitchen-encoding">
+              <option value="CP1254_18">CP1254_18 (XPrinter cogu)</option>
+              <option value="CP1254_32">CP1254_32</option>
+              <option value="CP1254_33">CP1254_33</option>
+              <option value="CP1254_44">CP1254_44</option>
+              <option value="WPC1254">WPC1254 (eski)</option>
+              <option value="PC857">PC857 (DOS)</option>
+              <option value="ASCII">ASCII</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <button class="btn-primary" onclick="savePrinterProfile('kitchen')">Kaydet</button>
+            <button class="btn-secondary" onclick="testPrinterProfile('kitchen')">Test Yazdir</button>
+            <button class="btn-secondary" onclick="codepageTest('kitchen')">Kod Sayfasi Testi</button>
+          </div>
+          <p class="printer-status" id="kitchen-status"></p>
+        </div>
+
+        <div class="printer-card">
+          <h3>Sistemde Bulunan Yazicilar (Yerel)</h3>
+          <div class="form-row" style="gap:8px;align-items:center;flex-wrap:wrap;">
+            <label class="hint" style="margin-right:8px;">Filtre:</label>
+            <select id="discover-filter" onchange="discoverPrinters()">
+              <option value="thermal">Sadece termal / POS yazicilari</option>
+              <option value="all">Tum yazicilar</option>
+            </select>
+            <button class="btn-secondary" onclick="discoverPrinters()">Yenile</button>
+          </div>
+          <p class="hint" id="discover-counts"></p>
+          <div class="discovered-list" id="discovered-list"></div>
+        </div>
+
+        <div class="printer-card">
+          <h3>Agda Yazici Ara (TCP/IP)</h3>
+          <p class="hint">Yerel ag uzerinde port 9100 dinleyen cihazlari tarar ve ESC/POS durum komutu ile termal yaziciyi <strong>protokol seviyesinde dogrular</strong> (isim filtresi degil).</p>
+          <button class="btn-secondary" onclick="discoverNetworkPrinters()">Agda Tara</button>
+          <p class="hint" id="netscan-info"></p>
+          <div class="discovered-list" id="netscan-list"></div>
+        </div>
+
+        <div class="printer-card">
+          <h3>Manuel Cihaz Ekle (IP/Hostname)</h3>
+          <p class="hint">Yazici taramada gorunmuyor ama IP'sini biliyor musunuz? Manuel girip <strong>zorla baglanma</strong> deneyin. ESC/POS test komutu gonderilir; cevap gelmese bile profil olarak kaydedebilirsiniz.</p>
+          <div class="form-row" style="gap:8px;flex-wrap:wrap;align-items:flex-end;">
+            <div class="form-group" style="flex:2;min-width:160px;margin:0;">
+              <label>IP veya Hostname</label>
+              <input type="text" id="manual-ip" placeholder="192.168.1.50">
+            </div>
+            <div class="form-group" style="flex:0 0 100px;margin:0;">
+              <label>Port</label>
+              <input type="number" id="manual-port" value="9100">
+            </div>
+            <div class="form-group" style="flex:0 0 110px;margin:0;">
+              <label>Genislik</label>
+              <select id="manual-width">
+                <option value="80">80mm</option>
+                <option value="58">58mm</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row" style="gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <button class="btn-secondary" onclick="testManualPrinter()">Test (Ping + ESC/POS)</button>
+            <button class="btn-primary" onclick="assignManualPrinter('receipt')">Adisyon Olarak Ekle</button>
+            <button class="btn-primary" onclick="assignManualPrinter('kitchen')">Mutfak Olarak Ekle</button>
+          </div>
+          <p class="hint" id="manual-result"></p>
+        </div>
+      </section>
+
+      <!-- ADISYON SABLONU -->
+      <section class="section hidden" id="sec-receipt">
+        <h2>Adisyon Sablonu</h2>
+        <p class="hint">Yazdirilan musteri adisyonunun gorunumunu duzenleyin. Sag tarafta canli onizleme gorunur.</p>
+        <div class="receipt-editor">
+          <div class="receipt-form">
+            <h3>Ust Bilgi</h3>
+            <div class="form-group">
+              <label>Ust ekstra satirlar (her satir ayri)</label>
+              <textarea id="rt-header-lines" rows="3" placeholder="HOSGELDINIZ&#10;Acilis: 12:00"></textarea>
+            </div>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-name"> Restoran adi</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-address"> Adres</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-phone"> Telefon</label>
+            <div class="form-group">
+              <label>Alt baslik (orn. slogan)</label>
+              <input type="text" id="rt-subheader" placeholder="Lezzetin adresi">
+            </div>
+
+            <h3>Adisyon Bilgileri</h3>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-datetime"> Tarih/Saat</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-table"> Masa numarasi</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-orderid"> Adisyon no</label>
+
+            <h3>Urun Satirlari</h3>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-unit"> Birim fiyat ("2 x 120.00")</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-notes"> Urun notlari</label>
+
+            <h3>Toplam Blogu</h3>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-subtotal"> Ara toplam</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-discount"> Indirim satiri</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-vat"> KDV satiri</label>
+            <label class="checkbox-label"><input type="checkbox" id="rt-show-payment"> Odeme yontemi</label>
+
+            <h3>Alt Bilgi</h3>
+            <div class="form-group">
+              <label>Alt satirlar (her satir ayri)</label>
+              <textarea id="rt-footer-lines" rows="3" placeholder="Tesekkur ederiz!&#10;Tekrar bekleriz"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Alt bosluk (besleme) satir sayisi</label>
+              <input type="number" id="rt-feed-lines" min="1" max="10" value="3">
+            </div>
+
+            <div class="form-row" style="margin-top:14px;gap:8px;flex-wrap:wrap;">
+              <button class="btn-primary" onclick="saveReceiptTemplate()">Kaydet</button>
+              <button class="btn-secondary" onclick="resetReceiptTemplate()">Varsayilana Don</button>
+            </div>
+          </div>
+          <div class="receipt-preview">
+            <h3>Onizleme</h3>
+            <div id="rt-preview" class="rt-preview-box"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- YEDEK -->
+      <section class="section hidden" id="sec-backup">
+        <h2>Yedek / Geri Yukleme</h2>
+        <div class="backup-info" id="backup-info"></div>
+        <button class="btn-primary" onclick="createBackup()">Simdi Yedekle</button>
+      </section>
+
+      <!-- SISTEM AYARLARI -->
+      <section class="section hidden" id="sec-system">
+        <h2>Sistem Ayarlari</h2>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="auto-start"> Windows acilisinda otomatik baslat
+          </label>
+        </div>
+        <hr>
+        <h3>Kiosk Modu</h3>
+        <p class="hint">Tam ekran, taskbar gizli, kazara cikis engelli. Restoran masaustu PC'si icin onerilir.<br>
+        <strong>Cikis kombinasyonu:</strong> <code>Ctrl + Shift + Q</code></p>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="kiosk-mode"> Kiosk modu aktif
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Kiosk acilis sayfasi</label>
+          <select id="kiosk-url">
+            <option value="/pos">POS Ekrani (kasiyer)</option>
+            <option value="/yonetici">Yonetici Mobil</option>
+            <option value="/garson">Garson Mobil</option>
+            <option value="/admin">Admin Panel</option>
+          </select>
+        </div>
+        <p class="hint" style="color:#c00;"><strong>Uyari:</strong> Kiosk modu acildiginda uygulama otomatik yeniden baslar. Once tum islemleri tamamlayin.</p>
+        <button class="btn-primary" onclick="saveSystem()">Kaydet</button>
+      </section>
+
+      <!-- TEMA -->
+      <section class="section hidden" id="sec-theme">
+        <h2>Tema Ayarlari</h2>
+        <p class="hint">POS ekraninin renk temasini secin. Degisiklik tum acik POS sekmelerine anında uygulanir.</p>
+        <div class="form-group">
+          <label>Tema</label>
+          <select id="theme-select">
+            <option value="sakura">Sakura (Koyu — varsayilan)</option>
+            <option value="krem">Krem (Acik)</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="saveTheme()">Kaydet</button>
+      </section>
+
+      <!-- HAKKINDA -->
+      <section class="section hidden" id="sec-about">
+        <h2>Sistem Bilgisi</h2>
+        <div class="about-info" id="about-info"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- MASA DUZENLE MODALI -->
+  <div class="modal hidden" id="table-modal">
+    <div class="modal-box">
+      <h3 id="table-modal-title">Masa</h3>
+      <div class="form-group"><label>Masa Adi</label><input type="text" id="table-name" placeholder="Masa 1"></div>
+      <div class="form-group"><label>Kapasite</label><input type="number" id="table-capacity" placeholder="4"></div>
+      <div class="form-group">
+        <label>Bolum</label>
+        <select id="table-section"><option value="salon">Salon</option><option value="teras">Teras</option></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('table-modal')">Iptal</button>
+        <button class="btn-primary" onclick="saveTableModal()">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/time-sync.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

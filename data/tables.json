@@ -1,0 +1,53 @@
+{
+  "version": 231,
+  "tables": [
+    {
+      "id": 1,
+      "name": "Masa 1",
+      "capacity": 4,
+      "section": "salon",
+      "currentOrderId": "ord_20260505_094",
+      "status": "open"
+    },
+    {
+      "id": 6,
+      "name": "Masa 6",
+      "capacity": 8,
+      "section": "salon",
+      "currentOrderId": "ord_20260505_309",
+      "status": "open"
+    },
+    {
+      "id": 7,
+      "name": "Teras 1",
+      "capacity": 4,
+      "section": "teras",
+      "currentOrderId": "ord_20260505_746",
+      "status": "open"
+    },
+    {
+      "id": 8,
+      "name": "Teras 2",
+      "capacity": 4,
+      "section": "teras",
+      "currentOrderId": "ord_20260508_480",
+      "status": "open"
+    },
+    {
+      "id": 9,
+      "name": "Teras 3",
+      "capacity": 6,
+      "section": "teras",
+      "currentOrderId": "ord_20260505_497",
+      "status": "open"
+    },
+    {
+      "id": 10,
+      "name": "Teras 4",
+      "capacity": 2,
+      "section": "teras",
+      "currentOrderId": "ord_20260508_697",
+      "status": "open"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Sakura Garson</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/garson.css">
+</head>
+<body>
+
+  <!-- PIN EKRANI -->
+  <div id="pin-screen" class="screen">
+    <div class="pin-box">
+      <div class="pin-logo">Sakura Garson</div>
+      <div class="pin-subtitle">PIN giriniz</div>
+      <div class="pin-display" id="pin-display">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+      <div class="pin-error" id="pin-error"></div>
+      <div class="pin-pad">
+        <button onclick="pinInput('1')">1</button>
+        <button onclick="pinInput('2')">2</button>
+        <button onclick="pinInput('3')">3</button>
+        <button onclick="pinInput('4')">4</button>
+        <button onclick="pinInput('5')">5</button>
+        <button onclick="pinInput('6')">6</button>
+        <button onclick="pinInput('7')">7</button>
+        <button onclick="pinInput('8')">8</button>
+        <button onclick="pinInput('9')">9</button>
+        <button class="btn-clear" onclick="pinClear()">C</button>
+        <button onclick="pinInput('0')">0</button>
+        <button class="btn-enter" onclick="pinSubmit()">&#10003;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANA EKRAN -->
+  <div id="main-screen" class="screen hidden">
+    <!-- UST BAR -->
+    <header class="header">
+      <span class="header-logo">Sakura</span>
+      <div class="header-right">
+        <span class="ws-dot" id="ws-dot"></span>
+        <button class="logout-btn" onclick="logout()">Cikis</button>
+      </div>
+    </header>
+
+    <!-- SEKMELER -->
+    <div class="tabs">
+      <button class="tab active" data-tab="tables" onclick="switchTab('tables')">Masalar</button>
+      <button class="tab" data-tab="active" onclick="switchTab('active')">Aktif</button>
+    </div>
+
+    <!-- MASALAR SEKMESI -->
+    <div class="tab-content" id="tab-tables">
+      <div class="tables-grid" id="tables-grid"></div>
+    </div>
+
+    <!-- AKTIF SEKMESI -->
+    <div class="tab-content hidden" id="tab-active">
+      <div class="active-list" id="active-list"></div>
+    </div>
+  </div>
+
+  <!-- ADISYON EKRANI -->
+  <div id="order-screen" class="screen hidden">
+    <!-- BASLIK -->
+    <header class="header">
+      <button class="back-btn" onclick="goBack()">&#8249;</button>
+      <div class="header-center">
+        <span class="header-table" id="order-table-name">Masa 1</span>
+        <span class="header-time" id="order-time">12:34 - 45dk</span>
+      </div>
+      <span class="ws-dot" id="ws-dot-order"></span>
+    </header>
+
+    <!-- SIPARIS LISTESI -->
+    <div class="order-items" id="order-items">
+      <!-- Bos durum -->
+      <div class="empty-state" id="empty-order">
+        <p>Henuz urun eklenmedi</p>
+        <p class="hint">Asagidan kategori secip urun ekleyin</p>
+      </div>
+    </div>
+
+    <!-- TOPLAM + GONDER -->
+    <div class="order-footer">
+      <div class="order-total">
+        <span>Toplam</span>
+        <span class="total-amount" id="order-total">0 TL</span>
+      </div>
+      <button class="send-btn" id="send-btn" onclick="showSentFeedback()">Siparisi Gonder</button>
+    </div>
+
+    <!-- KATEGORI CHIPS + URUNLER -->
+    <div class="menu-panel">
+      <div class="category-chips" id="category-chips"></div>
+      <div class="menu-items-scroll" id="menu-items-scroll"></div>
+    </div>
+  </div>
+
+  <!-- URUN MIKTAR MODALI -->
+  <div class="modal hidden" id="qty-modal">
+    <div class="modal-box">
+      <div class="modal-title" id="qty-item-name">Urun</div>
+      <div class="qty-row">
+        <button class="qty-btn" onclick="modalQty(-1)">-</button>
+        <span class="qty-val" id="qty-val">1</span>
+        <button class="qty-btn" onclick="modalQty(1)">+</button>
+      </div>
+      <div class="qty-price" id="qty-price">0 TL</div>
+      <input type="text" id="qty-note" placeholder="Not (opsiyonel)" class="note-input">
+      <label class="ikram-check">
+        <input type="checkbox" id="qty-ikram" onchange="modalIkram()"> Ikram (ucretsiz - 0 TL)
+      </label>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeQtyModal()">Iptal</button>
+        <button class="modal-confirm" onclick="confirmAdd()">Ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast hidden" id="toast"></div>
+
+  <!-- BAGLANTI YOK BANNER -->
+  <div class="offline-banner hidden" id="offline-banner">Baglanti yok</div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/time-sync.js"></script>
+  <script src="/js/garson.js"></script>
+</body>
+</html>

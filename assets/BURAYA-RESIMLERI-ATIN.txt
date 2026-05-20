@@ -1,0 +1,15 @@
+SAKURA POS - Gorsel Dosyalari
+==============================
+
+Bu klasore asagidaki dosyalari atin:
+
+  logo.png         - Ana logo (launcher ekrani, giris ekrani). Ideal: 256x256 veya daha buyuk, seffaf arka plan (PNG)
+  icon.ico         - Windows uygulama ikonu (.ico formati, 256x256). Masaustu kisayolu ve pencere iconu icin.
+  icon.png         - Tray (sistem cubugu) ikonu. 64x64 veya 128x128 PNG.
+  favicon.png      - Tarayici sekmesi ikonu. 32x32 veya 64x64 PNG.
+
+Notlar:
+  - Dosya isimleri birebir yukaridaki gibi olmali (kucuk harf)
+  - logo.png yoksa launcher'da varsayilan SVG cicek gosterilir
+  - icon.ico yoksa Windows varsayilan ikonu kullanilir
+  - Resimleri attiktan sonra uygulamayi tekrar baslatin

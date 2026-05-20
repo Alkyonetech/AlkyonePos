@@ -1,0 +1,75 @@
+{
+  "restaurant": {
+    "name": "Sakura Sushi Fulya",
+    "address": "Fulya, Istanbul",
+    "phone": "",
+    "logo": ""
+  },
+  "network": {
+    "port": 3000,
+    "mdnsName": "sakura",
+    "lastKnownIp": ""
+  },
+  "auth": {
+    "garsonPin": "1234",
+    "yoneticiPin": "9999",
+    "jwtSecret": "sakura-pos-secret-change-me",
+    "pinChangedAt": null
+  },
+  "operations": {
+    "dayCloseHour": 4,
+    "vatRate": 10,
+    "currency": "TL"
+  },
+  "startup": {
+    "autoStart": true,
+    "kioskMode": false,
+    "kioskUrl": "/pos"
+  },
+  "printer": {
+    "enabled": false,
+    "type": "escpos",
+    "connection": "usb",
+    "device": "auto",
+    "paperWidth": 58,
+    "encoding": "CP1254_18"
+  },
+  "printers": {
+    "receipt": {
+      "enabled": true,
+      "model": "POS-80C",
+      "connection": "usb",
+      "device": "auto",
+      "paperWidth": 80,
+      "encoding": "CP1254_18"
+    },
+    "kitchen": {
+      "enabled": true,
+      "connection": "usb",
+      "device": "auto",
+      "paperWidth": 58,
+      "encoding": "CP1254_18"
+    }
+  },
+  "receiptTemplate": {
+    "headerLines": [],
+    "showRestaurantName": true,
+    "showAddress": true,
+    "showPhone": true,
+    "subHeaderText": "",
+    "showDateTime": true,
+    "showTableNo": true,
+    "showOrderId": true,
+    "showItemUnitPrice": true,
+    "showItemNotes": true,
+    "showSubtotal": true,
+    "showDiscount": true,
+    "showVat": false,
+    "showPaymentMethod": true,
+    "footerLines": ["Teşekkür ederiz!"],
+    "footerFeedLines": 3
+  },
+  "appVersion": "1.6.4",
+  "apkVersion": "1.6.4",
+  "minApkVersion": "1.0.0"
+}

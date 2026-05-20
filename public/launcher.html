@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura POS</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .launcher {
+      text-align: center;
+      width: 400px;
+    }
+
+    /* Sakura cicek animasyonu */
+    .logo-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+    }
+
+    .sakura-flower {
+      position: absolute;
+      inset: 0;
+      animation: flowerPulse 2s ease-in-out infinite;
+    }
+
+    .petal {
+      fill: #e8b4b8;
+      opacity: 0.9;
+    }
+
+    .petal-inner {
+      fill: #d4838a;
+    }
+
+    .center-dot {
+      fill: #f5d5d8;
+    }
+
+    @keyframes flowerPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Doner sakura yapraklari arka plan */
+    .falling-petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .fp {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #e8b4b8;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: fall linear infinite;
+    }
+
+    .fp:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+    .fp:nth-child(2) { left: 25%; animation-duration: 10s; animation-delay: 1s; }
+    .fp:nth-child(3) { left: 40%; animation-duration: 7s; animation-delay: 3s; }
+    .fp:nth-child(4) { left: 55%; animation-duration: 9s; animation-delay: 0.5s; }
+    .fp:nth-child(5) { left: 70%; animation-duration: 11s; animation-delay: 2s; }
+    .fp:nth-child(6) { left: 85%; animation-duration: 8s; animation-delay: 4s; }
+    .fp:nth-child(7) { left: 15%; animation-duration: 9s; animation-delay: 2.5s; }
+    .fp:nth-child(8) { left: 60%; animation-duration: 7s; animation-delay: 1.5s; }
+
+    @keyframes fall {
+      0% { top: -20px; opacity: 0; transform: rotate(0deg) translateX(0); }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.1; }
+      100% { top: 105vh; opacity: 0; transform: rotate(360deg) translateX(80px); }
+    }
+
+    .app-name {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e8b4b8 0%, #f5d5d8 50%, #d4838a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+    }
+
+    .app-sub {
+      font-size: 0.85rem;
+      color: #8888a0;
+      margin-bottom: 40px;
+    }
+
+    /* Progress bar */
+    .progress-area {
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #2a2a45;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e8b4b8, #d4838a);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .progress-fill.indeterminate {
+      width: 30%;
+      animation: indeterminate 1.5s ease-in-out infinite;
+    }
+
+    @keyframes indeterminate {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+
+    .status-text {
+      font-size: 0.85rem;
+      color: #8888a0;
+      min-height: 24px;
+      transition: opacity 0.3s;
+    }
+
+    .status-text.success { color: #60d080; }
+    .status-text.error { color: #e06060; }
+
+    .version-info {
+      position: fixed;
+      bottom: 16px;
+      right: 20px;
+      font-size: 0.7rem;
+      color: #555570;
+      z-index: 1;
+    }
+
+    /* Guncelleme detay */
+    .update-detail {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(232, 180, 184, 0.08);
+      border: 1px solid #2a2a45;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #8888a0;
+      display: none;
+    }
+
+    .update-detail.show { display: block; }
+
+    .btn-retry {
+      margin-top: 16px;
+      padding: 10px 32px;
+      background: linear-gradient(135deg, #e8b4b8, #d4838a);
+      color: #0f0f1a;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+    }
+
+    .btn-retry.show { display: inline-block; }
+    .btn-retry:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+  <!-- Dusen yapraklar -->
+  <div class="falling-petals">
+    <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+    <div class="fp"></div><div class="fp"></div><div class="fp"></div><div class="fp"></div>
+  </div>
+
+  <div class="launcher">
+    <!-- Sakura logo -->
+    <div class="logo-container">
+      <svg class="sakura-flower" viewBox="0 0 120 120">
+        <g transform="translate(60,55)">
+          <!-- 5 yaprak -->
+          <path class="petal" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(0)"/>
+          <path class="petal" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(0)"/>
+          <path class="petal" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(72)"/>
+          <path class="petal" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(72)"/>
+          <path class="petal" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(144)"/>
+          <path class="petal" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(144)"/>
+          <path class="petal" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(216)"/>
+          <path class="petal" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(216)"/>
+          <path class="petal" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(288)"/>
+          <path class="petal" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(288)"/>
+          <!-- Ic yapraklar -->
+          <path class="petal-inner" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(36)"/>
+          <path class="petal-inner" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(36)"/>
+          <path class="petal-inner" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(108)"/>
+          <path class="petal-inner" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(108)"/>
+          <path class="petal-inner" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(180)"/>
+          <path class="petal-inner" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(180)"/>
+          <path class="petal-inner" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(252)"/>
+          <path class="petal-inner" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(252)"/>
+          <path class="petal-inner" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(324)"/>
+          <path class="petal-inner" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(324)"/>
+          <!-- Merkez -->
+          <circle class="center-dot" cx="0" cy="0" r="6"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="app-name">SAKURA</div>
+    <div class="app-sub">Restoran Yonetim Sistemi</div>
+
+    <div class="progress-area">
+      <div class="progress-bar">
+        <div class="progress-fill indeterminate" id="progress"></div>
+      </div>
+      <div class="status-text" id="status">Baslatiliyor...</div>
+
+      <div class="update-detail" id="update-detail"></div>
+      <button class="btn-retry" id="btn-retry" onclick="location.reload()">Tekrar Dene</button>
+    </div>
+  </div>
+
+  <div class="version-info" id="version-info">v1.0.0</div>
+
+  <script>
+    const progress = document.getElementById('progress');
+    const status = document.getElementById('status');
+    const updateDetail = document.getElementById('update-detail');
+    const btnRetry = document.getElementById('btn-retry');
+
+    const steps = [
+      { pct: 10, text: 'Sistem kontrol ediliyor...' },
+      { pct: 25, text: 'Sunucu baslatiliyor...' },
+      { pct: 50, text: 'Surum kontrol ediliyor...' },
+      { pct: 75, text: 'Arayuz hazirlaniyor...' },
+      { pct: 100, text: 'Hazir!' }
+    ];
+
+    function setProgress(pct, text, cls) {
+      progress.classList.remove('indeterminate');
+      progress.style.width = pct + '%';
+      status.textContent = text;
+      status.className = 'status-text' + (cls ? ' ' + cls : '');
+    }
+
+    function showError(text) {
+      setProgress(0, text, 'error');
+      progress.classList.add('indeterminate');
+      progress.style.background = '#e06060';
+      btnRetry.classList.add('show');
+    }
+
+    async function launch() {
+      try {
+        // Adim 1: Sistem kontrol
+        setProgress(10, 'Sistem kontrol ediliyor...');
+        await sleep(400);
+
+        // Adim 2: Sunucu baglanti kontrolu
+        setProgress(25, 'Sunucu baslatiliyor...');
+        const serverOk = await waitForHealth(30); // 30 deneme, 15sn
+        if (!serverOk) {
+          showError('Sunucuya baglanamadi. Tekrar deneyin.');
+          return;
+        }
+
+        // Adim 3: Surum kontrol
+        setProgress(50, 'Surum kontrol ediliyor...');
+        await sleep(300);
+        try {
+          const vRes = await fetch('/api/version');
+          const vData = await vRes.json();
+          document.getElementById('version-info').textContent = 'v' + (vData.appVersion || '1.0.0');
+
+          // Burada gelecekte uzak sunucudan guncelleme kontrolu yapilabilir
+          // Simdilik lokal surum bilgisini gosteriyoruz
+          setProgress(60, 'Surum: v' + (vData.appVersion || '1.0.0') + ' — Guncel');
+          await sleep(500);
+        } catch (e) {
+          // Surum kontrol basarisiz, devam et
+          setProgress(60, 'Surum kontrol atlanıyor...');
+          await sleep(300);
+        }
+
+        // Adim 4: Arayuz hazirlaniyor
+        setProgress(80, 'Arayuz hazirlaniyor...');
+        await sleep(400);
+
+        // Adim 5: Hazir, yonlendir
+        setProgress(100, 'Hazir! Yonlendiriliyor...', 'success');
+        await sleep(600);
+
+        // POS veya setup'a yonlendir
+        const settingsRes = await fetch('/api/settings');
+        const settingsData = await settingsRes.json();
+        const isSetup = !settingsData.restaurant?.name || settingsData.restaurant.name === 'Sakura Sushi';
+
+        window.location.href = isSetup ? '/setup.html' : '/pos';
+
+      } catch (err) {
+        showError('Baslatilamadi: ' + err.message);
+      }
+    }
+
+    async function waitForHealth(maxRetries) {
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const res = await fetch('/api/health', { signal: AbortSignal.timeout(2000) });
+          if (res.ok) return true;
+        } catch (e) {}
+        await sleep(500);
+        const pct = 25 + Math.floor((i / maxRetries) * 20);
+        setProgress(pct, 'Sunucu bekleniyor... (' + (i + 1) + '/' + maxRetries + ')');
+      }
+      return false;
+    }
+
+    function sleep(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    // Basla
+    launch();
+  </script>
+</body>
+</html>

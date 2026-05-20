@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="auto">
+
+    <!-- Ag izinleri -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <!-- APK guncelleme + kurulum -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                     android:maxSdkVersion="28"
+                     tools:ignore="ScopedStorage" />
+
+    <!-- Kiosk + ekran uyanik -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Android 13+ DownloadManager bildirimleri icin -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Android 12+ pil optimizasyonu istisnasi (MIUI/HyperOS aggressive killing) -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- Cihaz/Yazilim ozellikleri: hicbiri zorunlu degil — Chromebook,
+         Ethernet-only tablet, x86 emulator vb. de yukleyebilsin -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature android:name="android.hardware.faketouch" android:required="false" />
+    <uses-feature android:name="android.software.webview" android:required="true" />
+
+    <!-- Sadece MIUI / HyperOS — Poco/Xiaomi/Redmi yonetim sayfalari -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="application/vnd.android.package-archive" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+        <package android:name="com.miui.securitycenter" />
+        <package android:name="com.miui.powerkeeper" />
+        <package android:name="com.miui.permcenter" />
+        <package android:name="com.android.settings" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:resizeableActivity="true"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="33">
+
+        <!-- WebView multi-process veri dizini cakismasini onle (bazi OEM ROM'lari) -->
+        <meta-data android:name="android.webkit.WebView.MetricsOptOut" android:value="true" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="userPortrait"
+            android:keepScreenOn="true"
+            android:hardwareAccelerated="true"
+            android:taskAffinity=""
+            android:directBootAware="false"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize|locale|fontScale|uiMode|density"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- DEFAULT: bazi POCO Launcher / 3rd party launcher'lar bu kategori
+                     olmadan icon'a tiklasa bile activity'yi resolve edemiyor. -->
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- Tablet launcher'larin (Vivo Y36 vb.) bizi varsayilan ev olarak
+                     kullanabilmesi icin opsiyonel HOME kategorisi DAHIL ETMIYORUZ —
+                     MIUI/HyperOS'ta home replacement yetkisi MIUI tarafindan engelleniyor.
+                     Kullanici manuel olarak default launcher yapsin. -->
+            </intent-filter>
+        </activity>
+
+        <!-- APK guncelleme icin FileProvider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+</manifest>

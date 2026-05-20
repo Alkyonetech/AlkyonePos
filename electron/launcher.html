@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura POS</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .launcher {
+      text-align: center;
+      width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Logo */
+    .logo-wrap {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      animation: logoPulse 2.5s ease-in-out infinite;
+    }
+
+    .logo-wrap svg {
+      width: 120px;
+      height: 120px;
+      animation: logoPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.92; }
+    }
+
+    .app-name {
+      font-size: 2.4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e8b4b8 0%, #f5d5d8 50%, #d4838a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      letter-spacing: 3px;
+    }
+
+    .app-sub {
+      font-size: 0.85rem;
+      color: #8888a0;
+      margin-bottom: 44px;
+    }
+
+    /* Progress */
+    .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: #1a1a2e;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e8b4b8, #d4838a, #e8b4b8);
+      background-size: 200% 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-fill.loading {
+      width: 100%;
+      animation: shimmer 1.8s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .status {
+      font-size: 0.8rem;
+      color: #8888a0;
+      min-height: 20px;
+      transition: all 0.3s;
+    }
+
+    .status.ok { color: #60d080; }
+    .status.err { color: #e06060; }
+
+    .btn-retry {
+      margin-top: 20px;
+      padding: 10px 36px;
+      background: linear-gradient(135deg, #e8b4b8, #d4838a);
+      color: #0f0f1a;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+    }
+
+    .btn-retry:hover { opacity: 0.9; }
+
+    .ver {
+      position: fixed;
+      bottom: 14px;
+      right: 18px;
+      font-size: 0.65rem;
+      color: #444460;
+    }
+
+    /* Dusen yapraklar */
+    .petals { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .p {
+      position: absolute;
+      width: 10px; height: 10px;
+      background: #e8b4b8;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: drift linear infinite;
+    }
+    .p:nth-child(1){left:8%;animation-duration:9s;animation-delay:0s}
+    .p:nth-child(2){left:22%;animation-duration:11s;animation-delay:1.2s}
+    .p:nth-child(3){left:38%;animation-duration:8s;animation-delay:3s}
+    .p:nth-child(4){left:52%;animation-duration:10s;animation-delay:0.6s}
+    .p:nth-child(5){left:68%;animation-duration:12s;animation-delay:2.4s}
+    .p:nth-child(6){left:82%;animation-duration:9s;animation-delay:4s}
+    .p:nth-child(7){left:45%;animation-duration:10s;animation-delay:1.8s}
+    .p:nth-child(8){left:75%;animation-duration:8s;animation-delay:3.5s}
+    .p:nth-child(9){left:15%;animation-duration:11s;animation-delay:0.3s}
+    .p:nth-child(10){left:90%;animation-duration:9s;animation-delay:2s}
+
+    @keyframes drift {
+      0%   { top: -15px; opacity: 0; transform: rotate(0deg) translateX(0); }
+      8%   { opacity: 0.12; }
+      92%  { opacity: 0.08; }
+      100% { top: 105vh; opacity: 0; transform: rotate(340deg) translateX(60px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="petals">
+    <div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div>
+    <div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div>
+  </div>
+
+  <div class="launcher">
+    <div class="logo-wrap" id="logo-wrap">
+      <!-- JS ile logo.png veya fallback SVG yuklenecek -->
+    </div>
+
+    <div class="app-name">SAKURA</div>
+    <div class="app-sub">Restoran Yonetim Sistemi</div>
+
+    <div class="progress-bar">
+      <div class="progress-fill loading" id="bar"></div>
+    </div>
+    <div class="status" id="status">Baslatiliyor...</div>
+    <button class="btn-retry" id="retry" onclick="start()">Tekrar Dene</button>
+  </div>
+
+  <div class="ver" id="ver">v1.0.0</div>
+
+  <script>
+    const PORT = 3000;
+    const BASE = 'http://localhost:' + PORT;
+    const bar = document.getElementById('bar');
+    const stat = document.getElementById('status');
+    const retry = document.getElementById('retry');
+
+    // Logo yukle
+    (function loadLogo() {
+      const wrap = document.getElementById('logo-wrap');
+      const img = new Image();
+      // file:// protokolunde calistigimiz icin assets/ yolunu dene
+      // Electron'dan gelen __dirname bilgisi yok, fallback SVG kullan
+      // Sunucu acilinca /assets/logo.png denenecek
+      const fallbackSVG = `<svg viewBox="0 0 120 120">
+        <g transform="translate(60,55)">
+          <path fill="#e8b4b8" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(0)"/>
+          <path fill="#e8b4b8" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(0)"/>
+          <path fill="#e8b4b8" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(72)"/>
+          <path fill="#e8b4b8" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(72)"/>
+          <path fill="#e8b4b8" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(144)"/>
+          <path fill="#e8b4b8" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(144)"/>
+          <path fill="#e8b4b8" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(216)"/>
+          <path fill="#e8b4b8" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(216)"/>
+          <path fill="#e8b4b8" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(288)"/>
+          <path fill="#e8b4b8" d="M0,-40 C-12,-35 -18,-20 -12,-8 L0,0 Z" transform="rotate(288)"/>
+          <path fill="#d4838a" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(36)"/>
+          <path fill="#d4838a" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(36)"/>
+          <path fill="#d4838a" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(108)"/>
+          <path fill="#d4838a" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(108)"/>
+          <path fill="#d4838a" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(180)"/>
+          <path fill="#d4838a" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(180)"/>
+          <path fill="#d4838a" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(252)"/>
+          <path fill="#d4838a" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(252)"/>
+          <path fill="#d4838a" d="M0,-22 C6,-18 8,-10 5,-4 L0,0 Z" transform="rotate(324)"/>
+          <path fill="#d4838a" d="M0,-22 C-6,-18 -8,-10 -5,-4 L0,0 Z" transform="rotate(324)"/>
+          <circle fill="#f5d5d8" cx="0" cy="0" r="6"/>
+        </g>
+      </svg>`;
+      wrap.innerHTML = fallbackSVG;
+
+      // Sunucu acilinca gercek logoyu dene
+      setTimeout(() => {
+        const real = new Image();
+        real.onload = () => { wrap.innerHTML = ''; wrap.appendChild(real); };
+        real.src = BASE + '/assets/logo.png';
+      }, 2000);
+    })();
+
+    function setStatus(text, cls) {
+      stat.textContent = text;
+      stat.className = 'status' + (cls ? ' ' + cls : '');
+    }
+
+    function setBar(pct) {
+      bar.classList.remove('loading');
+      bar.style.width = pct + '%';
+    }
+
+    async function start() {
+      retry.style.display = 'none';
+      bar.classList.add('loading');
+      bar.style.width = '';
+
+      setStatus('Sunucu bekleniyor...');
+
+      // 1. Sunucuya baglan (max 40 deneme = ~20sn)
+      let ok = false;
+      for (let i = 0; i < 40; i++) {
+        try {
+          const r = await fetch(BASE + '/api/health', { signal: AbortSignal.timeout(1500) });
+          if (r.ok) { ok = true; break; }
+        } catch (e) {}
+        await new Promise(r => setTimeout(r, 500));
+        if (i % 4 === 0) setStatus('Sunucu bekleniyor... (' + Math.round((i/40)*100) + '%)');
+      }
+
+      if (!ok) {
+        setBar(0);
+        bar.classList.add('loading');
+        bar.style.background = '#e06060';
+        setStatus('Sunucuya baglanamadi', 'err');
+        retry.style.display = 'inline-block';
+        return;
+      }
+
+      // 2. Surum kontrol
+      setBar(40);
+      setStatus('Surum kontrol ediliyor...');
+      try {
+        const vr = await fetch(BASE + '/api/version');
+        const vd = await vr.json();
+        document.getElementById('ver').textContent = 'v' + (vd.appVersion || '1.0.0');
+        setBar(60);
+        setStatus('v' + (vd.appVersion || '1.0.0') + ' — Guncel', 'ok');
+        await new Promise(r => setTimeout(r, 600));
+      } catch (e) {
+        setBar(60);
+        setStatus('Surum kontrol atlandi');
+        await new Promise(r => setTimeout(r, 300));
+      }
+
+      // 3. Logo guncelle (sunucu acik, gercek logoyu dene)
+      try {
+        const logoWrap = document.getElementById('logo-wrap');
+        const img = new Image();
+        img.onload = () => { logoWrap.innerHTML = ''; logoWrap.appendChild(img); };
+        img.src = BASE + '/assets/logo.png?t=' + Date.now();
+      } catch(e) {}
+
+      // 4. Hazirlik
+      setBar(80);
+      setStatus('Arayuz hazirlaniyor...');
+      await new Promise(r => setTimeout(r, 500));
+
+      // 5. Yonlendir
+      setBar(100);
+      setStatus('Hazir!', 'ok');
+      await new Promise(r => setTimeout(r, 400));
+
+      // Setup mu POS mu?
+      try {
+        const sr = await fetch(BASE + '/api/settings');
+        const sd = await sr.json();
+        const isSetup = !sd.restaurant?.name || sd.restaurant.name === 'Sakura Sushi';
+        window.location.href = BASE + (isSetup ? '/setup.html' : '/pos');
+      } catch (e) {
+        window.location.href = BASE + '/pos';
+      }
+    }
+
+    start();
+  </script>
+</body>
+</html>

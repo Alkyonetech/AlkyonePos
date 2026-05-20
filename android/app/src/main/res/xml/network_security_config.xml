@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Tum HTTP trafigine izin ver (yerel ag POS sunucusu icin sart).
+         Android <domain> elementi IP CIDR araligi desteklemiyor — bu yuzden
+         base-config ile genel cleartext izni veriyoruz. -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -1,0 +1,41 @@
+node_modules/
+
+# Yerel/canli restoran verisi — repo'ya GIRMEZ
+data/backups/
+data/reports/
+data/logs/
+data/orders.json
+data/.firewall-ensured*
+updates/
+
+*.log
+.DS_Store
+Thumbs.db
+
+# Electron build cikti
+dist/
+
+# Android build cikti
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+
+# Android imzalama (gizli — KAYIP OLURSA GUNCELLEME UNINSTALL+INSTALL GEREKIR)
+android/keystore.properties
+android/*.jks
+android/*.keystore
+
+# Release paketi
+release/
+
+# Editor / OS
+.vscode/
+.idea/
+
+# Claude Code internal
+.claude/
+
+# Gecici dosyalar
+Blank*.pdf
+*.tmp

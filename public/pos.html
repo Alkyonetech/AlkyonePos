@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura POS</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/pos.css">
+</head>
+<body>
+
+  <!-- PIN EKRANI -->
+  <div id="pin-screen" class="pin-screen">
+    <div class="pin-box">
+      <div class="pin-logo">Sakura POS</div>
+      <div class="pin-subtitle">Yonetici PIN giriniz</div>
+      <div class="pin-display" id="pin-display">
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+      </div>
+      <div class="pin-error" id="pin-error"></div>
+      <div class="pin-pad">
+        <button class="pin-btn" onclick="pinInput('1')">1</button>
+        <button class="pin-btn" onclick="pinInput('2')">2</button>
+        <button class="pin-btn" onclick="pinInput('3')">3</button>
+        <button class="pin-btn" onclick="pinInput('4')">4</button>
+        <button class="pin-btn" onclick="pinInput('5')">5</button>
+        <button class="pin-btn" onclick="pinInput('6')">6</button>
+        <button class="pin-btn" onclick="pinInput('7')">7</button>
+        <button class="pin-btn" onclick="pinInput('8')">8</button>
+        <button class="pin-btn" onclick="pinInput('9')">9</button>
+        <button class="pin-btn pin-btn-clear" onclick="pinClear()">C</button>
+        <button class="pin-btn" onclick="pinInput('0')">0</button>
+        <button class="pin-btn pin-btn-enter" onclick="pinSubmit()">&#10003;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANA POS EKRANI -->
+  <div id="pos-screen" class="pos-screen hidden">
+
+    <!-- UST BAR -->
+    <header class="top-bar">
+      <div class="top-left">
+        <img src="/assets/logo.png" alt="" class="header-logo" onerror="this.style.display='none'">
+        <span class="logo">Sakura POS</span>
+      </div>
+      <div class="top-center">
+        <span class="stat-item" id="stat-date"></span>
+        <span class="stat-divider">|</span>
+        <span class="stat-item">Ciro: <strong id="stat-revenue">0</strong> TL</span>
+        <span class="stat-divider">|</span>
+        <span class="stat-item">Dolu: <strong id="stat-tables">0</strong></span>
+      </div>
+      <div class="top-right">
+        <span class="ws-status" id="ws-status" title="Baglanti durumu"></span>
+        <span class="user-role" id="user-role"></span>
+        <button class="logout-btn" onclick="logout()" title="Cikis yap">Cikis</button>
+      </div>
+    </header>
+
+    <!-- ANA ICERIK -->
+    <div class="main-content">
+
+      <!-- SOL PANEL - MASALAR -->
+      <div class="left-panel">
+        <div class="panel-header">
+          <h2>Masalar</h2>
+          <div class="table-filters">
+            <button class="filter-btn active" data-filter="all">Tumu</button>
+            <button class="filter-btn" data-filter="salon">Salon</button>
+            <button class="filter-btn" data-filter="teras">Teras</button>
+          </div>
+        </div>
+        <div class="tables-grid" id="tables-grid">
+          <!-- Masalar JS ile yuklenecek -->
+        </div>
+      </div>
+
+      <!-- SAG PANEL - ADISYON -->
+      <div class="right-panel" id="right-panel">
+        <div class="no-selection" id="no-selection">
+          <div class="no-selection-icon">&#127860;</div>
+          <p>Adisyon gormek icin bir masa secin</p>
+        </div>
+
+        <div class="order-detail hidden" id="order-detail">
+          <!-- Adisyon Baslik -->
+          <div class="order-header">
+            <div class="order-title">
+              <h3 id="order-table-name">Masa 1</h3>
+              <span class="order-time" id="order-time">12:34 - 45dk</span>
+            </div>
+            <span class="order-items-count" id="order-items-count">0 kalem</span>
+          </div>
+
+          <!-- Urun Listesi -->
+          <div class="order-items" id="order-items">
+            <!-- JS ile yuklenecek -->
+          </div>
+
+          <!-- Toplamlar -->
+          <div class="order-totals">
+            <div class="total-row">
+              <span>Ara Toplam</span>
+              <span id="order-subtotal">0.00 TL</span>
+            </div>
+            <div class="total-row" id="discount-row" style="display:none">
+              <span>Indirim</span>
+              <span id="order-discount">-0.00 TL</span>
+            </div>
+            <div class="total-row total-grand">
+              <span>TOPLAM</span>
+              <span id="order-total">0.00 TL</span>
+            </div>
+          </div>
+
+          <!-- Aksiyon Butonlari -->
+          <div class="order-actions">
+            <button class="action-btn" onclick="openAddItemModal()">
+              <span class="action-icon">+</span> Urun Ekle
+            </button>
+            <div class="action-row">
+              <button class="action-btn secondary" onclick="openTransferModal()">Tasi</button>
+              <button class="action-btn secondary" onclick="openMergeModal()">Birlestir</button>
+              <button class="action-btn secondary" onclick="openDiscountModal()">Indirim</button>
+            </div>
+            <div class="action-row">
+              <button class="action-btn secondary" onclick="printReceiptNow()">Adisyon Bas</button>
+              <button class="action-btn primary" onclick="openCloseModal()">Hesap Kapat</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALT BAR -->
+    <footer class="bottom-bar">
+      <button class="bottom-btn" onclick="openExternalOrders()">Harici Siparisler</button>
+      <button class="bottom-btn" onclick="openReports()">Raporlar</button>
+      <button class="bottom-btn" onclick="openMenuManager()">Menu Yonet</button>
+      <button class="bottom-btn" onclick="window.open('/admin','_blank')">Admin</button>
+      <button class="bottom-btn danger" onclick="closeDay()">Gunu Kapat</button>
+    </footer>
+  </div>
+
+  <!-- MODALLER -->
+
+  <!-- Urun Ekleme Modali -->
+  <div class="modal hidden" id="add-item-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Urun Ekle</h3>
+        <button class="modal-close" onclick="closeModal('add-item-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="menu-search">
+          <input type="text" id="menu-search" placeholder="Urun ara..." oninput="filterMenu()">
+        </div>
+        <div class="menu-layout">
+          <div class="menu-categories" id="menu-categories">
+            <!-- Kategoriler -->
+          </div>
+          <div class="menu-items" id="menu-items">
+            <!-- Urunler -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Urun Miktar/Not Modali -->
+  <div class="modal hidden" id="item-qty-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3 id="item-qty-name">Urun</h3>
+        <button class="modal-close" onclick="closeModal('item-qty-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+          <span class="qty-value" id="item-qty-value">1</span>
+          <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+        </div>
+        <div class="qty-price">
+          <span id="item-qty-price">0</span> TL
+        </div>
+        <input type="text" id="item-qty-note" placeholder="Not (opsiyonel)" class="note-input">
+        <label style="display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--text-dim);font-size:0.9rem;cursor:pointer;">
+          <input type="checkbox" id="item-qty-ikram" onchange="toggleIkram()"> Ikram (ucretsiz - 0 TL)
+        </label>
+        <button class="action-btn primary" onclick="confirmAddItem()" style="margin-top:12px">Ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hesap Kapatma Modali -->
+  <div class="modal hidden" id="close-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3>Hesap Kapat</h3>
+        <button class="modal-close" onclick="closeModal('close-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="close-summary">
+          <div class="close-total" id="close-total">0.00 TL</div>
+        </div>
+        <div class="payment-methods">
+          <button class="payment-btn active" data-method="nakit" onclick="selectPayment('nakit')">Nakit</button>
+          <button class="payment-btn" data-method="kart" onclick="selectPayment('kart')">Kart</button>
+          <button class="payment-btn" data-method="karisik" onclick="selectPayment('karisik')">Karisik</button>
+        </div>
+        <button class="action-btn primary" onclick="confirmClose()" style="margin-top:16px">Onayla ve Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Masa Tasi Modali -->
+  <div class="modal hidden" id="transfer-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3>Masa Tasi</h3>
+        <button class="modal-close" onclick="closeModal('transfer-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Hedef masa secin (sadece bos masalar):</p>
+        <div class="transfer-tables" id="transfer-tables"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Masa Birlestir Modali -->
+  <div class="modal hidden" id="merge-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3>Masa Birlestir</h3>
+        <button class="modal-close" onclick="closeModal('merge-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Bu masanin siparislerini hangi masaya ekleyelim?</p>
+        <div class="merge-tables" id="merge-tables"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indirim Modali -->
+  <div class="modal hidden" id="discount-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3>Indirim Uygula</h3>
+        <button class="modal-close" onclick="closeModal('discount-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="discount-types">
+          <button class="payment-btn active" data-dtype="fixed" onclick="selectDiscountType('fixed')">Sabit (TL)</button>
+          <button class="payment-btn" data-dtype="percent" onclick="selectDiscountType('percent')">Yuzde (%)</button>
+        </div>
+        <input type="number" id="discount-value" placeholder="Tutar" class="note-input" style="margin-top:12px">
+        <button class="action-btn primary" onclick="applyDiscount()" style="margin-top:12px">Uygula</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gun Kapat Onay Modali -->
+  <div class="modal hidden" id="dayclose-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3>Gunu Kapat</h3>
+        <button class="modal-close" onclick="closeModal('dayclose-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="dayclose-warning"></p>
+        <div class="dayclose-summary" id="dayclose-summary"></div>
+        <button class="action-btn danger-btn" onclick="confirmCloseDay()" style="margin-top:16px">Onayla ve Gunu Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU YONETIM MODALI -->
+  <div class="modal hidden" id="menu-manager-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Menu Yonetimi</h3>
+        <button class="modal-close" onclick="closeModal('menu-manager-modal')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <button class="action-btn secondary" onclick="openNewCategoryModal()" style="flex:0 0 auto;">+ Kategori</button>
+          <button class="action-btn secondary" onclick="openNewProductModal()" style="flex:0 0 auto;">+ Urun</button>
+        </div>
+        <div id="mm-categories"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIZLI KATEGORI EKLE MODALI -->
+  <div class="modal hidden" id="quick-cat-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3 id="quick-cat-title">Yeni Kategori</h3>
+        <button class="modal-close" onclick="closeModal('quick-cat-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="qc-id" placeholder="ID (ornek: tatli)" class="note-input" style="margin-bottom:8px">
+        <input type="text" id="qc-name" placeholder="Kategori Adi" class="note-input" style="margin-bottom:8px">
+        <button class="action-btn primary" onclick="saveQuickCategory()" style="margin-top:8px">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIZLI URUN EKLE/DUZENLE MODALI -->
+  <div class="modal hidden" id="quick-product-modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3 id="quick-product-title">Yeni Urun</h3>
+        <button class="modal-close" onclick="closeModal('quick-product-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <select id="qp-category" class="note-input" style="margin-bottom:8px;padding:10px;"></select>
+        <input type="text" id="qp-name" placeholder="Urun Adi" class="note-input" style="margin-bottom:8px">
+        <input type="number" id="qp-price" placeholder="Fiyat (TL)" class="note-input" style="margin-bottom:8px">
+        <input type="text" id="qp-desc" placeholder="Aciklama (opsiyonel)" class="note-input" style="margin-bottom:8px">
+        <label style="display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:0.85rem;">
+          <input type="checkbox" id="qp-visible" checked> Menude gorunur
+        </label>
+        <button class="action-btn primary" onclick="saveQuickProduct()" style="margin-top:12px">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HARICI SIPARISLER MODALI -->
+  <div class="modal hidden" id="external-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Harici Siparisler</h3>
+        <button class="modal-close" onclick="closeModal('external-modal')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height:78vh;overflow-y:auto;">
+
+        <div style="background:var(--bg-card,#1a1a2e);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;">
+          <strong style="color:var(--text);font-size:0.95rem;">Yeni Harici Siparis</strong>
+
+          <div class="payment-methods" style="margin-top:10px;">
+            <button class="payment-btn active" data-src="trendyol" onclick="extSelectSource('trendyol')">Trendyol</button>
+            <button class="payment-btn" data-src="yemeksepeti" onclick="extSelectSource('yemeksepeti')">Yemeksepeti</button>
+            <button class="payment-btn" data-src="getir" onclick="extSelectSource('getir')">Getir Yemek</button>
+          </div>
+
+          <input type="text" id="ext-order-no" placeholder="Platform siparis no (opsiyonel)" class="note-input" style="margin-top:10px;">
+          <input type="text" id="ext-customer" placeholder="Musteri adi (opsiyonel)" class="note-input" style="margin-top:8px;">
+          <input type="text" id="ext-note" placeholder="Siparis notu (opsiyonel)" class="note-input" style="margin-top:8px;">
+
+          <button class="action-btn secondary" onclick="openExtItemPicker()" style="margin-top:12px;">+ Urun Ekle</button>
+
+          <div id="ext-cart" style="margin-top:12px;"></div>
+
+          <div class="order-totals" style="margin-top:12px;">
+            <div class="total-row total-grand">
+              <span>TOPLAM</span>
+              <span id="ext-total">0.00 TL</span>
+            </div>
+          </div>
+
+          <button class="action-btn primary" onclick="submitExternalOrder()" style="margin-top:12px;">Kaydet ve Mutfaga Gonder</button>
+        </div>
+
+        <strong style="color:var(--text);font-size:0.95rem;">Bugunku Harici Siparisler</strong>
+        <div id="ext-list" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HARICI SIPARIS - URUN SECME MODALI -->
+  <div class="modal hidden" id="external-item-modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3>Urun Sec</h3>
+        <button class="modal-close" onclick="closeModal('external-item-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="menu-search">
+          <input type="text" id="ext-menu-search" placeholder="Urun ara..." oninput="renderExtMenuItems()">
+        </div>
+        <div class="menu-layout">
+          <div class="menu-categories" id="ext-menu-categories"></div>
+          <div class="menu-items" id="ext-menu-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/time-sync.js"></script>
+  <script src="/js/pos.js"></script>
+</body>
+</html>

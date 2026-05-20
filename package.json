@@ -1,0 +1,90 @@
+{
+  "name": "sakura-pos",
+  "version": "1.6.4",
+  "description": "Sakura Sushi Fulya - Restoran Yonetim ve POS Sistemi",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "node --watch src/server/index.js",
+    "electron": "electron .",
+    "build:win": "electron-builder --win",
+    "build:all": "electron-builder --win",
+    "test": "node test/api-test.js",
+    "test:scenarios": "node test/scenarios.js",
+    "test:load": "node test/load-test.js",
+    "test:launcher": "node test/launcher.test.js",
+    "release": "node scripts/build-release.js"
+  },
+  "keywords": [
+    "pos",
+    "restaurant",
+    "sakura"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bonjour-service": "^1.3.0",
+    "electron-updater": "^6.8.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "uuid": "^14.0.0",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "electron": "^41.3.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.sakura.pos",
+    "productName": "SakuraPOS",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "src/**/*",
+      "public/**/*",
+      "data/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "data/",
+        "to": "data/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "electron/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "electron/icon.ico",
+      "uninstallerIcon": "electron/icon.ico",
+      "installerHeaderIcon": "electron/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sakura POS",
+      "include": "electron/installer.nsh"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Alkyonetech",
+        "repo": "AlkyonePos"
+      }
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "sushi",
+      "name": "Sushi",
+      "nameEn": "Sushi",
+      "items": [
+        {
+          "id": 1,
+          "name": "Salmon Avocado Roll",
+          "nameEn": "Salmon Avocado Roll",
+          "price": 420,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 2,
+          "name": "Dragon Roll",
+          "nameEn": "Dragon Roll",
+          "price": 480,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 3,
+          "name": "California Roll",
+          "nameEn": "California Roll",
+          "price": 360,
+          "desc": "",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "ramen",
+      "name": "Ramen",
+      "nameEn": "Ramen",
+      "items": [
+        {
+          "id": 10,
+          "name": "Tonkotsu Ramen",
+          "nameEn": "Tonkotsu Ramen",
+          "price": 450,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 11,
+          "name": "Shoyu Ramen",
+          "nameEn": "Shoyu Ramen",
+          "price": 420,
+          "desc": "",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "baslangic",
+      "name": "Baslangiclar",
+      "nameEn": "Starters",
+      "items": [
+        {
+          "id": 20,
+          "name": "Edamame",
+          "nameEn": "Edamame",
+          "price": 195,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 21,
+          "name": "Gyoza",
+          "nameEn": "Gyoza",
+          "price": 280,
+          "desc": "",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "icecek",
+      "name": "Icecekler",
+      "nameEn": "Drinks",
+      "items": [
+        {
+          "id": 30,
+          "name": "Matcha Latte",
+          "nameEn": "Matcha Latte",
+          "price": 160,
+          "desc": "",
+          "visible": true
+        },
+        {
+          "id": 31,
+          "name": "Su",
+          "nameEn": "Water",
+          "price": 30,
+          "desc": "",
+          "visible": true
+        }
+      ]
+    }
+  ]
+}
