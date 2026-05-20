@@ -1,13 +1,13 @@
 {
-  "name": "sakura-pos-launcher",
+  "name": "alkyone-pos-launcher",
   "version": "1.0.0",
-  "description": "Sakura POS Launcher — guncelleme yonetimi ve POS baslatma",
+  "description": "Alkyone POS Launcher — guncelleme yonetimi ve POS baslatma",
   "main": "launcher.js",
   "bin": "launcher.js",
   "scripts": {
     "start": "node launcher.js",
-    "build": "pkg launcher.js -t node18-win-x64 -o ../dist/SakuraPOS-Launcher.exe",
-    "build:compressed": "pkg launcher.js -t node18-win-x64 -C GZip -o ../dist/SakuraPOS-Launcher.exe"
+    "build": "pkg launcher.js -t node18-win-x64 -o ../dist/AlkyonePOS-Launcher.exe",
+    "build:compressed": "pkg launcher.js -t node18-win-x64 -C GZip -o ../dist/AlkyonePOS-Launcher.exe"
   },
   "pkg": {
     "targets": ["node18-win-x64"]

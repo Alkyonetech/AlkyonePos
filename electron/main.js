@@ -18,6 +18,34 @@ const isDev = !app.isPackaged;
 const DATA_DIR = isDev
   ? path.join(__dirname, '..', 'data')
   : path.join(app.getPath('userData'), 'data');
+
+// v1.8.0 marka degisikligi: eski %APPDATA%/SakuraPOS/data klasorunu
+// %APPDATA%/AlkyonePOS/data'ya tek seferlik tasi. Yoksa eski musterilerin
+// veri kaybi olur.
+function migrateLegacyUserData() {
+  if (isDev) return;
+  try {
+    const appData = app.getPath('appData');
+    const legacyDir = path.join(appData, 'SakuraPOS', 'data');
+    const newDir = DATA_DIR;
+    if (fs.existsSync(legacyDir) && !fs.existsSync(path.join(newDir, 'settings.json'))) {
+      fs.mkdirSync(path.dirname(newDir), { recursive: true });
+      const copyRec = (src, dst) => {
+        if (!fs.existsSync(dst)) fs.mkdirSync(dst, { recursive: true });
+        for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+          const s = path.join(src, entry.name);
+          const d = path.join(dst, entry.name);
+          if (entry.isDirectory()) copyRec(s, d);
+          else fs.copyFileSync(s, d);
+        }
+      };
+      copyRec(legacyDir, newDir);
+      console.log('[Migration] Eski SakuraPOS verisi AlkyonePOS klasorune tasindi:', legacyDir, '->', newDir);
+    }
+  } catch (e) {
+    console.warn('[Migration] Hata:', e.message);
+  }
+}
 // Updates klasoru: production'da launcher .exe'nin yaninda (SakuraPOS/updates/),
 // dev'de proje kokunde
 const UPDATES_DIR = isDev
@@ -27,6 +55,7 @@ const PORT = 3000;
 
 // Data klasorunu hazirla
 function ensureDataDir() {
+  migrateLegacyUserData();
   const dirs = [DATA_DIR, path.join(DATA_DIR, 'reports'), path.join(DATA_DIR, 'backups')];
   for (const d of dirs) {
     if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
@@ -38,9 +67,10 @@ function ensureDataDir() {
     'tables.json': { version: 1, tables: [] },
     'orders.json': { orders: [] },
     'settings.json': {
-      restaurant: { name: 'Sakura Sushi', address: '', phone: '', logo: '' },
+      restaurant: { name: '', address: '', phone: '', logo: '' },
       network: { port: PORT, mdnsName: 'sakura', lastKnownIp: '' },
-      auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: 'sakura-' + Date.now(), pinChangedAt: null },
+      auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: 'alkyone-' + Date.now(), pinChangedAt: null },
+      setupCompleted: false,
       operations: { dayCloseHour: 4, vatRate: 10, currency: 'TL' },
       printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'PC857' },
       startup: { autoStart: true, kioskMode: false, kioskUrl: '/pos' },
@@ -124,7 +154,7 @@ function isFirstRun() {
   if (!fs.existsSync(settingsPath)) return true;
   try {
     const s = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-    return !s.restaurant?.name || s.restaurant.name === 'Sakura Sushi';
+    return !s.restaurant?.name || s.setupCompleted === false;
   } catch { return true; }
 }
 
@@ -265,7 +295,7 @@ function createWindow() {
     height: 800,
     minWidth: 1024,
     minHeight: 600,
-    title: 'Sakura POS',
+    title: 'Alkyone POS',
     icon: getIconPath(),
     autoHideMenuBar: true,
     webPreferences: {
@@ -336,7 +366,7 @@ function createTray() {
   tray = new Tray(icon);
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Sakura POS', type: 'normal', enabled: false },
+    { label: 'Alkyone POS', type: 'normal', enabled: false },
     { type: 'separator' },
     { label: 'POS Ekrani', click: () => showWindow(`http://localhost:${PORT}/pos`) },
     { label: 'Admin Panel', click: () => showWindow(`http://localhost:${PORT}/admin`) },
@@ -349,7 +379,7 @@ function createTray() {
     { label: 'Cikis', click: () => { app.isQuitting = true; app.quit(); } }
   ]);
 
-  tray.setToolTip('Sakura POS');
+  tray.setToolTip('Alkyone POS');
   tray.setContextMenu(contextMenu);
   tray.on('double-click', () => showWindow(`http://localhost:${PORT}/pos`));
 }
@@ -428,14 +458,14 @@ function ensureFirewallRule() {
 
   // Tek satirlik, idempotent: once sil, sonra profile=any ekle (3 kural).
   const cmds = [
-    'netsh advfirewall firewall delete rule name="Sakura POS"',
-    'netsh advfirewall firewall add rule name="Sakura POS" dir=in action=allow protocol=TCP localport=3000 profile=any',
-    'netsh advfirewall firewall add rule name="Sakura POS" dir=out action=allow protocol=TCP localport=3000 profile=any',
-    'netsh advfirewall firewall delete rule name="Sakura POS mDNS"',
-    'netsh advfirewall firewall add rule name="Sakura POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any',
-    'netsh advfirewall firewall delete rule name="Sakura POS Discovery"',
-    'netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any',
-    'netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any',
+    'netsh advfirewall firewall delete rule name="Alkyone POS"',
+    'netsh advfirewall firewall add rule name="Alkyone POS" dir=in action=allow protocol=TCP localport=3000 profile=any',
+    'netsh advfirewall firewall add rule name="Alkyone POS" dir=out action=allow protocol=TCP localport=3000 profile=any',
+    'netsh advfirewall firewall delete rule name="Alkyone POS mDNS"',
+    'netsh advfirewall firewall add rule name="Alkyone POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any',
+    'netsh advfirewall firewall delete rule name="Alkyone POS Discovery"',
+    'netsh advfirewall firewall add rule name="Alkyone POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any',
+    'netsh advfirewall firewall add rule name="Alkyone POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any',
   ];
 
   const { exec } = require('child_process');
@@ -487,7 +517,7 @@ function syncAutoStart() {
 
     // Production'da launcher'i isaret et (varsa); yoksa SakuraPOS.exe
     const installDir = path.dirname(app.getPath('exe'));
-    const launcherExe = path.join(installDir, 'SakuraPOS-Launcher.exe');
+    const launcherExe = path.join(installDir, 'AlkyonePOS-Launcher.exe');
     const targetExe = fs.existsSync(launcherExe)
       ? launcherExe
       : app.getPath('exe');

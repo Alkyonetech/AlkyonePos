@@ -1,6 +1,6 @@
 @echo off
 REM ============================================================
-REM  Sakura POS - Firewall Kural Onarici
+REM  Alkyone POS - Firewall Kural Onarici
 REM ------------------------------------------------------------
 REM  Restoran/POS makinesinde Wi-Fi "Public" siniflandiginda
 REM  eski "Domain,Private" kurallari uygulanmaz; tabletler ne
@@ -20,22 +20,25 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-title Sakura POS - Firewall Onarici
+title Alkyone POS - Firewall Onarici
 color 0B
 echo.
 echo ============================================================
-echo   SAKURA POS - FIREWALL KURAL ONARICI
+echo   ALKYONE POS - FIREWALL KURAL ONARICI
 echo ============================================================
 echo.
 echo Mevcut Wi-Fi/Ethernet profilleri:
 powershell -NoProfile -Command "Get-NetConnectionProfile | Select-Object Name, NetworkCategory, InterfaceAlias | Format-Table -AutoSize"
 echo.
 echo ------------------------------------------------------------
-echo  1) Eski Sakura POS kurallari siliniyor...
+echo  1) Eski Sakura POS / Alkyone POS kurallari siliniyor...
 echo ------------------------------------------------------------
 netsh advfirewall firewall delete rule name="Sakura POS" >nul 2>&1
 netsh advfirewall firewall delete rule name="Sakura POS mDNS" >nul 2>&1
 netsh advfirewall firewall delete rule name="Sakura POS Discovery" >nul 2>&1
+netsh advfirewall firewall delete rule name="Alkyone POS" >nul 2>&1
+netsh advfirewall firewall delete rule name="Alkyone POS mDNS" >nul 2>&1
+netsh advfirewall firewall delete rule name="Alkyone POS Discovery" >nul 2>&1
 echo    Temizlik tamam.
 echo.
 
@@ -44,26 +47,26 @@ echo  2) Yeni kurallar ekleniyor (profile=ANY - tum aglar)
 echo ------------------------------------------------------------
 set ERRORS=0
 
-netsh advfirewall firewall add rule name="Sakura POS" dir=in action=allow protocol=TCP localport=3000 profile=any
+netsh advfirewall firewall add rule name="Alkyone POS" dir=in action=allow protocol=TCP localport=3000 profile=any
 if %errorlevel% neq 0 set /a ERRORS+=1
 
-netsh advfirewall firewall add rule name="Sakura POS" dir=out action=allow protocol=TCP localport=3000 profile=any
+netsh advfirewall firewall add rule name="Alkyone POS" dir=out action=allow protocol=TCP localport=3000 profile=any
 if %errorlevel% neq 0 set /a ERRORS+=1
 
-netsh advfirewall firewall add rule name="Sakura POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any
+netsh advfirewall firewall add rule name="Alkyone POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any
 if %errorlevel% neq 0 set /a ERRORS+=1
 
-netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any
+netsh advfirewall firewall add rule name="Alkyone POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any
 if %errorlevel% neq 0 set /a ERRORS+=1
 
-netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any
+netsh advfirewall firewall add rule name="Alkyone POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any
 if %errorlevel% neq 0 set /a ERRORS+=1
 
 echo.
 echo ------------------------------------------------------------
 echo  3) Dogrulama (kurallar profile=Any mi?)
 echo ------------------------------------------------------------
-powershell -NoProfile -Command "Get-NetFirewallRule -DisplayName 'Sakura POS*' -ErrorAction SilentlyContinue | Select-Object DisplayName, Direction, Profile, Enabled | Format-Table -AutoSize"
+powershell -NoProfile -Command "Get-NetFirewallRule -DisplayName 'Alkyone POS*' -ErrorAction SilentlyContinue | Select-Object DisplayName, Direction, Profile, Enabled | Format-Table -AutoSize"
 
 echo.
 echo ------------------------------------------------------------

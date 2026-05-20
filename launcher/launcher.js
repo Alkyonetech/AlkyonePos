@@ -1,31 +1,31 @@
 #!/usr/bin/env node
 /**
- * Sakura POS Launcher (master plan §12.4)
+ * Alkyone POS Launcher (master plan §12.4)
  *
  * Bu kucuk Node uygulamasi POS exe'sini yonetir. Calisma dizini:
- *   SakuraPOS/
- *   ├── SakuraPOS-Launcher.exe       ← bu dosya (pkg ile derlenmis)
- *   ├── SakuraPOS.exe                ← asil POS
- *   ├── SakuraPOS.exe.bak            ← bir onceki surum
+ *   AlkyonePOS/
+ *   ├── AlkyonePOS-Launcher.exe       ← bu dosya (pkg ile derlenmis)
+ *   ├── AlkyonePOS.exe                ← asil POS
+ *   ├── AlkyonePOS.exe.bak            ← bir onceki surum
  *   ├── data/                        ← dokunulmaz
  *   ├── updates/
  *   │   ├── latest.json
  *   │   └── pos/
- *   │       └── SakuraPOS-1.x.x.exe
+ *   │       └── AlkyonePOS-1.x.x.exe
  *   └── logs/
  *       └── launcher.log
  *
  * Akis:
  *   1. updates/latest.json oku (varsa)
- *   2. Mevcut SakuraPOS.exe surumunu (data/settings.json#appVersion) karsilastir
+ *   2. Mevcut AlkyonePOS.exe surumunu (data/settings.json#appVersion) karsilastir
  *   3. Yeni surum varsa: yedekle → kopyala → settings guncelle
  *   4. Bozuk dosya / kopyalama hatasi → rollback (.bak geri yukle)
- *   5. SakuraPOS.exe'yi calistir, lifecycle takip et
+ *   5. AlkyonePOS.exe'yi calistir, lifecycle takip et
  *
  * Pkg ile derleme:
  *   npm install -g pkg
  *   cd launcher
- *   pkg launcher.js -t node18-win-x64 -o SakuraPOS-Launcher.exe
+ *   pkg launcher.js -t node18-win-x64 -o AlkyonePOS-Launcher.exe
  */
 
 const fs = require('fs');
@@ -35,14 +35,14 @@ const crypto = require('crypto');
 
 // ===== KLASOR KESFI =====
 
-// Pkg ile derlenmisse process.execPath = SakuraPOS-Launcher.exe yolu
+// Pkg ile derlenmisse process.execPath = AlkyonePOS-Launcher.exe yolu
 // node ile calistirilirsa __dirname = launcher klasoru
 const ROOT = process.pkg
   ? path.dirname(process.execPath)
   : path.resolve(__dirname, '..');
 
-const POS_EXE = path.join(ROOT, 'SakuraPOS.exe');
-const POS_BAK = path.join(ROOT, 'SakuraPOS.exe.bak');
+const POS_EXE = path.join(ROOT, 'AlkyonePOS.exe');
+const POS_BAK = path.join(ROOT, 'AlkyonePOS.exe.bak');
 const UPDATES_DIR = path.join(ROOT, 'updates');
 const LATEST_JSON = path.join(UPDATES_DIR, 'latest.json');
 const POS_UPDATES = path.join(UPDATES_DIR, 'pos');
@@ -121,7 +121,7 @@ function checkForUpdate() {
   const newExeRel = latest.pos.file;
   if (!newExeRel) return null;
 
-  // file path can be "pos/SakuraPOS-1.1.0.exe" — relative to updates/
+  // file path can be "pos/AlkyonePOS-1.1.0.exe" — relative to updates/
   const newExe = path.isAbsolute(newExeRel)
     ? newExeRel
     : path.join(UPDATES_DIR, newExeRel);
@@ -151,7 +151,7 @@ function applyUpdate(update) {
   if (fs.existsSync(POS_EXE)) {
     if (fs.existsSync(POS_BAK)) fs.unlinkSync(POS_BAK);
     fs.copyFileSync(POS_EXE, POS_BAK);
-    log(`Yedek olusturuldu: SakuraPOS.exe.bak (${fileHash(POS_BAK).slice(0, 16)}...)`);
+    log(`Yedek olusturuldu: AlkyonePOS.exe.bak (${fileHash(POS_BAK).slice(0, 16)}...)`);
   }
 
   // 2. Yeni .exe'yi kopyala (atomic-ish)
@@ -182,7 +182,7 @@ function rollback() {
   try {
     if (fs.existsSync(POS_EXE)) fs.unlinkSync(POS_EXE);
     fs.copyFileSync(POS_BAK, POS_EXE);
-    log('Rollback basarili: .bak -> SakuraPOS.exe');
+    log('Rollback basarili: .bak -> AlkyonePOS.exe');
     return true;
   } catch (e) {
     logFail(`Rollback basarisiz: ${e.message}`);
@@ -194,7 +194,7 @@ function rollback() {
 
 function startPos() {
   if (!fs.existsSync(POS_EXE)) {
-    logFail(`SakuraPOS.exe bulunamadi: ${POS_EXE}`);
+    logFail(`AlkyonePOS.exe bulunamadi: ${POS_EXE}`);
     return false;
   }
 
@@ -260,16 +260,16 @@ function startPos() {
 
 function main() {
   log('='.repeat(50));
-  log(`Sakura POS Launcher — root: ${ROOT}`);
+  log(`Alkyone POS Launcher — root: ${ROOT}`);
 
   if (!fs.existsSync(POS_EXE) && !fs.existsSync(POS_BAK)) {
-    logFail('SakuraPOS.exe ve .bak yok — kurulum bozulmus, geliştiriciye basvurun.');
+    logFail('AlkyonePOS.exe ve .bak yok — kurulum bozulmus, geliştiriciye basvurun.');
     process.exit(1);
   }
 
   // Eger sadece .bak varsa onu primary'ye al
   if (!fs.existsSync(POS_EXE) && fs.existsSync(POS_BAK)) {
-    log('SakuraPOS.exe yok ama .bak var — geri yukleniyor');
+    log('AlkyonePOS.exe yok ama .bak var — geri yukleniyor');
     fs.copyFileSync(POS_BAK, POS_EXE);
   }
 

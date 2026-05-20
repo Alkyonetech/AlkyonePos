@@ -1,7 +1,7 @@
 {
   "restaurant": {
-    "name": "Sakura Sushi Fulya",
-    "address": "Fulya, Istanbul",
+    "name": "",
+    "address": "",
     "phone": "",
     "logo": ""
   },
@@ -13,7 +13,7 @@
   "auth": {
     "garsonPin": "1234",
     "yoneticiPin": "9999",
-    "jwtSecret": "sakura-pos-secret-change-me",
+    "jwtSecret": "alkyone-pos-secret-change-me",
     "pinChangedAt": null
   },
   "operations": {
@@ -69,7 +69,8 @@
     "footerLines": ["Teşekkür ederiz!"],
     "footerFeedLines": 3
   },
-  "appVersion": "1.6.4",
-  "apkVersion": "1.6.4",
-  "minApkVersion": "1.0.0"
+  "appVersion": "1.8.0",
+  "apkVersion": "1.8.0",
+  "minApkVersion": "1.0.0",
+  "setupCompleted": false
 }

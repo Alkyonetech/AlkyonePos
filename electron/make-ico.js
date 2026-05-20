@@ -16,7 +16,7 @@ const PNG_PATH = path.join(__dirname, 'icon.png');
 const ICO_PATH = path.join(__dirname, 'icon.ico');
 
 // Mevcut icon.png 32x32 placeholder. Electron-builder NSIS 256x256+ ister.
-// 256x256 duz Sakura pembesi RGBA PNG synthesize ediyoruz.
+// 256x256 duz Pembe RGBA PNG synthesize ediyoruz.
 function makeSolidPng(size, r, g, b, a = 255) {
   // CRC tablo
   const crcTab = (() => {
@@ -74,7 +74,7 @@ function makeSolidPng(size, r, g, b, a = 255) {
 }
 
 const SIZE = 256;
-// Sakura pembesi: #e8b4b8
+// Pembe: #e8b4b8
 const png = makeSolidPng(SIZE, 0xe8, 0xb4, 0xb8);
 fs.writeFileSync(PNG_PATH, png);
 console.log(`PNG synthesize edildi: ${SIZE}x${SIZE}, ${png.length} bayt`);

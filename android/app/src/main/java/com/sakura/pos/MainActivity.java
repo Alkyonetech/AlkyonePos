@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
     private void showUnsupportedDeviceDialog() {
         new AlertDialog.Builder(this)
             .setTitle("Desteklenmeyen cihaz")
-            .setMessage("Sakura POS bu surumde yalnizca Poco / Xiaomi / Redmi "
+            .setMessage("Alkyone POS bu surumde yalnizca Poco / Xiaomi / Redmi "
                 + "(MIUI / HyperOS) cihazlarda calisir.\n\n"
                 + "Tespit edilen: " + Build.MANUFACTURER + " " + Build.MODEL)
             .setPositiveButton("Cikis", (d, w) -> finish())
@@ -287,12 +287,12 @@ public class MainActivity extends AppCompatActivity {
             if (prefs.getBoolean(PREF_OEM_HINTED, false)) return;
             new AlertDialog.Builder(this)
                 .setTitle("HyperOS / MIUI ayarlari")
-                .setMessage("Sakura POS'un sorunsuz calismasi icin:\n\n"
+                .setMessage("Alkyone POS'un sorunsuz calismasi icin:\n\n"
                     + "  1) Pil optimizasyonu istisnasi (asagida acilacak)\n"
                     + "  2) Guvenlik > Izinler > 'Otomatik baslat' → AKTIF\n"
-                    + "  3) Son uygulamalar ekraninda Sakura'yi kilitleyin (asagi cek -> kilit)\n"
+                    + "  3) Son uygulamalar ekraninda Alkyone'u kilitleyin (asagi cek -> kilit)\n"
                     + "  4) Ayarlar > Gizlilik koruma > Ozel izinler > "
-                    + "'Kisitlanmis uygulamalar' listesinden Sakura'yi CIKARIN\n"
+                    + "'Kisitlanmis uygulamalar' listesinden Alkyone'u CIKARIN\n"
                     + "  5) HyperOS 2 Saf Mod (Pure Mode) AKTIFSE kapatin — yoksa "
                     + "imzasiz APK acilmaz\n"
                     + "  6) Ayarlar > Ekran > 'Karanlik mod her uygulamada' KAPALI olmali "
@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                 i.setComponent(new ComponentName(pair[0], pair[1]));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if (i.resolveActivity(getPackageManager()) != null) {
-                    showToast("Lutfen Sakura uygulamalarini 'autostart' listesine ekleyin");
+                    showToast("Lutfen Alkyone POS uygulamalarini 'autostart' listesine ekleyin");
                     startActivity(i);
                     return;
                 }
@@ -436,9 +436,9 @@ public class MainActivity extends AppCompatActivity {
         root.setBackgroundColor(BG_DARK);
 
         // Yerel splash overlay — WebView ilk frame'i basana kadar gorunur.
-        // Boylece kullanici beyaz ekran yerine "Sakura yukleniyor..." gorur.
+        // Boylece kullanici beyaz ekran yerine "Alkyone yukleniyor..." gorur.
         final android.widget.TextView splash = new android.widget.TextView(this);
-        splash.setText("Sakura " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici") + "\nYukleniyor...");
+        splash.setText("Alkyone " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici") + "\nYukleniyor...");
         splash.setTextColor(0xFFE8B4B8);
         splash.setTextSize(18);
         splash.setGravity(android.view.Gravity.CENTER);
@@ -612,7 +612,7 @@ public class MainActivity extends AppCompatActivity {
     private void setSplashSub(String sub) {
         handler.post(() -> {
             if (splashView != null) {
-                splashView.setText("Sakura "
+                splashView.setText("Alkyone "
                     + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici")
                     + "\n" + sub);
             }
@@ -870,7 +870,7 @@ public class MainActivity extends AppCompatActivity {
                         // Yerel splash overlay zaten ekranda; dogrudan gercek URL'i yukle.
                         if (splashView != null) {
                             splashView.setVisibility(View.VISIBLE);
-                            splashView.setText("Sakura " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici")
+                            splashView.setText("Alkyone " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici")
                                 + "\n" + serverUrl);
                         }
                         if (webView != null) webView.setVisibility(View.INVISIBLE);
@@ -912,7 +912,7 @@ public class MainActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
             .setTitle("Sunucu Adresi")
-            .setMessage("Sakura POS sunucusunun IP adresini girin:")
+            .setMessage("Alkyone POS sunucusunun IP adresini girin:")
             .setView(input)
             .setPositiveButton("Baglan", (d, w) -> {
                 manualIpDialogShown = false; // diyalog kapandı; tekrar açılabilir
@@ -1011,7 +1011,7 @@ public class MainActivity extends AppCompatActivity {
                     pendingApkUrl = url;
                     new AlertDialog.Builder(this)
                         .setTitle("Kurulum izni gerekli")
-                        .setMessage("Sakura POS guncellemesi yukleyebilmek icin 'Bu kaynaktan "
+                        .setMessage("Alkyone POS guncellemesi yukleyebilmek icin 'Bu kaynaktan "
                             + "yuklemeye izin ver' ayarini acmaniz gerekiyor.")
                         .setPositiveButton("Ayarlari Ac", (d, w) -> {
                             try {
@@ -1019,7 +1019,7 @@ public class MainActivity extends AppCompatActivity {
                                     Uri.parse("package:" + getPackageName()));
                                 startActivityForResult(i, REQ_INSTALL_PERMISSION);
                             } catch (Throwable t) {
-                                showToast("Ayar acilamadi — Ayarlar > Uygulamalar > Sakura > "
+                                showToast("Ayar acilamadi — Ayarlar > Uygulamalar > Alkyone > "
                                     + "Bilinmeyen uygulamalari yukle");
                             }
                         })
@@ -1041,7 +1041,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             DownloadManager.Request req = new DownloadManager.Request(Uri.parse(url));
-            req.setTitle("Sakura POS Guncelleme");
+            req.setTitle("Alkyone POS Guncelleme");
             req.setDescription("Yeni surum indiriliyor...");
             req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
             req.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);

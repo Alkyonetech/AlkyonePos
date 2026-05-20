@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 34
-        versionCode 15
-        versionName "1.7.1"
+        versionCode 16
+        versionName "1.8.0"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -21,14 +21,14 @@ android {
         garson {
             dimension "role"
             applicationId "com.sakura.pos.garson"
-            resValue "string", "app_name", "Sakura Garson"
+            resValue "string", "app_name", "Alkyone Garson"
             buildConfigField "String", "START_PATH", "\"/garson\""
             buildConfigField "String", "ROLE", "\"garson\""
         }
         yonetici {
             dimension "role"
             applicationId "com.sakura.pos.yonetici"
-            resValue "string", "app_name", "Sakura Yonetici"
+            resValue "string", "app_name", "Alkyone Yonetici"
             buildConfigField "String", "START_PATH", "\"/yonetici\""
             buildConfigField "String", "ROLE", "\"yonetici\""
         }

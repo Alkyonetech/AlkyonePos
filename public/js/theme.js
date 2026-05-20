@@ -1,4 +1,4 @@
-// Sakura tema uygulayici — tum sayfalarda body[data-theme] kurar
+// Tema uygulayici — tum sayfalarda body[data-theme] kurar
 (function () {
   function apply(theme) {
     try {

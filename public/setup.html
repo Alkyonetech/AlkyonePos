@@ -3,82 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakura POS - Ilk Kurulum</title>
+  <title>Alkyone POS - Ilk Kurulum</title>
   <style>
     :root{--bg:#0f0f1a;--card:#1a1a2e;--input:#222240;--sakura:#e8b4b8;--sakura-d:#c9787e;--text:#e8e8f0;--dim:#8888a0;--border:#2a2a45;--green:#60d080;--red:#e06060}
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;align-items:center;justify-content:center}
-    .wizard{width:460px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+    .wizard{width:520px;max-width:100%;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px}
     .logo{text-align:center;font-size:1.6rem;font-weight:700;color:var(--sakura);margin-bottom:4px}
-    .subtitle{text-align:center;color:var(--dim);font-size:.85rem;margin-bottom:28px}
+    .subtitle{text-align:center;color:var(--dim);font-size:.85rem;margin-bottom:24px}
     .step{display:none}.step.active{display:block}
     .step-title{font-size:1rem;font-weight:600;margin-bottom:16px}
-    .form-group{margin-bottom:14px}
+    .form-group{margin-bottom:12px}
     .form-group label{display:block;font-size:.8rem;color:var(--dim);margin-bottom:4px}
     .form-group input,.form-group select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--input);color:var(--text);font-size:.9rem;outline:none}
-    .form-group input:focus{border-color:var(--sakura)}
+    .form-group input:focus,.form-group select:focus{border-color:var(--sakura)}
+    .row{display:flex;gap:10px}.row .form-group{flex:1}
     .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
     .btn{padding:10px 24px;border-radius:8px;border:none;font-size:.85rem;font-weight:600;cursor:pointer}
     .btn-next{background:linear-gradient(135deg,var(--sakura),var(--sakura-d));color:var(--bg)}
     .btn-back{background:var(--input);color:var(--dim);border:1px solid var(--border)}
-    .steps-indicator{display:flex;justify-content:center;gap:8px;margin-bottom:24px}
-    .step-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .2s}
+    .btn-sec{background:var(--input);color:var(--text);border:1px solid var(--border)}
+    .steps-indicator{display:flex;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+    .step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s}
     .step-dot.active{background:var(--sakura)}
-    .success-icon{text-align:center;font-size:3rem;margin-bottom:12px}
+    .success-icon{text-align:center;font-size:3rem;margin-bottom:12px;color:var(--green)}
     .success-text{text-align:center;color:var(--green);font-size:1.1rem;font-weight:600;margin-bottom:8px}
     .success-sub{text-align:center;color:var(--dim);font-size:.85rem;margin-bottom:20px}
     .err{color:var(--red);font-size:.8rem;margin-top:4px;display:none}
+    .hint{font-size:.75rem;color:var(--dim);margin-top:4px}
+    .logo-preview{width:80px;height:80px;border-radius:8px;background:var(--input);border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.7rem;overflow:hidden;margin:8px auto}
+    .logo-preview img{width:100%;height:100%;object-fit:contain}
   </style>
 </head>
 <body>
   <div class="wizard">
-    <div class="logo">Sakura POS</div>
+    <div class="logo">Alkyone POS</div>
     <div class="subtitle">Ilk Kurulum Sihirbazi</div>
     <div class="steps-indicator">
       <div class="step-dot active" data-step="0"></div>
       <div class="step-dot" data-step="1"></div>
       <div class="step-dot" data-step="2"></div>
       <div class="step-dot" data-step="3"></div>
+      <div class="step-dot" data-step="4"></div>
+      <div class="step-dot" data-step="5"></div>
     </div>
 
     <!-- ADIM 1: Restoran -->
     <div class="step active" id="step-0">
       <div class="step-title">Restoran Bilgileri</div>
-      <div class="form-group"><label>Restoran Adi</label><input type="text" id="s-name" value="Sakura Sushi Fulya"></div>
-      <div class="form-group"><label>Adres</label><input type="text" id="s-addr" value="Fulya, Istanbul"></div>
+      <div class="form-group"><label>Restoran Adi *</label><input type="text" id="s-name" placeholder="Ornek: Lezzet Restoran"></div>
+      <div class="form-group"><label>Adres</label><input type="text" id="s-addr" placeholder="Mahalle / Ilce / Sehir"></div>
       <div class="form-group"><label>Telefon</label><input type="text" id="s-phone" placeholder="0212 ___ __ __"></div>
+      <div class="form-group">
+        <label>Logo (opsiyonel, fiste basilir)</label>
+        <input type="file" id="s-logo" accept="image/png,image/jpeg">
+        <div class="logo-preview" id="logo-preview">Logo yok</div>
+      </div>
+      <div class="err" id="name-err">Restoran adi gerekli</div>
       <div class="actions"><button class="btn btn-next" onclick="next()">Devam</button></div>
     </div>
 
-    <!-- ADIM 2: Masalar -->
+    <!-- ADIM 2: Operasyon -->
     <div class="step" id="step-1">
-      <div class="step-title">Masa Ayarlari</div>
-      <div class="form-group"><label>Salon Masa Sayisi</label><input type="number" id="s-salon" value="6"></div>
-      <div class="form-group"><label>Teras Masa Sayisi</label><input type="number" id="s-teras" value="4"></div>
-      <div class="form-group"><label>Varsayilan Kapasite</label><input type="number" id="s-cap" value="4"></div>
+      <div class="step-title">Operasyon Ayarlari</div>
+      <div class="row">
+        <div class="form-group"><label>KDV Orani (%)</label><input type="number" id="s-vat" value="10" min="0" max="50"></div>
+        <div class="form-group"><label>Para Birimi</label>
+          <select id="s-currency">
+            <option value="TL">TL (Turk Lirasi)</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Gun Kapanis Saati (00-23)</label><input type="number" id="s-dayclose" value="4" min="0" max="23"></div>
+      <div class="hint">Gun kapanis: bu saatten once acilan adisyonlar onceki gune sayilir.</div>
       <div class="actions">
         <button class="btn btn-back" onclick="prev()">Geri</button>
         <button class="btn btn-next" onclick="next()">Devam</button>
       </div>
     </div>
 
-    <!-- ADIM 3: PIN -->
+    <!-- ADIM 3: Masalar -->
     <div class="step" id="step-2">
-      <div class="step-title">PIN Ayarlari</div>
-      <div class="form-group"><label>Garson PIN (4 hane)</label><input type="text" id="s-gpin" maxlength="4" value="1234"></div>
-      <div class="form-group"><label>Yonetici PIN (4 hane)</label><input type="text" id="s-ypin" maxlength="4" value="9999"></div>
-      <div class="err" id="pin-err">PIN 4 haneli olmali</div>
+      <div class="step-title">Masa Ayarlari</div>
+      <div class="row">
+        <div class="form-group"><label>Salon Masa Sayisi</label><input type="number" id="s-salon" value="6" min="0" max="50"></div>
+        <div class="form-group"><label>Teras Masa Sayisi</label><input type="number" id="s-teras" value="0" min="0" max="50"></div>
+      </div>
+      <div class="form-group"><label>Varsayilan Kapasite</label><input type="number" id="s-cap" value="4" min="1" max="20"></div>
       <div class="actions">
         <button class="btn btn-back" onclick="prev()">Geri</button>
         <button class="btn btn-next" onclick="next()">Devam</button>
       </div>
     </div>
 
-    <!-- ADIM 4: Tamamlandi -->
+    <!-- ADIM 4: Yazici -->
     <div class="step" id="step-3">
+      <div class="step-title">Yazici Ayarlari</div>
+      <div class="form-group"><label>Yazici Modeli</label>
+        <select id="s-printer-model">
+          <option value="POS-80C">POS-80C / Generic 80mm</option>
+          <option value="XPrinter">XPrinter (XP-58 / XP-80)</option>
+          <option value="Epson">Epson TM-T20 / TM-T88</option>
+          <option value="none">Yazici yok / sonra ayarla</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Kagit Genisligi</label>
+        <select id="s-paper">
+          <option value="80">80mm (48 karakter)</option>
+          <option value="58">58mm (32 karakter)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Karakter Kod Sayfasi (Turkce)</label>
+        <select id="s-encoding">
+          <option value="PC857">PC857 (DOS Turkce, en yaygin)</option>
+          <option value="CP1254_18">CP1254 n=18 (XPrinter)</option>
+          <option value="CP1254_32">CP1254 n=32</option>
+          <option value="CP1254_33">CP1254 n=33</option>
+          <option value="CP1254_44">CP1254 n=44 (Yeni XPrinter)</option>
+          <option value="ASCII">ASCII (Turkce harf donusumlu)</option>
+        </select>
+        <div class="hint">Emin degilseniz: "Test Cikti" basin, hangi satirda CSGUOI dogru ciktiysa onu secin.</div>
+      </div>
+      <div class="actions" style="justify-content:space-between">
+        <button class="btn btn-sec" onclick="printCodepageTest()">Test Cikti Bas</button>
+        <div>
+          <button class="btn btn-back" onclick="prev()">Geri</button>
+          <button class="btn btn-next" onclick="next()">Devam</button>
+        </div>
+      </div>
+      <div class="hint" id="printer-msg" style="margin-top:10px"></div>
+    </div>
+
+    <!-- ADIM 5: PIN -->
+    <div class="step" id="step-4">
+      <div class="step-title">PIN Ayarlari (Zorunlu Degisim)</div>
+      <div class="hint" style="margin-bottom:10px">Guvenlik icin varsayilan PIN'leri (1234/9999) mutlaka degistirin.</div>
+      <div class="form-group"><label>Garson PIN (4 hane)</label><input type="text" id="s-gpin" maxlength="4" placeholder="4 haneli"></div>
+      <div class="form-group"><label>Yonetici PIN (4 hane)</label><input type="text" id="s-ypin" maxlength="4" placeholder="4 haneli"></div>
+      <div class="err" id="pin-err">PIN 4 haneli olmali ve varsayilan (1234, 9999) olamaz</div>
+      <div class="actions">
+        <button class="btn btn-back" onclick="prev()">Geri</button>
+        <button class="btn btn-next" onclick="next()">Kaydet</button>
+      </div>
+    </div>
+
+    <!-- ADIM 6: Tamamlandi -->
+    <div class="step" id="step-5">
       <div class="success-icon">&#10003;</div>
       <div class="success-text">Kurulum Tamamlandi!</div>
-      <div class="success-sub">Sakura POS kullanima hazir.</div>
+      <div class="success-sub">Alkyone POS kullanima hazir.</div>
       <div class="actions" style="justify-content:center">
         <button class="btn btn-next" onclick="finish()">POS'u Baslat</button>
       </div>
@@ -86,86 +161,156 @@
   </div>
 
   <script>
+    const STEPS = 6;
     let currentStep = 0;
+    let logoDataUrl = '';
 
-    function next() {
-      if (currentStep === 2) {
+    document.getElementById('s-logo').addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      if (f.size > 500 * 1024) { alert('Logo 500 KB\'tan kucuk olmali'); e.target.value=''; return; }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        logoDataUrl = ev.target.result;
+        const prev = document.getElementById('logo-preview');
+        prev.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = logoDataUrl;
+        prev.appendChild(img);
+      };
+      reader.readAsDataURL(f);
+    });
+
+    function validateStep(s) {
+      if (s === 0) {
+        const name = document.getElementById('s-name').value.trim();
+        if (!name) { document.getElementById('name-err').style.display='block'; return false; }
+        document.getElementById('name-err').style.display='none';
+      }
+      if (s === 4) {
         const gpin = document.getElementById('s-gpin').value;
         const ypin = document.getElementById('s-ypin').value;
-        if (gpin.length !== 4 || ypin.length !== 4) {
-          document.getElementById('pin-err').style.display = 'block';
-          return;
+        const bad = ['1234','9999','0000','1111'];
+        if (gpin.length !== 4 || ypin.length !== 4 || bad.includes(gpin) || bad.includes(ypin) || gpin === ypin) {
+          document.getElementById('pin-err').style.display='block';
+          return false;
         }
-        document.getElementById('pin-err').style.display = 'none';
-        saveSetup();
+        document.getElementById('pin-err').style.display='none';
       }
-      if (currentStep < 3) {
-        currentStep++;
-        showStep();
-      }
+      return true;
     }
 
-    function prev() {
-      if (currentStep > 0) {
-        currentStep--;
-        showStep();
+    async function next() {
+      if (!validateStep(currentStep)) return;
+      if (currentStep === 4) {
+        const ok = await saveSetup();
+        if (!ok) return;
       }
+      if (currentStep < STEPS - 1) { currentStep++; showStep(); }
     }
-
+    function prev() { if (currentStep > 0) { currentStep--; showStep(); } }
     function showStep() {
       document.querySelectorAll('.step').forEach((s, i) => s.classList.toggle('active', i === currentStep));
       document.querySelectorAll('.step-dot').forEach((d, i) => d.classList.toggle('active', i <= currentStep));
     }
 
+    async function loginYonetici() {
+      const r = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ pin:'9999' })});
+      const d = await r.json();
+      return d.token;
+    }
+
+    async function printCodepageTest() {
+      const msg = document.getElementById('printer-msg');
+      msg.style.color = 'var(--dim)';
+      msg.textContent = 'Test cikti gonderiliyor...';
+      try {
+        const token = await loginYonetici();
+        const enc = document.getElementById('s-encoding').value;
+        const paper = parseInt(document.getElementById('s-paper').value);
+        // Once encoding/paperWidth ayarlarini kaydet
+        await fetch('/api/settings', {
+          method:'PUT',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+          body: JSON.stringify({ printers: { receipt: { encoding: enc, paperWidth: paper, enabled: true } } })
+        });
+        const r = await fetch('/api/print/codepage-test', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+          body: JSON.stringify({ role:'receipt' })
+        });
+        if (r.ok) {
+          msg.style.color = 'var(--green)';
+          msg.textContent = 'Test cikti basildi. Fiste hangi satir dogruysa onu secin.';
+        } else {
+          const e = await r.json().catch(()=>({}));
+          msg.style.color = 'var(--red)';
+          msg.textContent = 'Hata: ' + (e.error || r.statusText);
+        }
+      } catch (e) {
+        msg.style.color = 'var(--red)';
+        msg.textContent = 'Yazici baglantisi yok: ' + e.message;
+      }
+    }
+
     async function saveSetup() {
-      const salonCount = parseInt(document.getElementById('s-salon').value) || 6;
-      const terasCount = parseInt(document.getElementById('s-teras').value) || 4;
-      const capacity = parseInt(document.getElementById('s-cap').value) || 4;
+      try {
+        const token = await loginYonetici();
+        const auth = { 'Content-Type':'application/json', 'Authorization':'Bearer '+token };
 
-      // Masalar olustur
-      const tables = [];
-      for (let i = 1; i <= salonCount; i++) {
-        tables.push({ id: i, name: `Masa ${i}`, capacity, section: 'salon', currentOrderId: null, status: 'empty' });
-      }
-      for (let i = 1; i <= terasCount; i++) {
-        tables.push({ id: salonCount + i, name: `Teras ${i}`, capacity, section: 'teras', currentOrderId: null, status: 'empty' });
-      }
+        const salonCount = parseInt(document.getElementById('s-salon').value) || 0;
+        const terasCount = parseInt(document.getElementById('s-teras').value) || 0;
+        const capacity = parseInt(document.getElementById('s-cap').value) || 4;
+        const tables = [];
+        for (let i = 1; i <= salonCount; i++) tables.push({ id:i, name:`Masa ${i}`, capacity, section:'salon', currentOrderId:null, status:'empty' });
+        for (let i = 1; i <= terasCount; i++) tables.push({ id:salonCount+i, name:`Teras ${i}`, capacity, section:'teras', currentOrderId:null, status:'empty' });
 
-      // Oncelikle login
-      const loginRes = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pin: '9999' })
-      });
-      const { token } = await loginRes.json();
-      const auth = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
-
-      // Settings guncelle
-      await fetch('/api/settings', {
-        method: 'PUT', headers: auth,
-        body: JSON.stringify({
+        const settingsPayload = {
           restaurant: {
-            name: document.getElementById('s-name').value,
-            address: document.getElementById('s-addr').value,
-            phone: document.getElementById('s-phone').value
+            name: document.getElementById('s-name').value.trim(),
+            address: document.getElementById('s-addr').value.trim(),
+            phone: document.getElementById('s-phone').value.trim(),
+            logo: logoDataUrl
+          },
+          operations: {
+            vatRate: parseInt(document.getElementById('s-vat').value) || 10,
+            currency: document.getElementById('s-currency').value,
+            dayCloseHour: parseInt(document.getElementById('s-dayclose').value) || 4
+          },
+          printers: {
+            receipt: {
+              enabled: document.getElementById('s-printer-model').value !== 'none',
+              model: document.getElementById('s-printer-model').value,
+              paperWidth: parseInt(document.getElementById('s-paper').value),
+              encoding: document.getElementById('s-encoding').value
+            },
+            kitchen: {
+              enabled: document.getElementById('s-printer-model').value !== 'none',
+              paperWidth: 58,
+              encoding: document.getElementById('s-encoding').value
+            }
           },
           auth: {
             garsonPin: document.getElementById('s-gpin').value,
             yoneticiPin: document.getElementById('s-ypin').value
-          }
-        })
-      });
+          },
+          setupCompleted: true
+        };
 
-      // Masalari kaydet
-      await fetch('/api/tables', {
-        method: 'PUT', headers: auth,
-        body: JSON.stringify({ version: 1, tables })
-      });
+        const r1 = await fetch('/api/settings', { method:'PUT', headers:auth, body: JSON.stringify(settingsPayload) });
+        if (!r1.ok) { alert('Ayarlar kaydedilemedi: ' + r1.statusText); return false; }
+
+        if (tables.length) {
+          await fetch('/api/tables', { method:'PUT', headers:auth, body: JSON.stringify({ version:1, tables }) });
+        }
+        return true;
+      } catch (e) {
+        alert('Kurulum hatasi: ' + e.message);
+        return false;
+      }
     }
 
-    function finish() {
-      window.location.href = '/pos';
-    }
+    function finish() { window.location.href = '/pos'; }
   </script>
 </body>
 </html>

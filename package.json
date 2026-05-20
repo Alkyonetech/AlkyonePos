@@ -1,7 +1,7 @@
 {
-  "name": "sakura-pos",
-  "version": "1.7.1",
-  "description": "Sakura Sushi Fulya - Restoran Yonetim ve POS Sistemi",
+  "name": "alkyone-pos",
+  "version": "1.8.0",
+  "description": "Alkyone POS - Restoran Yonetim ve POS Sistemi",
   "main": "electron/main.js",
   "scripts": {
     "start": "node src/server/index.js",
@@ -18,7 +18,7 @@
   "keywords": [
     "pos",
     "restaurant",
-    "sakura"
+    "alkyone"
   ],
   "author": "",
   "license": "ISC",
@@ -36,7 +36,7 @@
   },
   "build": {
     "appId": "com.sakura.pos",
-    "productName": "SakuraPOS",
+    "productName": "AlkyonePOS",
     "directories": {
       "output": "dist"
     },
@@ -76,7 +76,7 @@
       "installerHeaderIcon": "electron/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Sakura POS",
+      "shortcutName": "Alkyone POS",
       "include": "electron/installer.nsh"
     },
     "publish": [

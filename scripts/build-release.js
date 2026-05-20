@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Sakura POS — Final Release Paketleyici
+ * Alkyone POS — Final Release Paketleyici
  *
  * Calistirma:
  *   node scripts/build-release.js
@@ -11,8 +11,8 @@
  *   1. package.json ve android/app/build.gradle versiyonlarini okur
  *   2. Electron build (electron-builder)
  *   3. Android build (gradle assembleRelease, iki flavor)
- *   4. release/SakuraPOS-x.y.z/ altinda toplar:
- *        - SakuraPOS Setup x.y.z.exe
+ *   4. release/AlkyonePOS-x.y.z/ altinda toplar:
+ *        - AlkyonePOS Setup x.y.z.exe
  *        - garson-x.y.z.apk, yonetici-x.y.z.apk
  *        - latest.json (manifest)
  *        - docs/ (kullanim klavuzlari)
@@ -121,7 +121,7 @@ function buildLauncher() {
   // Yoksa hatayi kapat, kullanici elle build edebilir
   const res = spawnSync('npx', ['--yes', 'pkg', 'launcher.js',
     '-t', 'node18-win-x64',
-    '-o', '../dist/SakuraPOS-Launcher.exe'], {
+    '-o', '../dist/AlkyonePOS-Launcher.exe'], {
     cwd: path.join(ROOT, 'launcher'),
     stdio: 'inherit',
     shell: true,
@@ -139,7 +139,7 @@ function buildAndroid() {
 }
 
 function collectArtifacts(version) {
-  const outDir = path.join(RELEASE_DIR, `SakuraPOS-${version}`);
+  const outDir = path.join(RELEASE_DIR, `AlkyonePOS-${version}`);
   // DEGISIKLIKLER.txt mevcut ve elle doldurulmussa onu kaybetmemek icin
   // baska klasore koymadan once okuyoruz.
   const changelogPath = path.join(outDir, 'DEGISIKLIKLER.txt');
@@ -162,10 +162,10 @@ function collectArtifacts(version) {
     // Once tam versiyon eslesmesi ara, yoksa herhangi bir Setup *.exe (eski build'lerden
     // yanlislikla almamak icin onayla)
     let setupExe = findFile(path.join(ROOT, 'dist'),
-      (n) => n === `SakuraPOS Setup ${version}.exe`);
+      (n) => n === `AlkyonePOS Setup ${version}.exe`);
     if (!setupExe) {
       setupExe = findFile(path.join(ROOT, 'dist'),
-        (n) => n.match(/^SakuraPOS Setup .*\.exe$/i));
+        (n) => n.match(/^AlkyonePOS Setup .*\.exe$/i));
     }
     if (!setupExe) throw new Error('Setup exe bulunamadi (dist/ icine bakin)');
     fs.copyFileSync(setupExe, path.join(outDir, 'pos', path.basename(setupExe)));
@@ -181,7 +181,7 @@ function collectArtifacts(version) {
 
     // Launcher (varsa)
     const launcher = findFile(path.join(ROOT, 'dist'),
-      (n) => n.match(/^SakuraPOS-Launcher.*\.exe$/i));
+      (n) => n.match(/^AlkyonePOS-Launcher.*\.exe$/i));
     if (launcher) {
       fs.copyFileSync(launcher, path.join(outDir, 'pos', path.basename(launcher)));
       log(`+ pos/${path.basename(launcher)}`);
@@ -211,7 +211,7 @@ function collectArtifacts(version) {
   const manifest = {
     pos: {
       version,
-      file: `pos/SakuraPOS Setup ${version}.exe`,
+      file: `pos/AlkyonePOS Setup ${version}.exe`,
       releaseDate: new Date().toISOString().slice(0, 10),
       notes: 'DEGISIKLIKLER.txt dosyasina bakin',
     },
@@ -241,7 +241,7 @@ function collectArtifacts(version) {
   // 5. DEGISIKLIKLER.txt placeholder — VARSA DOKUNMA (kullanici elle doldurmus olabilir)
   if (!fs.existsSync(changelogPath)) {
     fs.writeFileSync(changelogPath,
-      `Sakura POS ${version}\n` +
+      `Alkyone POS ${version}\n` +
       `Tarih: ${new Date().toISOString().slice(0, 10)}\n\n` +
       `[BU DOSYAYI ELLE DUZENLEYIN — KULLANICIYA NE DEGISTIGINI ANLATIN]\n\n` +
       `Yenilikler:\n  - ...\n\n` +

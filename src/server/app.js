@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const { initWebSocket } = require('../ws/websocket');
+const { loadSettings } = require('../utils/data');
 
 const UPDATES_DIR = process.env.SAKURA_UPDATES_DIR
   || path.join(__dirname, '../../updates');
@@ -42,6 +43,25 @@ function createServer() {
     }
     next();
   });
+  // Ilk kurulum gate — restaurant.name bos veya setupCompleted=false ise
+  // tum sayfa istekleri /setup.html'e yonlendirilir. API ve assets serbest.
+  app.use((req, res, next) => {
+    const p = req.path;
+    if (p.startsWith('/api/') || p.startsWith('/assets/') || p.startsWith('/updates/') ||
+        p.startsWith('/css/') || p.startsWith('/js/') || p.startsWith('/img/') ||
+        p === '/setup.html' || p === '/favicon.ico' || p.endsWith('.css') || p.endsWith('.js')) {
+      return next();
+    }
+    try {
+      const s = loadSettings();
+      const needsSetup = !s.restaurant?.name || s.setupCompleted === false;
+      if (needsSetup && p !== '/setup.html') {
+        return res.redirect('/setup.html');
+      }
+    } catch (_) { /* settings okunamazsa gecmeye izin ver */ }
+    next();
+  });
+
   app.use(express.static(path.join(__dirname, '../../public'), {
     etag: false,
     lastModified: false,

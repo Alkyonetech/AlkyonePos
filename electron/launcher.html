@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakura POS</title>
+  <title>Alkyone POS</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -309,7 +309,7 @@
       try {
         const sr = await fetch(BASE + '/api/settings');
         const sd = await sr.json();
-        const isSetup = !sd.restaurant?.name || sd.restaurant.name === 'Sakura Sushi';
+        const isSetup = !sd.restaurant?.name || sd.restaurant.name === '';
         window.location.href = BASE + (isSetup ? '/setup.html' : '/pos');
       } catch (e) {
         window.location.href = BASE + '/pos';
