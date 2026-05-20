@@ -13,7 +13,7 @@ Bu rehber `INTERNET-UPDATE-PLANI.md`'nin uygulama adımlarıdır. Tek seferlik k
 
 ## 1) GitHub Repo'yu Hazırla
 
-Web'den `Alkyonetech/AlkyonePos` repo'sunu **public** olarak aç (henüz açmadıysan). Açıklama: "Sakura POS — restoran yönetim sistemi". `.gitignore`, README, license **eklemeden** boş bırak (yerel zaten var).
+Web'den `Alkyonetech/AlkyonePos` repo'sunu **public** olarak aç (henüz açmadıysan). Açıklama: "Alkyone POS — restoran yönetim sistemi". `.gitignore`, README, license **eklemeden** boş bırak (yerel zaten var).
 
 ## 2) Yerel Repo'yu Bağla ve Push Et
 
@@ -31,7 +31,7 @@ $env:GH_TOKEN = gh auth token
 
 # İlk commit + push
 git add .
-git commit -m "Sakura POS baseline v1.6.4 — internet update mimarisi"
+git commit -m "Alkyone POS baseline v1.6.4 — internet update mimarisi"
 git branch -M main
 git push -u origin main
 ```
@@ -49,7 +49,7 @@ node scripts/build-release.js --publish
 ```
 
 Bittiğinde GitHub'da `v1.6.4` release görünür. Asset listesi:
-- `SakuraPOS Setup 1.6.4.exe`
+- `AlkyonePOS Setup 1.6.4.exe`
 - `latest.yml` (electron-updater bunu okur)
 - `garson-1.6.4.apk`, `yonetici-1.6.4.apk`
 - `latest.json`
@@ -57,7 +57,7 @@ Bittiğinde GitHub'da `v1.6.4` release görünür. Asset listesi:
 
 ## 4) Restoran PC'sine Son Manuel Kurulum
 
-USB ile `release/SakuraPOS-1.6.4/pos/SakuraPOS Setup 1.6.4.exe`'yi taşı, kur. Bu Setup, internet-update yeteneğine sahip ilk sürüm — bu noktadan sonra **manuel kurulum yok**.
+USB ile `release/AlkyonePOS-1.6.4/pos/AlkyonePOS Setup 1.6.4.exe`'yi taşı, kur. Bu Setup, internet-update yeteneğine sahip ilk sürüm — bu noktadan sonra **manuel kurulum yok**.
 
 Açılınca log'a `[Updater] Guncel surum kullaniliyor` veya `[Updater] Yeni surum mevcut...` mesajları düşer (`%APPDATA%\sakura-pos\logs\main.log`).
 

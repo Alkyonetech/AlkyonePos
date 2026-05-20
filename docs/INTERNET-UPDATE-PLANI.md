@@ -1,4 +1,4 @@
-# Sakura POS — İnternet Üzerinden Güncelleme Mimarisi
+# Alkyone POS — İnternet Üzerinden Güncelleme Mimarisi
 
 **Tarih:** 2026-05-20
 **Repo:** [`Alkyonetech/AlkyonePos`](https://github.com/Alkyonetech/AlkyonePos) (public)
@@ -123,7 +123,7 @@ npm i electron-updater
 
 3. Release yoksa otomatik oluştur:
    ```
-   gh release create v<version> --title "Sakura POS X.Y.Z" --notes-file DEGISIKLIKLER.txt
+   gh release create v<version> --title "Alkyone POS X.Y.Z" --notes-file DEGISIKLIKLER.txt
    ```
 
 `--publish` flag'i **yoksa** mevcut offline akış aynen çalışır (USB dağıtımı geri uyumlu).
@@ -146,7 +146,7 @@ $env:GH_TOKEN = gh auth token   # PowerShell'de
 
 # 4) İlk commit + push
 git add .
-git commit -m "Sakura POS baseline v1.6.3"
+git commit -m "Alkyone POS baseline v1.6.3"
 git push -u origin master
 
 # 5) İlk publish
@@ -155,7 +155,7 @@ node scripts/build-release.js --publish
 
 ### Restoran PC'sinde (son manuel adım)
 
-- Mevcut `release/SakuraPOS-1.6.3/pos/SakuraPOS Setup 1.6.3.exe`'yi USB ile kur
+- Mevcut `release/AlkyonePOS-1.6.3/pos/AlkyonePOS Setup 1.6.3.exe`'yi USB ile kur
 - Bu, internet-update özelliği eklenmiş yeni Electron — bu noktadan sonra **manuel kurulum bitti**
 - Sonraki sürümler otomatik
 

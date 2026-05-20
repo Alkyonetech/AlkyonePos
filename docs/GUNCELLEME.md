@@ -1,4 +1,4 @@
-# Sakura POS — Güncelleme Kılavuzu
+# Alkyone POS — Güncelleme Kılavuzu
 
 Yeni sürüm geldiğinde bilgisayara ve tabletlere nasıl uygulanacağı.
 
@@ -11,10 +11,10 @@ Yeni sürüm geldiğinde bilgisayara ve tabletlere nasıl uygulanacağı.
 
 USB veya WeTransfer ile aldığınız ZIP içinde:
 ```
-SakuraPOS-Update-1.x.0/
+AlkyonePOS-Update-1.x.0/
 ├── latest.json                    ← sürüm manifesti
 ├── pos/
-│   └── SakuraPOS-1.x.0.exe       ← yeni POS
+│   └── AlkyonePOS-1.x.0.exe       ← yeni POS
 ├── apk/
 │   ├── garson-1.x.0.apk          ← yeni garson APK
 │   └── yonetici-1.x.0.apk        ← yeni yönetici APK
@@ -26,27 +26,27 @@ SakuraPOS-Update-1.x.0/
 ## 2. POS Bilgisayarını Güncelleme
 
 ### Adım 1 — Dosyaları kopyala
-1. POS bilgisayarında **`SakuraPOS/updates/`** klasörünü aç
-   (genellikle `C:\Program Files\Sakura POS\updates\` veya `C:\SakuraPOS\updates\`)
+1. POS bilgisayarında **`AlkyonePOS/updates/`** klasörünü aç
+   (genellikle `C:\Program Files\Alkyone POS\updates\` veya `C:\AlkyonePOS\updates\`)
 2. ZIP içindeki dosyaları **doğru yerlere** kopyala:
    - `latest.json` → `updates/latest.json` (üstüne yaz)
-   - `SakuraPOS-1.x.0.exe` → `updates/pos/`
+   - `AlkyonePOS-1.x.0.exe` → `updates/pos/`
    - `garson-1.x.0.apk` → `updates/apk/`
    - `yonetici-1.x.0.apk` → `updates/apk/`
 
 ### Adım 2 — POS'u kapat
-- Görev çubuğundan Sakura POS'a sağ tık → **Çıkış**
+- Görev çubuğundan Alkyone POS'a sağ tık → **Çıkış**
 - veya tarayıcıdan `/pos` ekranındaki **Çıkış** butonu → tarayıcıyı kapat
-- Görev Yöneticisi'nde "SakuraPOS" işlemi olmadığından emin ol
+- Görev Yöneticisi'nde "AlkyonePOS" işlemi olmadığından emin ol
 
 ### Adım 3 — Launcher ile güncelle
-1. Masaüstünden **Sakura POS** kısayoluna çift tıkla
-   (Bu kısayol aslında `SakuraPOS-Launcher.exe`'yi çalıştırır)
+1. Masaüstünden **Alkyone POS** kısayoluna çift tıkla
+   (Bu kısayol aslında `AlkyonePOS-Launcher.exe`'yi çalıştırır)
 2. Launcher otomatik olarak:
    - `latest.json`'u okur
    - Mevcut sürümle karşılaştırır
    - Yeni sürüm varsa: **"Sürüm 1.x.0'a güncelleniyor..."** ekranı (3-5 sn)
-   - Eski sürümü `SakuraPOS.exe.bak` olarak yedekler
+   - Eski sürümü `AlkyonePOS.exe.bak` olarak yedekler
    - Yeni sürümü kurar
    - POS'u başlatır
 
@@ -97,14 +97,14 @@ Launcher zaten otomatik rollback yapar:
 - `update-failed.log` oluşur, geliştiriciye gönderin
 
 ### Manuel POS rollback
-1. `SakuraPOS/` klasörünü aç
-2. `SakuraPOS.exe` dosyasını sil
-3. `SakuraPOS.exe.bak` → `SakuraPOS.exe` olarak yeniden adlandır
+1. `AlkyonePOS/` klasörünü aç
+2. `AlkyonePOS.exe` dosyasını sil
+3. `AlkyonePOS.exe.bak` → `AlkyonePOS.exe` olarak yeniden adlandır
 4. `updates/latest.json` dosyasını **eski sürümle** değiştir (geliştiricinin verdiği bir önceki paketten)
 5. POS'u açar gibi tekrar Launcher'a tıkla
 
 ### APK rollback (tablet)
-1. **Ayarlar → Uygulamalar → Sakura Garson** (veya Yönetici)
+1. **Ayarlar → Uygulamalar → Alkyone Garson** (veya Yönetici)
 2. **Kaldır**
 3. Bilgisayardan eski APK'yı USB ile getir
 4. Tablete kur

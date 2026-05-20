@@ -1,4 +1,4 @@
-# Sakura POS — Sorun Giderme
+# Alkyone POS — Sorun Giderme
 
 Sık karşılaşılan sorunlar ve çözümleri. Sıralama: önce hızlı kontroller, sonra detaylı.
 
@@ -6,10 +6,10 @@ Sık karşılaşılan sorunlar ve çözümleri. Sıralama: önce hızlı kontrol
 
 ## ⚡ Acil Durum — POS açılmıyor
 
-1. **Sakura POS** kısayoluna sağ tık → **Yönetici olarak çalıştır**
-2. Çözmediyse: **Görev Yöneticisi** (Ctrl+Shift+Esc) → "SakuraPOS" işlemi varsa kapat → tekrar aç
-3. Hâlâ açılmıyorsa: `C:\Program Files\Sakura POS\SakuraPOS.exe` üzerinde sağ tık → **Özellikler → Engelliliği kaldır** (Antivirüs)
-4. **Acil yedek:** Yan masadaki dizüstü/yedek bilgisayarda da Sakura POS kuruluysa, oraya geçin. Tabletler aynı IP'ye otomatik bulamayabilir → manuel IP gir.
+1. **Alkyone POS** kısayoluna sağ tık → **Yönetici olarak çalıştır**
+2. Çözmediyse: **Görev Yöneticisi** (Ctrl+Shift+Esc) → "AlkyonePOS" işlemi varsa kapat → tekrar aç
+3. Hâlâ açılmıyorsa: `C:\Program Files\Alkyone POS\AlkyonePOS.exe` üzerinde sağ tık → **Özellikler → Engelliliği kaldır** (Antivirüs)
+4. **Acil yedek:** Yan masadaki dizüstü/yedek bilgisayarda da Alkyone POS kuruluysa, oraya geçin. Tabletler aynı IP'ye otomatik bulamayabilir → manuel IP gir.
 
 ---
 
@@ -31,7 +31,7 @@ Sık karşılaşılan sorunlar ve çözümleri. Sıralama: önce hızlı kontrol
 
 **Olası neden 4: Güvenlik duvarı**
 - Windows Defender Firewall: gelen bağlantı engelliyor olabilir
-- **Çözüm:** Denetim Masası → Güvenlik Duvarı → "Sakura POS"a izin ver
+- **Çözüm:** Denetim Masası → Güvenlik Duvarı → "Alkyone POS"a izin ver
 
 ### Tablet bağlandı ama sürekli kopuyor
 
@@ -125,8 +125,8 @@ Yedekler birikiyor olabilir:
 
 ### Launcher splash takılı kaldı
 
-- 30 saniye bekle, takılıysa: **Görev Yöneticisi** ile `SakuraPOS-Launcher.exe`'yi sonlandır
-- Sonra: `SakuraPOS/SakuraPOS.exe.bak` dosyası varsa onu **`SakuraPOS.exe`** olarak yeniden adlandır
+- 30 saniye bekle, takılıysa: **Görev Yöneticisi** ile `AlkyonePOS-Launcher.exe`'yi sonlandır
+- Sonra: `AlkyonePOS/AlkyonePOS.exe.bak` dosyası varsa onu **`AlkyonePOS.exe`** olarak yeniden adlandır
 - POS açılır (eski sürüm ile)
 - Geliştiriciye `update-failed.log` dosyasını gönder
 
