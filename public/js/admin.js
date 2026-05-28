@@ -604,7 +604,7 @@ async function saveTheme() {
 // ===== ABOUT =====
 function renderAbout() {
   document.getElementById('about-info').innerHTML = `
-    <p>Uygulama: <strong>Alkyone POS</strong></p>
+    <p>Uygulama: <strong>Sakura POS</strong></p>
     <p>Surum: <strong>${settings.appVersion || '1.0.0'}</strong></p>
     <p>Min APK: <strong>${settings.minApkVersion || '1.0.0'}</strong></p>
     <p>Restoran: <strong>${settings.restaurant?.name || '-'}</strong></p>

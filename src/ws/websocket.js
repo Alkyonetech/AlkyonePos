@@ -1,6 +1,5 @@
 const { WebSocketServer } = require('ws');
 const jwt = require('jsonwebtoken');
-const { loadSettings } = require('../utils/data');
 
 let wss = null;
 
@@ -15,17 +14,17 @@ function initWebSocket(server) {
     ws.role = null;
     ws.subscribedEvents = new Set();
 
-    // URL'den token al (?token=xxx)
+    // URL'den token al (?token=xxx). Token DOĞRULANMAZ — yalnızca rol bilgisi
+    // için imzasız çözülür. Süresi dolmuş/geçersiz token bağlantıyı engellemez.
     try {
       const url = new URL(req.url, 'http://localhost');
       const token = url.searchParams.get('token');
       if (token) {
-        const settings = loadSettings();
-        const decoded = jwt.verify(token, settings.auth.jwtSecret);
-        ws.role = decoded.role;
+        const decoded = jwt.decode(token);
+        if (decoded && decoded.role) ws.role = decoded.role;
       }
     } catch (err) {
-      // Token yoksa veya gecersizse anonim baglanti
+      // Token yoksa veya bozuksa anonim baglanti
     }
 
     ws.on('pong', () => {

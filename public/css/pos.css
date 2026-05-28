@@ -300,7 +300,8 @@ input, textarea, select, [contenteditable] {
 }
 
 .table-card.status-open {
-  border-left: 3px solid var(--sakura);
+  border-left: 3px solid var(--green);
+  background: rgba(96, 208, 128, 0.08);
 }
 
 .table-card.status-reserved {
@@ -331,7 +332,7 @@ input, textarea, select, [contenteditable] {
 }
 
 .status-open .table-status-dot {
-  background: var(--sakura);
+  background: var(--green);
   animation: pulse 2s infinite;
 }
 
@@ -353,7 +354,7 @@ input, textarea, select, [contenteditable] {
 .table-amount {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--sakura);
+  color: var(--green);
   text-align: right;
   margin-top: 8px;
 }

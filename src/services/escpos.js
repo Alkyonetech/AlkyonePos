@@ -87,7 +87,7 @@ function listEncodings() {
 }
 
 class EscPos {
-  constructor(width = 32, encodingName = 'ASCII') {
+  constructor(width = 32, encodingName = 'CP1254_32') {
     this.width = width;
     this.encoding = getEncoding(encodingName);
     this.chunks = [
@@ -192,7 +192,7 @@ function formatReceipt(order, settings) {
   const r = settings.restaurant || {};
   const t = resolveTemplate(settings);
   const W = settings.printer?.paperWidth === 80 ? 48 : 32;
-  const enc = settings.printer?.encoding || 'ASCII';
+  const enc = settings.printer?.encoding || 'CP1254_32';
   const p = new EscPos(W, enc);
 
   // Üst ekstra satırlar
@@ -295,7 +295,7 @@ function formatReceipt(order, settings) {
  */
 function formatKitchenTicket(order, settings, opts = {}) {
   const W = settings.printer?.paperWidth === 80 ? 48 : 32;
-  const enc = settings.printer?.encoding || 'ASCII';
+  const enc = settings.printer?.encoding || 'CP1254_32';
   const p = new EscPos(W, enc);
 
   p.align('center').bold(true).double(true)

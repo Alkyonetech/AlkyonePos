@@ -13,7 +13,7 @@
   "auth": {
     "garsonPin": "1234",
     "yoneticiPin": "9999",
-    "jwtSecret": "alkyone-pos-secret-change-me",
+    "jwtSecret": "sakura-pos-secret-change-me",
     "pinChangedAt": null
   },
   "operations": {
@@ -32,7 +32,7 @@
     "connection": "usb",
     "device": "auto",
     "paperWidth": 58,
-    "encoding": "ASCII"
+    "encoding": "CP1254_32"
   },
   "printers": {
     "receipt": {
@@ -41,14 +41,14 @@
       "connection": "usb",
       "device": "auto",
       "paperWidth": 80,
-      "encoding": "ASCII"
+      "encoding": "CP1254_32"
     },
     "kitchen": {
       "enabled": true,
       "connection": "usb",
       "device": "auto",
       "paperWidth": 58,
-      "encoding": "ASCII"
+      "encoding": "CP1254_32"
     }
   },
   "receiptTemplate": {
@@ -69,8 +69,8 @@
     "footerLines": ["Teşekkür ederiz!"],
     "footerFeedLines": 3
   },
-  "appVersion": "1.8.4",
-  "apkVersion": "1.8.4",
+  "appVersion": "1.9.0",
+  "apkVersion": "1.9.0",
   "minApkVersion": "1.0.0",
   "setupCompleted": false
 }

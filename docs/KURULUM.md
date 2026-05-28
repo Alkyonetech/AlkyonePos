@@ -1,6 +1,6 @@
-# Alkyone POS — Kurulum Kılavuzu
+# Sakura POS — Kurulum Kılavuzu
 
-Bu doküman Alkyone POS'u restoran bilgisayarına ve tabletlere ilk kez kurarken
+Bu doküman Sakura POS'u restoran bilgisayarına ve tabletlere ilk kez kurarken
 adım adım takip etmeniz gereken kılavuzdur.
 
 ---
@@ -31,18 +31,18 @@ adım adım takip etmeniz gereken kılavuzdur.
 ## 2. Bilgisayara POS Kurulumu
 
 ### Adım 1 — Dosyaları al
-Geliştiriciden USB veya WeTransfer ile aldığınız `AlkyonePOS-x.x.x.zip`
+Geliştiriciden USB veya WeTransfer ile aldığınız `SakuraPOS-x.x.x.zip`
 dosyasını C:\\ veya Masaüstüne çıkartın.
 
 ### Adım 2 — Kurulum sihirbazını çalıştır
-`AlkyonePOS Setup 1.0.0.exe` dosyasına çift tıklayın.
+`SakuraPOS Setup 1.0.0.exe` dosyasına çift tıklayın.
 
-1. "Next" → kurulum klasörünü seçin (varsayılan: `C:\Program Files\Alkyone POS`)
+1. "Next" → kurulum klasörünü seçin (varsayılan: `C:\Program Files\Sakura POS`)
 2. "Install" → kurulum birkaç saniye sürer
 3. "Finish" → Masaüstü ve Başlat menüsüne kısayol oluşturulur
 
 ### Adım 3 — İlk çalıştırma
-Masaüstündeki **Alkyone POS** kısayoluna çift tıklayın.
+Masaüstündeki **Sakura POS** kısayoluna çift tıklayın.
 
 İlk çalıştırmada şunları yapar:
 - Yerel sunucuyu başlatır (port 3000)
@@ -90,8 +90,8 @@ Android 8+ için: APK açıldığında çıkan diyalogdan **"Ayarlar"** → bu u
 ### Adım 3 — APK'yı kur
 Dosya yöneticisinden APK'ya dokun → **"Yükle"**.
 Kurulum bittikten sonra:
-- Garson tableti için: `Alkyone Garson` simgesine dokun
-- Yönetici tableti için: `Alkyone Yönetici` simgesine dokun
+- Garson tableti için: `Sakura Garson` simgesine dokun
+- Yönetici tableti için: `Sakura Yönetici` simgesine dokun
 
 ### Adım 4 — Sunucuya bağlan
 APK ilk açıldığında otomatik olarak `sakura.local` üzerinden sunucuyu arar.
@@ -131,7 +131,7 @@ Yazıcı yoksa: hesap kapanırken A4 PDF üretilir, yazıcıya gönderilebilir.
 
 ## 6. İlk Gün Açma Adımları
 
-1. **POS bilgisayarı:** sabah açılınca masaüstündeki **Alkyone POS** kısayoluna tıkla
+1. **POS bilgisayarı:** sabah açılınca masaüstündeki **Sakura POS** kısayoluna tıkla
 2. **Tabletler:** her tabletten kendi APK'sını aç
 3. **Yönetici PIN** ile yönetici tableti girişi: `9999` (veya değiştirdiğin PIN)
 4. **Garson PIN** ile garson tabletleri girişi: `1234`
@@ -149,7 +149,7 @@ Yazıcı yoksa: hesap kapanırken A4 PDF üretilir, yazıcıya gönderilebilir.
 - **Tablet bağlanamıyor:** IP'yi manuel gir (yönlendiricinin DHCP rezervasyonunu yap)
 - **mDNS çalışmıyor:** Bazı yönlendiriciler mDNS'i bloklar — IP fallback otomatik devreye girer
 - **Yazıcı çalışmıyor:** USB kabloyu çıkar/tak, sürücü kur, yeniden test et
-- **POS açılmıyor:** Antivirüs `AlkyonePOS.exe`'yi karantinaya almış olabilir, izin ver
+- **POS açılmıyor:** Antivirüs `SakuraPOS.exe`'yi karantinaya almış olabilir, izin ver
 
 ---
 

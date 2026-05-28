@@ -243,7 +243,7 @@ body {
 
 .t-card:active { transform: scale(0.97); }
 
-.t-card.open { border-color: var(--sakura); background: rgba(232,180,184,0.08); }
+.t-card.open { border-color: var(--green); background: rgba(96,208,128,0.10); }
 .t-card.reserved { border-color: var(--amber); }
 
 .t-name {
@@ -260,7 +260,7 @@ body {
 .t-amount {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--sakura);
+  color: var(--green);
   margin-top: 6px;
 }
 
@@ -274,7 +274,7 @@ body {
   background: var(--text-muted);
 }
 
-.t-card.open .t-dot { background: var(--sakura); animation: pulse 2s infinite; }
+.t-card.open .t-dot { background: var(--green); animation: pulse 2s infinite; }
 
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 

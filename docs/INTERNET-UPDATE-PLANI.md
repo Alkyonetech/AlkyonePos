@@ -1,7 +1,7 @@
-# Alkyone POS — İnternet Üzerinden Güncelleme Mimarisi
+# Sakura POS — İnternet Üzerinden Güncelleme Mimarisi
 
 **Tarih:** 2026-05-20
-**Repo:** [`Alkyonetech/AlkyonePos`](https://github.com/Alkyonetech/AlkyonePos) (public)
+**Repo:** [`Sakuratech/SakuraPos`](https://github.com/Sakuratech/SakuraPos) (public)
 **Durum:** Tasarım onaylandı, implementasyon bekleniyor
 
 ---
@@ -22,7 +22,7 @@
 ```
                   ┌─────────────────────────┐
                   │   GitHub Releases       │
-                  │  Alkyonetech/AlkyonePos │
+                  │  Sakuratech/SakuraPos │
                   │                         │
                   │  • Setup.exe (POS)      │
                   │  • latest.yml           │
@@ -62,8 +62,8 @@ npm i electron-updater
 ```json
 "publish": [{
   "provider": "github",
-  "owner": "Alkyonetech",
-  "repo": "AlkyonePos"
+  "owner": "Sakuratech",
+  "repo": "SakuraPos"
 }]
 ```
 
@@ -82,7 +82,7 @@ npm i electron-updater
 ### `src/services/apk-updater.js`
 - Sunucu açılışında GitHub Releases API'sini sorgular:
   ```
-  GET https://api.github.com/repos/Alkyonetech/AlkyonePos/releases/latest
+  GET https://api.github.com/repos/Sakuratech/SakuraPos/releases/latest
   ```
 - Asset listesinden:
   - `garson-X.Y.Z.apk` ve `yonetici-X.Y.Z.apk` → `UPDATES_DIR/apk/`
@@ -123,7 +123,7 @@ npm i electron-updater
 
 3. Release yoksa otomatik oluştur:
    ```
-   gh release create v<version> --title "Alkyone POS X.Y.Z" --notes-file DEGISIKLIKLER.txt
+   gh release create v<version> --title "Sakura POS X.Y.Z" --notes-file DEGISIKLIKLER.txt
    ```
 
 `--publish` flag'i **yoksa** mevcut offline akış aynen çalışır (USB dağıtımı geri uyumlu).
@@ -136,7 +136,7 @@ npm i electron-updater
 
 ```bash
 # 1) GitHub repo'ya bağla
-git remote add origin https://github.com/Alkyonetech/AlkyonePos.git
+git remote add origin https://github.com/Sakuratech/SakuraPos.git
 
 # 2) gh CLI auth
 gh auth login   # browser flow
@@ -146,7 +146,7 @@ $env:GH_TOKEN = gh auth token   # PowerShell'de
 
 # 4) İlk commit + push
 git add .
-git commit -m "Alkyone POS baseline v1.6.3"
+git commit -m "Sakura POS baseline v1.6.3"
 git push -u origin master
 
 # 5) İlk publish
@@ -155,7 +155,7 @@ node scripts/build-release.js --publish
 
 ### Restoran PC'sinde (son manuel adım)
 
-- Mevcut `release/AlkyonePOS-1.6.3/pos/AlkyonePOS Setup 1.6.3.exe`'yi USB ile kur
+- Mevcut `release/SakuraPOS-1.6.3/pos/SakuraPOS Setup 1.6.3.exe`'yi USB ile kur
 - Bu, internet-update özelliği eklenmiş yeni Electron — bu noktadan sonra **manuel kurulum bitti**
 - Sonraki sürümler otomatik
 
@@ -179,7 +179,7 @@ node scripts/build-release.js --publish
 
 | Risk | Önlem |
 |---|---|
-| Kaynak kodu public görünür | Org adı (`Alkyonetech`) profesyonel, kabul edildi. Hassas sırlar `data/settings.json`'da yerel kalır (commit edilmez, `.gitignore`) |
+| Kaynak kodu public görünür | Org adı (`Sakuratech`) profesyonel, kabul edildi. Hassas sırlar `data/settings.json`'da yerel kalır (commit edilmez, `.gitignore`) |
 | Bozuk release sahaya gider | İlk `gh release create --draft` ile test, sonra `gh release edit --draft=false` ile promote |
 | Restoran internetsiz | apk-updater sessizce hata yutar, eski APK'lar yerel cache'te kalır, sistem çalışmaya devam eder |
 | GH_TOKEN sızıntısı | Sadece geliştirici makinesinde, repo'ya commit edilmez |

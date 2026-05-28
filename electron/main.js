@@ -2,7 +2,6 @@ const { app, BrowserWindow, Tray, Menu, nativeImage, dialog, shell } = require('
 const path = require('path');
 const { fork } = require('child_process');
 const fs = require('fs');
-const { autoUpdater } = require('electron-updater');
 
 // Tek instance kontrolu
 const gotLock = app.requestSingleInstanceLock();
@@ -19,33 +18,6 @@ const DATA_DIR = isDev
   ? path.join(__dirname, '..', 'data')
   : path.join(app.getPath('userData'), 'data');
 
-// v1.8.0 marka degisikligi: eski %APPDATA%/SakuraPOS/data klasorunu
-// %APPDATA%/AlkyonePOS/data'ya tek seferlik tasi. Yoksa eski musterilerin
-// veri kaybi olur.
-function migrateLegacyUserData() {
-  if (isDev) return;
-  try {
-    const appData = app.getPath('appData');
-    const legacyDir = path.join(appData, 'SakuraPOS', 'data');
-    const newDir = DATA_DIR;
-    if (fs.existsSync(legacyDir) && !fs.existsSync(path.join(newDir, 'settings.json'))) {
-      fs.mkdirSync(path.dirname(newDir), { recursive: true });
-      const copyRec = (src, dst) => {
-        if (!fs.existsSync(dst)) fs.mkdirSync(dst, { recursive: true });
-        for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-          const s = path.join(src, entry.name);
-          const d = path.join(dst, entry.name);
-          if (entry.isDirectory()) copyRec(s, d);
-          else fs.copyFileSync(s, d);
-        }
-      };
-      copyRec(legacyDir, newDir);
-      console.log('[Migration] Eski SakuraPOS verisi AlkyonePOS klasorune tasindi:', legacyDir, '->', newDir);
-    }
-  } catch (e) {
-    console.warn('[Migration] Hata:', e.message);
-  }
-}
 // Updates klasoru: production'da launcher .exe'nin yaninda (SakuraPOS/updates/),
 // dev'de proje kokunde
 const UPDATES_DIR = isDev
@@ -55,7 +27,6 @@ const PORT = 3000;
 
 // Data klasorunu hazirla
 function ensureDataDir() {
-  migrateLegacyUserData();
   const dirs = [DATA_DIR, path.join(DATA_DIR, 'reports'), path.join(DATA_DIR, 'backups')];
   for (const d of dirs) {
     if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
@@ -69,10 +40,10 @@ function ensureDataDir() {
     'settings.json': {
       restaurant: { name: '', address: '', phone: '', logo: '' },
       network: { port: PORT, mdnsName: 'sakura', lastKnownIp: '' },
-      auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: 'alkyone-' + Date.now(), pinChangedAt: null },
+      auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: 'sakura-' + Date.now(), pinChangedAt: null },
       setupCompleted: false,
       operations: { dayCloseHour: 4, vatRate: 10, currency: 'TL' },
-      printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'ASCII' },
+      printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'CP1254_32' },
       startup: { autoStart: true, kioskMode: false, kioskUrl: '/pos' },
       printers: {
         receipt: {
@@ -81,14 +52,14 @@ function ensureDataDir() {
           connection: 'usb',
           device: 'auto',
           paperWidth: 80,
-          encoding: 'PC857'
+          encoding: 'CP1254_32'
         },
         kitchen: {
           enabled: true,
           connection: 'usb',
           device: 'auto',
           paperWidth: 58,
-          encoding: 'PC857'
+          encoding: 'CP1254_32'
         }
       },
       appVersion: app.getVersion(),
@@ -97,10 +68,9 @@ function ensureDataDir() {
     }
   };
 
-  // userData'da dosya yoksa: paketteki extraResources'tan kopyala — fakat
-  // menu.json HARIC. Her restoran kendi menusunu admin panelden kurar; eski
-  // bir restoranin menusu yeni kuruluma sizmasin diye paketteki menu.json
-  // ASLA seed olarak kullanilmaz; yoksa bos default ile baslar.
+  // userData'da dosya yoksa: paketteki extraResources'tan kopyala (menu.json
+  // dahil — varsayilan menu paketle birlikte gelir). Paketten kopyalanamazsa
+  // bos default ile baslar.
   // Production'da: process.resourcesPath/data/<file>
   // Dev'de: <repo>/data/<file>
   const bundledDir = isDev
@@ -109,16 +79,14 @@ function ensureDataDir() {
   for (const [file, data] of Object.entries(defaults)) {
     const fp = path.join(DATA_DIR, file);
     if (fs.existsSync(fp)) continue;
-    if (file !== 'menu.json') {
-      const bundled = path.join(bundledDir, file);
-      if (fs.existsSync(bundled)) {
-        try {
-          fs.copyFileSync(bundled, fp);
-          console.log(`[Veri] ${file} paketten kopyalandi`);
-          continue;
-        } catch (e) {
-          console.warn(`[Veri] ${file} paketten kopyalanamadi: ${e.message}`);
-        }
+    const bundled = path.join(bundledDir, file);
+    if (fs.existsSync(bundled)) {
+      try {
+        fs.copyFileSync(bundled, fp);
+        console.log(`[Veri] ${file} paketten kopyalandi`);
+        continue;
+      } catch (e) {
+        console.warn(`[Veri] ${file} paketten kopyalanamadi: ${e.message}`);
       }
     }
     fs.writeFileSync(fp, JSON.stringify(data, null, 2));
@@ -273,7 +241,7 @@ function createWindow() {
     height: 800,
     minWidth: 1024,
     minHeight: 600,
-    title: 'Alkyone POS',
+    title: 'Sakura POS',
     icon: getIconPath(),
     autoHideMenuBar: true,
     webPreferences: {
@@ -344,7 +312,7 @@ function createTray() {
   tray = new Tray(icon);
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Alkyone POS', type: 'normal', enabled: false },
+    { label: 'Sakura POS', type: 'normal', enabled: false },
     { type: 'separator' },
     { label: 'POS Ekrani', click: () => showWindow(`http://localhost:${PORT}/pos`) },
     { label: 'Admin Panel', click: () => showWindow(`http://localhost:${PORT}/admin`) },
@@ -357,7 +325,7 @@ function createTray() {
     { label: 'Cikis', click: () => { app.isQuitting = true; app.quit(); } }
   ]);
 
-  tray.setToolTip('Alkyone POS');
+  tray.setToolTip('Sakura POS');
   tray.setContextMenu(contextMenu);
   tray.on('double-click', () => showWindow(`http://localhost:${PORT}/pos`));
 }
@@ -436,14 +404,14 @@ function ensureFirewallRule() {
 
   // Tek satirlik, idempotent: once sil, sonra profile=any ekle (3 kural).
   const cmds = [
-    'netsh advfirewall firewall delete rule name="Alkyone POS"',
-    'netsh advfirewall firewall add rule name="Alkyone POS" dir=in action=allow protocol=TCP localport=3000 profile=any',
-    'netsh advfirewall firewall add rule name="Alkyone POS" dir=out action=allow protocol=TCP localport=3000 profile=any',
-    'netsh advfirewall firewall delete rule name="Alkyone POS mDNS"',
-    'netsh advfirewall firewall add rule name="Alkyone POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any',
-    'netsh advfirewall firewall delete rule name="Alkyone POS Discovery"',
-    'netsh advfirewall firewall add rule name="Alkyone POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any',
-    'netsh advfirewall firewall add rule name="Alkyone POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any',
+    'netsh advfirewall firewall delete rule name="Sakura POS"',
+    'netsh advfirewall firewall add rule name="Sakura POS" dir=in action=allow protocol=TCP localport=3000 profile=any',
+    'netsh advfirewall firewall add rule name="Sakura POS" dir=out action=allow protocol=TCP localport=3000 profile=any',
+    'netsh advfirewall firewall delete rule name="Sakura POS mDNS"',
+    'netsh advfirewall firewall add rule name="Sakura POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any',
+    'netsh advfirewall firewall delete rule name="Sakura POS Discovery"',
+    'netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any',
+    'netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any',
   ];
 
   const { exec } = require('child_process');
@@ -495,7 +463,7 @@ function syncAutoStart() {
 
     // Production'da launcher'i isaret et (varsa); yoksa SakuraPOS.exe
     const installDir = path.dirname(app.getPath('exe'));
-    const launcherExe = path.join(installDir, 'AlkyonePOS-Launcher.exe');
+    const launcherExe = path.join(installDir, 'SakuraPOS-Launcher.exe');
     const targetExe = fs.existsSync(launcherExe)
       ? launcherExe
       : app.getPath('exe');
@@ -510,64 +478,10 @@ function syncAutoStart() {
   }
 }
 
-// ===== OTOMATIK GUNCELLEME (electron-updater) =====
-// Sunucu acilirken sessizce GitHub Releases'a bakar; yeni Setup.exe varsa
-// arkaplanda indirir, 60 sn lutuf suresi sonra quit + install + restart yapar.
-// Tum eventler data/logs/<son>.log icine gider, kullaniciya UI gosterilmez.
-function initAutoUpdater() {
-  if (isDev) {
-    console.log('[Updater] Dev mod — devre disi');
-    return;
-  }
-  try {
-    autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = true;
-    autoUpdater.allowPrerelease = false;
-    autoUpdater.allowDowngrade = false;
-
-    // electron-log yerine kendi console wrap'imiz; src/utils/logger.js zaten
-    // server tarafinda console'u logla yonlendiriyor. Burada main process
-    // konsoluna yaziyoruz; production'da electron-builder log dosyasi
-    // %APPDATA%/sakura-pos/logs/main.log altinda tutulur (electron-updater
-    // varsayilan logger'i bu klasore yazar).
-    autoUpdater.logger = {
-      info:  (m) => console.log('[Updater]', m),
-      warn:  (m) => console.warn('[Updater]', m),
-      error: (m) => console.error('[Updater]', m),
-      debug: () => {},
-    };
-
-    autoUpdater.on('checking-for-update', () => console.log('[Updater] Kontrol ediliyor...'));
-    autoUpdater.on('update-available', (info) =>
-      console.log('[Updater] Yeni surum mevcut:', info.version));
-    autoUpdater.on('update-not-available', () =>
-      console.log('[Updater] Guncel surum kullaniliyor'));
-    autoUpdater.on('download-progress', (p) =>
-      console.log(`[Updater] Indiriliyor: %${p.percent.toFixed(1)} (${(p.transferred / 1024 / 1024).toFixed(1)} / ${(p.total / 1024 / 1024).toFixed(1)} MB)`));
-    autoUpdater.on('error', (err) =>
-      console.warn('[Updater] Hata:', err && err.message ? err.message : err));
-
-    autoUpdater.on('update-downloaded', (info) => {
-      console.log('[Updater] Indirildi:', info.version, '— 60 sn sonra kurulup yeniden baslatilacak');
-      // Lutuf suresi: aktif yazici isi/sipariş varsa biraz nefes alsin
-      setTimeout(() => {
-        console.log('[Updater] quitAndInstall (silent + restart)');
-        try {
-          // (silent=true, isForceRunAfter=true) — sessiz kur, sonra otomatik baslat
-          autoUpdater.quitAndInstall(true, true);
-        } catch (e) {
-          console.error('[Updater] quitAndInstall hata:', e.message);
-        }
-      }, 60 * 1000);
-    });
-
-    // Acilista bir kez kontrol et — kullanici secimine gore "sadece acilista"
-    autoUpdater.checkForUpdates().catch((e) =>
-      console.warn('[Updater] checkForUpdates hata:', e && e.message ? e.message : e));
-  } catch (e) {
-    console.warn('[Updater] Baslatma hatasi:', e.message);
-  }
-}
+// ===== OTOMATIK GUNCELLEME =====
+// Offline surum: internet/GitHub uzerinden otomatik guncelleme KAPALIDIR.
+// Guncelleme yalnizca launcher'in yerel updates/ klasoru uzerinden, elle
+// kopyalanan dosyalarla yapilir (bkz. launcher/launcher.js).
 
 // ===== APP LIFECYCLE =====
 app.on('ready', async () => {
@@ -585,10 +499,6 @@ app.on('ready', async () => {
 
   // Otomatik baslatma ayarlarini OS ile senkronize et
   syncAutoStart();
-
-  // Otomatik guncelleme: sunucu start ile paralel, sessiz, sadece acilista
-  // (kullanicinin secimi: "Tamamen otomatik sessiz kur" + "Sadece acilista")
-  initAutoUpdater();
 
   // settings.json degisirse autoStart + kioskMode ayarlarini yansit
   // (Admin Panel'den degisikligi yakala — kiosk on/off'da uygulamayi yeniden baslat)

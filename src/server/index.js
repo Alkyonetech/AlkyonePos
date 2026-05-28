@@ -7,8 +7,6 @@ const { loadSettings, checkDataIntegrity } = require('../utils/data');
 const { initMdns } = require('../services/mdns');
 const { startDiscoveryBroadcaster } = require('../services/discovery-broadcaster');
 const { initBackupScheduler } = require('../services/backup');
-const { startApkUpdater } = require('../services/apk-updater');
-const pathMod = require('path');
 
 async function main() {
   // Acilista veri butunlugu — bozuk dosyalari yedekten geri yukle
@@ -46,16 +44,9 @@ async function main() {
     initBackupScheduler();
     console.log('[Sakura POS] Otomatik yedek zamanlayici aktif');
 
-    // APK auto-updater (GitHub Releases'tan tablet APK'larini ve latest.json'u
-    // surekli guncel tutar; tabletler /api/version uzerinden bu manifesti
-    // gorur ve mevcut akisla yerel agdan APK indirir).
-    try {
-      const updatesDir = process.env.SAKURA_UPDATES_DIR
-        || pathMod.join(__dirname, '..', '..', 'updates');
-      startApkUpdater({ updatesDir });
-    } catch (err) {
-      console.warn('[Sakura POS] APK auto-updater baslatma hatasi:', err.message);
-    }
+    // Offline surum: GitHub uzerinden APK auto-updater KAPALIDIR. Tablet
+    // APK'lari yalnizca yerel agdan /updates/apk/ uzerinden dagitilir; bu
+    // klasore dosyalar elle yerlestirilir.
   });
 }
 

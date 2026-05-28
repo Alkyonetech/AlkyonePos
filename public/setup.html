@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alkyone POS - Ilk Kurulum</title>
+  <title>Sakura POS - Ilk Kurulum</title>
   <style>
     :root{--bg:#0f0f1a;--card:#1a1a2e;--input:#222240;--sakura:#e8b4b8;--sakura-d:#c9787e;--text:#e8e8f0;--dim:#8888a0;--border:#2a2a45;--green:#60d080;--red:#e06060}
     *{margin:0;padding:0;box-sizing:border-box}
@@ -37,7 +37,7 @@
 </head>
 <body>
   <div class="wizard">
-    <img src="/assets/logo.png" alt="Alkyone POS" style="display:block;max-width:280px;width:80%;height:auto;margin:0 auto 8px">
+    <div style="text-align:center;font-size:1.8rem;font-weight:700;letter-spacing:3px;color:var(--accent,#e8b4b8);margin:0 auto 8px">SAKURA POS</div>
     <div class="subtitle">Ilk Kurulum Sihirbazi</div>
     <div class="steps-indicator">
       <div class="step-dot active" data-step="0"></div>
@@ -117,14 +117,14 @@
       </div>
       <div class="form-group"><label>Karakter Kod Sayfasi (Turkce)</label>
         <select id="s-encoding">
-          <option value="ASCII">ASCII (Turkce harf donusumlu — onerilen)</option>
-          <option value="PC857">PC857 (DOS Turkce)</option>
+          <option value="CP1254_32" selected>CP1254 n=32 (POS-80C — Turkce, onerilen)</option>
           <option value="CP1254_18">CP1254 n=18 (XPrinter)</option>
-          <option value="CP1254_32">CP1254 n=32</option>
           <option value="CP1254_33">CP1254 n=33</option>
           <option value="CP1254_44">CP1254 n=44 (Yeni XPrinter)</option>
+          <option value="PC857">PC857 (DOS Turkce)</option>
+          <option value="ASCII">ASCII (Turkce harf donusumlu — son care)</option>
         </select>
-        <div class="hint">POS-80C ve cogu Cin yazicisi standart Turkce kod sayfalarini desteklemiyor. ASCII en guvenlisi (s/u/c gibi basar). "Test Cikti" basin, daha iyi calisan baska bir secenek varsa onu secin.</div>
+        <div class="hint">Turkce harfler (s, c, g, u, o, i) icin CP1254_32 onerilir. Yaziciniz garbled (bozuk) basarsa "Test Cikti" ile diger CP1254 seceneklerini deneyin; hicbiri calismazsa ASCII secin (Turkce harfleri s/u/c'ye cevirir).</div>
       </div>
       <div class="actions" style="justify-content:space-between">
         <button class="btn btn-sec" onclick="printCodepageTest()">Test Cikti Bas</button>
@@ -153,7 +153,7 @@
     <div class="step" id="step-5">
       <div class="success-icon">&#10003;</div>
       <div class="success-text">Kurulum Tamamlandi!</div>
-      <div class="success-sub">Alkyone POS kullanima hazir.</div>
+      <div class="success-sub">Sakura POS kullanima hazir.</div>
       <div class="actions" style="justify-content:center">
         <button class="btn btn-next" onclick="finish()">POS'u Baslat</button>
       </div>

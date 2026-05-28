@@ -1,4 +1,4 @@
-# Alkyone POS — Kullanım Kılavuzu
+# Sakura POS — Kullanım Kılavuzu
 
 Sistem beş ekrandan oluşur:
 - `/pos` — Kasiyer / yönetici (bilgisayar)
@@ -12,7 +12,7 @@ Sistem beş ekrandan oluşur:
 ## 1. POS Ekranı (`/pos`) — Kasiyer
 
 ### Açma
-1. Bilgisayardaki **Alkyone POS** kısayoluna tıkla
+1. Bilgisayardaki **Sakura POS** kısayoluna tıkla
 2. Tarayıcı açılır → PIN ekranı (yönetici PIN: 9999)
 3. Masa düzeni görünür
 
@@ -76,7 +76,7 @@ Garson APK'da geri tuşu **devre dışıdır** (kiosk modu).
 Mobil yönetici uygulaması — sahip/yöneticinin masada dolaşırken hesap kapatabilmesi ve gün boyu ciroyu takip edebilmesi için. `/admin` paneline alternatif değil, tamamlayıcı.
 
 ### Giriş
-- **Alkyone Yönetici** APK'sını aç → otomatik bağlanır
+- **Sakura Yönetici** APK'sını aç → otomatik bağlanır
 - Yönetici PIN ile giriş yap (varsayılan: 9999 — değiştirilmiş olmalı!)
 
 ### Üst Bant (Header İstatistikleri)
@@ -115,7 +115,7 @@ Yönetici APK'da garson işlemleri de yapılabilir — masaya dokun → kategori
 ### Cihaz Uyumluluk Notu
 İlk açılışta **MIUI/HyperOS, ColorOS, Funtouch, OneUI** vb. cihazlarda uygulamanın arka planda kapatılmaması için:
 1. **Pil optimizasyonu istisnası** ekranı otomatik açılır → "İzin ver" deyin
-2. **Otomatik başlat (autostart)** ayar sayfası açılır → Alkyone Yönetici'yi listeye ekleyin
+2. **Otomatik başlat (autostart)** ayar sayfası açılır → Sakura Yönetici'yi listeye ekleyin
 3. Bu uyarı sadece bir kez gösterilir.
 
 ---
@@ -197,12 +197,12 @@ POS ekranında:
 
 ### Otomatik Başlatma (Windows)
 - **Admin Panel → Sistem Ayarları → "Windows açılışında otomatik başlat"** kutusunu işaretle → Kaydet
-- Bilgisayar yeniden başlatıldığında Alkyone POS sessizce açılır (`--auto-start` argümanıyla, tray'e gizli).
+- Bilgisayar yeniden başlatıldığında Sakura POS sessizce açılır (`--auto-start` argümanıyla, tray'e gizli).
 - Kiosk modu da açıksa doğrudan tam ekran POS gelir.
 - **Önkoşul:** Windows kullanıcısı için **otomatik giriş** veya **şifresiz hesap** olmalı (yoksa Windows giriş ekranında kullanıcının manuel giriş yapması gerekir). `netplwiz` komutuyla otomatik giriş ayarlanabilir.
 
 ### Kiosk Modu (Tam Ekran, Çıkış Engelli)
-Kiosk modunda Alkyone POS:
+Kiosk modunda Sakura POS:
 - **Tam ekran** açılır, taskbar gizlenir
 - Pencere çubuğu yok, ALT+F4 / Esc / F11 çalışmaz
 - Tray ikonu yok
@@ -217,7 +217,7 @@ Kiosk modunda Alkyone POS:
 
 **Kiosk modunu kapatmak için:**
 1. `Ctrl + Shift + Q` ile uygulamadan çık
-2. Tekrar Alkyone POS'u başlat (normal modda açılır)
+2. Tekrar Sakura POS'u başlat (normal modda açılır)
 3. Admin Panel → Sistem Ayarları → "Kiosk modu aktif" işaretini kaldır → Kaydet
 4. Yeniden başlatma → normal modda açılır
 

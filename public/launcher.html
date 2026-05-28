@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alkyone POS</title>
+  <title>Sakura POS</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -23,7 +23,7 @@
       width: 400px;
     }
 
-    /* Logo animasyonu */
+    /* Sakura cicek animasyonu */
     .logo-container {
       position: relative;
       width: 120px;
@@ -199,10 +199,9 @@
   </div>
 
   <div class="launcher">
-    <!-- Logo -->
+    <!-- Sakura logo -->
     <div class="logo-container">
-      <img src="/assets/logo.png" alt="Alkyone POS" style="max-width:340px;width:78%;height:auto;display:block;margin:0 auto">
-      <svg class="sakura-flower" viewBox="0 0 120 120" style="display:none">
+      <svg class="sakura-flower" viewBox="0 0 120 120">
         <g transform="translate(60,55)">
           <!-- 5 yaprak -->
           <path class="petal" d="M0,-40 C12,-35 18,-20 12,-8 L0,0 Z" transform="rotate(0)"/>
@@ -232,6 +231,7 @@
       </svg>
     </div>
 
+    <div class="app-name">SAKURA</div>
     <div class="app-sub">Restoran Yonetim Sistemi</div>
 
     <div class="progress-area">
@@ -318,7 +318,7 @@
         // POS veya setup'a yonlendir
         const settingsRes = await fetch('/api/settings');
         const settingsData = await settingsRes.json();
-        const isSetup = !settingsData.restaurant?.name || settingsData.restaurant.name === "";
+        const isSetup = !settingsData.restaurant?.name || settingsData.restaurant.name === '';
 
         window.location.href = isSetup ? '/setup.html' : '/pos';
 

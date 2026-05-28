@@ -1,7 +1,7 @@
 {
-  "name": "alkyone-pos",
-  "version": "1.8.4",
-  "description": "Alkyone POS - Restoran Yonetim ve POS Sistemi",
+  "name": "sakura-pos",
+  "version": "1.9.0",
+  "description": "Sakura POS - Restoran Yonetim ve POS Sistemi",
   "main": "electron/main.js",
   "scripts": {
     "start": "node src/server/index.js",
@@ -18,7 +18,7 @@
   "keywords": [
     "pos",
     "restaurant",
-    "alkyone"
+    "sakura"
   ],
   "author": "",
   "license": "ISC",
@@ -36,7 +36,7 @@
   },
   "build": {
     "appId": "com.sakura.pos",
-    "productName": "AlkyonePOS",
+    "productName": "SakuraPOS",
     "directories": {
       "output": "dist"
     },
@@ -53,7 +53,6 @@
         "to": "data/",
         "filter": [
           "**/*",
-          "!menu.json",
           "!orders.json",
           "!reports/**",
           "!backups/**"
@@ -80,15 +79,8 @@
       "installerHeaderIcon": "electron/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Alkyone POS",
+      "shortcutName": "Sakura POS",
       "include": "electron/installer.nsh"
-    },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "Alkyonetech",
-        "repo": "AlkyonePos"
-      }
-    ]
+    }
   }
 }

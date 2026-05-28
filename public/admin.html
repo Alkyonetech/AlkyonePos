@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alkyone POS - Admin</title>
+  <title>Sakura POS - Admin</title>
   <link rel="icon" href="/assets/favicon.png" type="image/png">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -12,8 +12,7 @@
   <!-- PIN -->
   <div id="pin-screen" class="screen">
     <div class="pin-box">
-      <img src="/assets/logo.png" alt="Alkyone POS" class="pin-logo-img" style="max-width:240px;width:80%;height:auto;display:block;margin:0 auto 8px">
-      <div class="pin-logo" style="font-size:1.05rem;color:var(--dim,#888a)">Admin</div>
+      <div class="pin-logo">Sakura Admin</div>
       <div class="pin-sub">Yonetici PIN giriniz</div>
       <div class="pin-dots" id="pin-dots"><span></span><span></span><span></span><span></span></div>
       <div class="pin-err" id="pin-err"></div>
@@ -29,7 +28,7 @@
   <!-- ADMIN ANA -->
   <div id="main" class="screen hidden">
     <header class="top">
-      <span class="logo">Alkyone Admin</span>
+      <span class="logo">Sakura Admin</span>
       <nav class="sidebar-nav" id="sidebar-nav">
         <button class="nav-btn active" data-s="tables" onclick="switchSection('tables')">Masalar</button>
         <button class="nav-btn" data-s="pins" onclick="switchSection('pins')">PIN</button>
@@ -298,7 +297,7 @@
         <div class="form-group">
           <label>Tema</label>
           <select id="theme-select">
-            <option value="sakura">Koyu (varsayilan)</option>
+            <option value="sakura">Sakura (Koyu — varsayilan)</option>
             <option value="krem">Krem (Acik)</option>
           </select>
         </div>
