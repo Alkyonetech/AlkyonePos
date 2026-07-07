@@ -128,6 +128,19 @@ Para=kuruş tam sayı · israf **maliyetten** (satış fiyatından asla) · hamm
 
 ---
 
-## 7. Ortam notu
+## 7. Üretilen binary'ler (bu sürümde derlendi)
 
-Bu değişiklikler bir Linux geliştirme sandbox'ında yazıldı; orada **Java/Android SDK/Gradle/Wine yok**, bu yüzden APK/`.exe` binary'leri burada derlenemedi. Node katmanı (sunucu, marka motoru, 2.0 analitik hattı) **çalıştırılarak doğrulandı** (`npm test` + iki markanın HTTP boot testi). Binary derleme yukarıdaki script'lerle sizin araç zincirinizde yapılır.
+JDK 17 + Android SDK (build-tools 34, platform-34) kurulup **4 APK gerçek Gradle ile derlendi ve imzası doğrulandı** (kurulabilir):
+
+| APK | Paket | minSdk | Sürüm |
+|---|---|---|---|
+| AlkyonePOS-garson-2.0.0.apk | `com.alkyone.pos.garson` | 24 | 2.0.0 |
+| AlkyonePOS-yonetici-2.0.0.apk | `com.alkyone.pos.yonetici` | 24 | 2.0.0 |
+| SakuraPOS-garson-2.0.0.apk | `com.sakura.pos.garson` | 24 | 2.0.0 |
+| SakuraPOS-yonetici-2.0.0.apk | `com.sakura.pos.yonetici` | 24 | 2.0.0 |
+
+İndir: **GitHub Release [v2.0.0](https://github.com/Alkyonetech/AlkyonePos/releases/tag/v2.0.0)** (yerelde `dist/apk/<brand>/`).
+
+> Bu APK'lar **debug keystore** ile imzalı — test/sideload kurulumuna hazır. **Üretim güncellemeleri** için marka release keystore ile derleyin (Bölüm 4): aynı imza olmadan mevcut kurulumun üzerine güncelleme geçmez.
+
+**Windows `.exe` kurulumları** (Electron): `npm run build:alkyone` / `build:sakura` bir Windows makinede çalıştırılır (electron-builder NSIS). Sunucu/masaüstü mantığı bu Linux ortamında doğrudan çalıştırılarak da doğrulandı (`npm test` 11/11 + iki markanın HTTP boot testi). İsterseniz `.exe` de wine ile burada üretilebilir.
