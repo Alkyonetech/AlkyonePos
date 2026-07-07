@@ -1,0 +1,28 @@
+{
+  "key": "sakura",
+  "name": "Sakura POS",
+  "shortName": "Sakura",
+  "tagline": "Restoran Yonetim ve POS",
+  "productName": "SakuraPOS",
+  "logo": "logo.svg",
+  "electronAppId": "com.sakura.pos",
+  "androidPackage": "com.sakura.pos",
+  "mdnsName": "sakura",
+  "discoveryApp": "sakura-pos",
+  "dataDir": "data",
+  "updatesDir": "updates",
+  "defaultPort": 3000,
+  "storage": "json",
+  "colors": {
+    "primary": "#E8B4B8",
+    "accent": "#E8B4B8",
+    "bg": "#0F0F1A",
+    "splashText": "#E8B4B8"
+  },
+  "features": {
+    "analytics": false,
+    "sqlite": false,
+    "wasteTracking": false,
+    "costTracking": false
+  }
+}

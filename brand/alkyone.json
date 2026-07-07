@@ -1,0 +1,28 @@
+{
+  "key": "alkyone",
+  "name": "Alkyone POS",
+  "shortName": "Alkyone",
+  "tagline": "Restoran Analitik ve POS",
+  "productName": "AlkyonePOS",
+  "logo": "logo.svg",
+  "electronAppId": "com.alkyone.pos",
+  "androidPackage": "com.alkyone.pos",
+  "mdnsName": "alkyone",
+  "discoveryApp": "alkyone-pos",
+  "dataDir": "data-alkyone",
+  "updatesDir": "updates-alkyone",
+  "defaultPort": 3100,
+  "storage": "json+sqlite",
+  "colors": {
+    "primary": "#7C5CFF",
+    "accent": "#5CE0D8",
+    "bg": "#0B0B14",
+    "splashText": "#B9A8FF"
+  },
+  "features": {
+    "analytics": true,
+    "sqlite": true,
+    "wasteTracking": true,
+    "costTracking": true
+  }
+}

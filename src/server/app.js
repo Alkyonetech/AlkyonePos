@@ -4,9 +4,10 @@ const path = require('path');
 const fs = require('fs');
 const { initWebSocket } = require('../ws/websocket');
 const { loadSettings } = require('../utils/data');
+const { getBrand, publicBrand } = require('../../brand');
 
-const UPDATES_DIR = process.env.SAKURA_UPDATES_DIR
-  || path.join(__dirname, '../../updates');
+const BRAND = getBrand();
+const UPDATES_DIR = BRAND.updatesDirAbs;
 
 function createServer() {
   const app = express();
@@ -48,6 +49,7 @@ function createServer() {
   app.use((req, res, next) => {
     const p = req.path;
     if (p.startsWith('/api/') || p.startsWith('/assets/') || p.startsWith('/updates/') ||
+        p.startsWith('/brand/') ||
         p.startsWith('/css/') || p.startsWith('/js/') || p.startsWith('/img/') ||
         p === '/setup.html' || p === '/favicon.ico' || p.endsWith('.css') || p.endsWith('.js')) {
       return next();
@@ -80,6 +82,15 @@ function createServer() {
     },
   }));
 
+  // Marka (brand) — UI isim/logo/renk/ozellikleri buradan cekilir, hicbir sey
+  // sabit degil. Yeni marka = brand/<key>.json, kod degismez.
+  app.get('/api/brand', (req, res) => res.json(publicBrand()));
+  app.get('/brand/logo.svg', (req, res) => {
+    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.sendFile(BRAND.logoFileAbs);
+  });
+
   // API Routes
   app.use('/api/auth', require('../routes/auth'));
   app.use('/api/menu', require('../routes/menu'));
@@ -88,6 +99,10 @@ function createServer() {
   app.use('/api/reports', require('../routes/reports'));
   app.use('/api/settings', require('../routes/settings'));
   app.use('/api/print', require('../routes/print'));
+  // Alkyone 2.0 analitik + manuel giris — yalnizca ozellik acik markada.
+  if (BRAND.features && BRAND.features.analytics) {
+    app.use('/api/alkyone', require('../routes/alkyone'));
+  }
   app.use('/api', require('../routes/system'));
 
   // Sayfa route'lari (HTML — no-cache)
@@ -102,6 +117,13 @@ function createServer() {
   app.get('/yonetici', (req, res) => sendNoCacheHtml(res, 'yonetici.html'));
   app.get('/admin',    (req, res) => sendNoCacheHtml(res, 'admin.html'));
   app.get('/rapor',    (req, res) => sendNoCacheHtml(res, 'rapor.html'));
+
+  // Alkyone 2.0 sayfalari (analitik pano + maliyet + atik) — yalnizca acik markada
+  if (BRAND.features && BRAND.features.analytics) {
+    app.get('/analitik', (req, res) => sendNoCacheHtml(res, 'alkyone/dashboard.html'));
+    app.get('/maliyet',  (req, res) => sendNoCacheHtml(res, 'alkyone/cost.html'));
+    app.get('/fire',     (req, res) => sendNoCacheHtml(res, 'alkyone/waste.html'));
+  }
 
   // 404 - Express 5 wildcard syntax
   app.all('/api/{*splat}', (req, res) => {

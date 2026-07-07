@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Alkyone">
+  <defs>
+    <linearGradient id="ag" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C5CFF"/>
+      <stop offset="1" stop-color="#5CE0D8"/>
+    </linearGradient>
+  </defs>
+  <path d="M60 8 L104 33 V83 L60 108 L16 83 V33 Z" fill="none" stroke="url(#ag)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M60 30 L82 74 H70 L60 52 L50 74 H38 Z" fill="url(#ag)"/>
+  <circle cx="60" cy="86" r="5" fill="#5CE0D8"/>
+</svg>

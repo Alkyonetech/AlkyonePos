@@ -2,47 +2,72 @@ plugins {
     id 'com.android.application'
 }
 
+// ===== MARKA (BRAND) =====
+// Aktif marka -PposBrand=<key> ile secilir (varsayilan: alkyone). Marka tanimi
+// android/brands/<key>.properties dosyasindan gelir. Yeni marka = yeni properties
+// dosyasi; bu build.gradle degismez.
+def brandKey = (project.hasProperty('posBrand') ? project.posBrand : 'alkyone').toString()
+def brandFile = file("../brands/${brandKey}.properties")
+if (!brandFile.exists()) {
+    throw new GradleException("Marka tanimi yok: android/brands/${brandKey}.properties " +
+        "(-PposBrand=alkyone veya -PposBrand=sakura)")
+}
+def brand = new Properties()
+brand.load(new FileInputStream(brandFile))
+println "[BRAND] ${brandKey} -> ${brand.appPackage} (${brand.appName})"
+
 android {
+    // Kaynak/BuildConfig paketi sabit; install kimligi (applicationId) markadan gelir.
     namespace 'com.sakura.pos'
     compileSdk 34
 
     defaultConfig {
-        minSdk 21
+        minSdk 24            // universal-apk spec: Android 7+, ~%97 kapsam
         targetSdk 34
-        versionCode 21
-        versionName "1.9.0"
+        versionCode 22
+        versionName "2.0.0"
         vectorDrawables.useSupportLibrary = true
+
+        // Marka -> BuildConfig alanlari (MainActivity bunlari okur, hicbir sey sabit degil)
+        buildConfigField "String", "BRAND_KEY",     "\"${brand.brandKey}\""
+        buildConfigField "String", "BRAND_NAME",    "\"${brand.brandName}\""
+        buildConfigField "String", "DISCOVERY_APP", "\"${brand.discoveryApp}\""
+        buildConfigField "String", "MDNS_HOST",     "\"${brand.mdnsHost}\""
+        buildConfigField "String", "PREFS_NAME",    "\"${brand.prefsName}\""
+
+        // Marka -> renk kaynaklari
+        resValue "color", "brand_bg",     "${brand.colorBg}"
+        resValue "color", "brand_splash", "${brand.colorSplashText}"
+        resValue "color", "brand_status", "${brand.colorStatusBar}"
     }
 
-    // Iki flavor: garson ve yonetici
+    // Iki flavor: garson ve yonetici (rol build-time; runtime rolu ayri is)
     flavorDimensions "role"
 
     productFlavors {
         garson {
             dimension "role"
-            applicationId "com.sakura.pos.garson"
-            resValue "string", "app_name", "Sakura Garson"
+            applicationId "${brand.appPackage}.garson"
+            resValue "string", "app_name", "${brand.appName} Garson"
             buildConfigField "String", "START_PATH", "\"/garson\""
             buildConfigField "String", "ROLE", "\"garson\""
         }
         yonetici {
             dimension "role"
-            applicationId "com.sakura.pos.yonetici"
-            resValue "string", "app_name", "Sakura Yonetici"
+            applicationId "${brand.appPackage}.yonetici"
+            resValue "string", "app_name", "${brand.appName} Yonetici"
             buildConfigField "String", "START_PATH", "\"/yonetici\""
             buildConfigField "String", "ROLE", "\"yonetici\""
         }
     }
 
     signingConfigs {
-        // Release imzasi: keystore.properties dosyasi varsa kullanilir.
-        // Ornek: android/keystore.properties
-        //   storeFile=sakura-release.jks
-        //   storePassword=...
-        //   keyAlias=sakura
-        //   keyPassword=...
+        // Release imzasi: marka bazli keystore. Once brands/<brand>-keystore.properties,
+        // yoksa eski tek keystore.properties. Her marka KENDI sabit keystore'unu
+        // kullanmali — yoksa guncelleme eski surumun uzerine kurulmaz.
         release {
-            def ksProps = file('../keystore.properties')
+            def ksProps = file("../brands/${brandKey}-keystore.properties")
+            if (!ksProps.exists()) ksProps = file('../keystore.properties')
             if (ksProps.exists()) {
                 def props = new Properties()
                 props.load(new FileInputStream(ksProps))
@@ -63,8 +88,8 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // keystore.properties yoksa debug imzasi ile cikar (gelistirme rahati)
-            def ksProps = file('../keystore.properties')
+            def ksProps = file("../brands/${brandKey}-keystore.properties")
+            if (!ksProps.exists()) ksProps = file('../keystore.properties')
             signingConfig ksProps.exists() ? signingConfigs.release : signingConfigs.debug
         }
     }
@@ -80,8 +105,7 @@ android {
 }
 
 // Kotlin stdlib catismasi cozumu — appcompat 1.7 ve activity 1.8 araciligiyla
-// gelen kotlin-stdlib 1.8.22, eski transitive jdk7/jdk8 stub'lariyla cakisiyor
-// (1.8'de bu modullerin icerigi ana stdlib'e tasindi). Tek surume sabitliyoruz.
+// gelen kotlin-stdlib 1.8.22, eski transitive jdk7/jdk8 stub'lariyla cakisiyor.
 configurations.all {
     resolutionStrategy {
         force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
@@ -92,12 +116,8 @@ configurations.all {
 }
 
 dependencies {
-    // appcompat 1.7.0 + activity 1.8.2: HyperOS 2 / MIUI 14 enableOnBackInvokedCallback
-    // ile uyumlu, eski sürümlerde IllegalState ile activity baslatilamiyordu.
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.activity:activity:1.8.2'
-    // webkit 1.10.0: WebViewFeature.FORCE_DARK ve metricsOptOut bayrak uyumlulugu
     implementation 'androidx.webkit:webkit:1.10.0'
-    // core 1.13.x: FileProvider.getUriForFile MIUI 14 SecurityException fix
     implementation 'androidx.core:core:1.13.1'
 }

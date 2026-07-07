@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="sakura_bg">#0F0F1A</color>
-    <color name="sakura_accent">#E8B4B8</color>
+    <!-- Renkler markaya gore build.gradle'da resValue ile uretilir:
+         brand_bg, brand_splash, brand_status. Buraya statik renk EKLEME. -->
 </resources>

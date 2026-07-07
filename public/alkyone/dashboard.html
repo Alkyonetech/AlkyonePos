@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{brand} — Analitik</title>
+<style>
+  :root{ --brand-primary:#7C5CFF; --brand-accent:#5CE0D8; --brand-bg:#0B0B14; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--brand-bg);color:#e8e8f0}
+  header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #22223a;position:sticky;top:0;background:rgba(11,11,20,.9);backdrop-filter:blur(8px);z-index:5;flex-wrap:wrap}
+  header img{width:34px;height:34px}
+  header h1{font-size:18px;margin:0;font-weight:600}
+  header .tag{color:#8a8aa5;font-size:12px}
+  .spacer{flex:1}
+  select,button,a.btn{background:#17172a;color:#e8e8f0;border:1px solid #2c2c46;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer;text-decoration:none}
+  a.btn:hover,button:hover{border-color:var(--brand-primary)}
+  main{padding:20px;max-width:1200px;margin:0 auto}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+  .kpi{background:#12122099;border:1px solid #22223a;border-radius:12px;padding:14px 16px}
+  .kpi .v{font-size:24px;font-weight:700;color:var(--brand-accent)}
+  .kpi .l{font-size:12px;color:#8a8aa5;margin-top:4px}
+  section{margin-bottom:28px}
+  h2{font-size:15px;color:#b9a8ff;border-left:3px solid var(--brand-primary);padding-left:10px;margin:0 0 12px}
+  .card{background:#12122099;border:1px solid #22223a;border-radius:12px;padding:16px;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #1e1e34}
+  th{color:#8a8aa5;font-weight:500}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .q{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+  .q.star{background:#1c3a1c;color:#7fe07f}
+  .q.plowhorse{background:#3a331c;color:#e0cf7f}
+  .q.puzzle{background:#1c2f3a;color:#7fc4e0}
+  .q.dog{background:#3a1c1c;color:#e07f7f}
+  .matrix{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .quad{border:1px solid #22223a;border-radius:10px;padding:12px;min-height:90px}
+  .quad h3{margin:0 0 8px;font-size:12px}
+  .quad ul{margin:0;padding-left:16px;font-size:12px;color:#c8c8dd}
+  .empty{color:#6a6a85;padding:20px;text-align:center}
+  .heat{display:grid;grid-template-columns:auto repeat(24,1fr);gap:2px;font-size:9px;min-width:640px}
+  .heat .hc{aspect-ratio:1;border-radius:2px;background:#17172a}
+  .heat .lbl{color:#8a8aa5;padding:2px 4px;white-space:nowrap}
+  .muted{color:#6a6a85;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <img data-brand-logo alt="logo">
+  <div>
+    <h1><span data-brand="short"></span> Analitik</h1>
+    <div class="tag">Restoran analitik panosu · kar · menu muhendisligi · israf</div>
+  </div>
+  <div class="spacer"></div>
+  <a class="btn" href="/maliyet">Maliyet Girisi</a>
+  <a class="btn" href="/fire">Fire Girisi</a>
+  <select id="days">
+    <option value="7">Son 7 gun</option>
+    <option value="30" selected>Son 30 gun</option>
+    <option value="90">Son 90 gun</option>
+    <option value="365">Son 1 yil</option>
+  </select>
+</header>
+<main>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>Menu Muhendisligi — populerlik × karlilik</h2>
+    <div class="card">
+      <div class="muted" id="me-note" style="margin-bottom:10px"></div>
+      <div class="matrix" id="matrix"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Urun Bazinda Satis + Kar</h2>
+    <div class="card"><table id="sales"><thead><tr>
+      <th>Urun</th><th>Kategori</th><th class="num">Adet</th><th class="num">Ciro</th>
+      <th class="num">Maliyet</th><th class="num">Kar</th><th class="num">Marj</th><th>Sinif</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section>
+    <h2>Gun × Saat Yogunluk</h2>
+    <div class="card"><div class="heat" id="heat"></div>
+      <div class="muted" style="margin-top:8px">Koyu = az, parlak = yogun siparis. Prep/vardiya planlamasi icin.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Israf (maliyetten)</h2>
+    <div class="card" id="waste"></div>
+  </section>
+
+  <section>
+    <h2>Sepet — Birlikte Satilanlar</h2>
+    <div class="card"><table id="basket"><thead><tr>
+      <th>Urun A</th><th>Urun B</th><th class="num">Birlikte</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+
+<script src="/js/brand.js"></script>
+<script>
+const DAYS = ['Paz','Pzt','Sal','Car','Per','Cum','Cmt'];
+const fmt = k => (k/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct = x => (x*100).toFixed(1)+'%';
+const QNAME = {star:'Yildiz ⭐',plowhorse:'Is Ati 🐴',puzzle:'Bulmaca 🧩',dog:'Kopek 🐕'};
+const api = (p) => fetch(p).then(r=>r.json());
+let days = 30;
+
+async function load(){
+  days = +document.getElementById('days').value;
+  const [ov, me, hm, ws, bk] = await Promise.all([
+    api('/api/alkyone/analytics/overview?days='+days),
+    api('/api/alkyone/analytics/menu-engineering?days='+days),
+    api('/api/alkyone/analytics/heatmap?days='+days),
+    api('/api/alkyone/analytics/waste?days='+days),
+    api('/api/alkyone/analytics/basket?days='+days),
+  ]);
+  renderKpis(ov); renderMenu(me); renderHeat(hm.cells); renderWaste(ws); renderBasket(bk.pairs);
+}
+
+function renderKpis(o){
+  const k=[['Siparis',o.orders],['Ciro',fmt(o.revenue)+' TL'],['Kar',fmt(o.profit)+' TL'],
+    ['Ort. Adisyon',fmt(o.avgTicket)+' TL'],['Israf',fmt(o.wasteCost)+' TL'],['Maliyet girisli urun',o.costCoverage]];
+  document.getElementById('kpis').innerHTML = k.map(([l,v])=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+}
+
+function renderMenu(me){
+  const t=document.querySelector('#sales tbody');
+  if(!me.items.length){ t.innerHTML='<tr><td colspan="8" class="empty">Henuz veri yok — siparisler kapandikca dolar. Maliyet girin ki kar/marj hesaplansin.</td></tr>'; document.getElementById('matrix').innerHTML=''; return; }
+  document.getElementById('me-note').textContent =
+    `Ortalama adet ${me.avgQty.toFixed(1)} · ortalama marj ${pct(me.avgMargin)} (esik cizgileri). Maliyet girilmemis urun karsiz gorunur.`;
+  t.innerHTML = me.items.map(i=>`<tr>
+    <td>${i.name}</td><td>${i.category||''}</td><td class="num">${i.qty}</td>
+    <td class="num">${fmt(i.revenue)}</td><td class="num">${i.cost?fmt(i.cost):'<span class="muted">—</span>'}</td>
+    <td class="num">${fmt(i.profit)}</td><td class="num">${pct(i.margin)}</td>
+    <td><span class="q ${i.quadrant}">${QNAME[i.quadrant].split(' ')[0]}</span></td></tr>`).join('');
+  const groups={star:[],plowhorse:[],puzzle:[],dog:[]};
+  me.items.forEach(i=>groups[i.quadrant].push(i.name));
+  document.getElementById('matrix').innerHTML = ['star','puzzle','plowhorse','dog'].map(q=>`
+    <div class="quad"><h3><span class="q ${q}">${QNAME[q]}</span></h3>
+    <ul>${groups[q].slice(0,8).map(n=>`<li>${n}</li>`).join('')||'<li class="muted">—</li>'}</ul></div>`).join('');
+}
+
+function renderHeat(cells){
+  const max=Math.max(1,...cells.map(c=>c.count));
+  const map={}; cells.forEach(c=>map[c.dow+'_'+c.hour]=c);
+  let html='<div class="lbl"></div>'+Array.from({length:24},(_,h)=>`<div class="lbl">${h}</div>`).join('');
+  for(let d=1;d<=7;d++){ const dow=d%7;
+    html+=`<div class="lbl">${DAYS[dow]}</div>`;
+    for(let h=0;h<24;h++){ const c=map[dow+'_'+h]; const a=c?(0.15+0.85*c.count/max):0;
+      html+=`<div class="hc" title="${DAYS[dow]} ${h}:00 — ${c?c.count+' siparis':'0'}" style="background:${c?`rgba(124,92,255,${a})`:'#17172a'}"></div>`; }
+  }
+  document.getElementById('heat').innerHTML=html;
+}
+
+function renderWaste(ws){
+  const el=document.getElementById('waste');
+  if(!ws.total){ el.innerHTML='<div class="empty">Fire kaydi yok. <a class="btn" href="/fire">Fire Girisi</a></div>'; return; }
+  const R={spoilage:'Bozulma',wrong_order:'Yanlis siparis',overprep:'Fazla hazirlik',other:'Diger'};
+  el.innerHTML=`<div style="font-size:20px;font-weight:700;color:#e07f7f;margin-bottom:10px">Toplam kayip: ${fmt(ws.total)} TL</div>
+    <table><thead><tr><th>Sebep</th><th class="num">Adet</th><th class="num">Maliyet</th></tr></thead><tbody>
+    ${ws.byReason.map(r=>`<tr><td>${R[r.reason]||r.reason}</td><td class="num">${r.n}</td><td class="num">${fmt(r.cost)} TL</td></tr>`).join('')}</tbody></table>`;
+}
+
+function renderBasket(pairs){
+  const t=document.querySelector('#basket tbody');
+  t.innerHTML = pairs.length ? pairs.map(p=>`<tr><td>${p.a}</td><td>${p.b}</td><td class="num">${p.n}</td></tr>`).join('')
+    : '<tr><td colspan="3" class="empty">Yeterli sepet verisi yok (birkac hafta veri gerekir).</td></tr>';
+}
+
+document.getElementById('days').addEventListener('change', load);
+load();
+</script>
+</body>
+</html>

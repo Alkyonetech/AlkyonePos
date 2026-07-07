@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
+const { getBrand } = require('../../brand');
 
-const DATA_DIR = process.env.SAKURA_DATA_DIR || path.join(__dirname, '../../data');
+// Veri dizini markadan gelir: Sakura -> data/, Alkyone -> data-alkyone/.
+// (getBrand ayrica eski SAKURA_DATA_DIR / yeni POS_DATA_DIR override'larini isler.)
+const DATA_DIR = getBrand().dataDirAbs;
 
 /**
  * Atomic write: once .tmp dosyaya yaz, sonra rename

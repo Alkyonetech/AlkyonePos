@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Sakura">
+  <g fill="#E8B4B8">
+    <g transform="translate(60,60)">
+      <g id="p"><path d="M0 -34 C 9 -22 9 -10 0 -4 C -9 -10 -9 -22 0 -34 Z"/></g>
+      <use href="#p" transform="rotate(72)"/>
+      <use href="#p" transform="rotate(144)"/>
+      <use href="#p" transform="rotate(216)"/>
+      <use href="#p" transform="rotate(288)"/>
+    </g>
+  </g>
+  <circle cx="60" cy="60" r="6" fill="#C98A8F"/>
+</svg>

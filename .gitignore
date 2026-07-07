@@ -8,6 +8,18 @@ data/orders.json
 data/.firewall-ensured*
 updates/
 
+# Alkyone marka calisma verisi (runtime — repoya girmez)
+data-alkyone/
+updates-alkyone/
+**/analytics.db
+**/analytics.db-*
+
+# Aktif marka isareti (build sirasinda yazilir)
+brand/.active
+
+# Marka bazli Android keystore
+android/brands/*-keystore.properties
+
 *.log
 .DS_Store
 Thumbs.db

@@ -3,6 +3,11 @@ const path = require('path');
 const { fork } = require('child_process');
 const fs = require('fs');
 
+// Aktif marka: build sirasinda yazilan brand/.active dosyasindan (veya POS_BRAND).
+// Baslik/tray/firewall/port/mdns hepsi buradan turer — hicbir sey sabit degil.
+const { getBrand } = require('../brand');
+const BRAND = getBrand();
+
 // Tek instance kontrolu
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) { app.quit(); }
@@ -23,7 +28,7 @@ const DATA_DIR = isDev
 const UPDATES_DIR = isDev
   ? path.join(__dirname, '..', 'updates')
   : path.join(path.dirname(app.getPath('exe')), 'updates');
-const PORT = 3000;
+const PORT = BRAND.defaultPort || 3000;
 
 // Data klasorunu hazirla
 function ensureDataDir() {
@@ -39,8 +44,8 @@ function ensureDataDir() {
     'orders.json': { orders: [] },
     'settings.json': {
       restaurant: { name: '', address: '', phone: '', logo: '' },
-      network: { port: PORT, mdnsName: 'sakura', lastKnownIp: '' },
-      auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: 'sakura-' + Date.now(), pinChangedAt: null },
+      network: { port: PORT, mdnsName: BRAND.mdnsName, lastKnownIp: '' },
+      auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: BRAND.key + '-' + Date.now(), pinChangedAt: null },
       setupCompleted: false,
       operations: { dayCloseHour: 4, vatRate: 10, currency: 'TL' },
       printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'CP1254_32' },
@@ -178,6 +183,10 @@ function startServer() {
     // Sunucu environment
     const env = {
       ...process.env,
+      POS_BRAND: BRAND.key,
+      POS_DATA_DIR: DATA_DIR,
+      POS_UPDATES_DIR: UPDATES_DIR,
+      // geriye donuk uyumluluk (eski Sakura degiskenleri)
       SAKURA_DATA_DIR: DATA_DIR,
       SAKURA_UPDATES_DIR: UPDATES_DIR,
       PORT: String(PORT)
@@ -241,7 +250,7 @@ function createWindow() {
     height: 800,
     minWidth: 1024,
     minHeight: 600,
-    title: 'Sakura POS',
+    title: BRAND.name,
     icon: getIconPath(),
     autoHideMenuBar: true,
     webPreferences: {
@@ -312,7 +321,7 @@ function createTray() {
   tray = new Tray(icon);
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Sakura POS', type: 'normal', enabled: false },
+    { label: BRAND.name, type: 'normal', enabled: false },
     { type: 'separator' },
     { label: 'POS Ekrani', click: () => showWindow(`http://localhost:${PORT}/pos`) },
     { label: 'Admin Panel', click: () => showWindow(`http://localhost:${PORT}/admin`) },
@@ -325,7 +334,7 @@ function createTray() {
     { label: 'Cikis', click: () => { app.isQuitting = true; app.quit(); } }
   ]);
 
-  tray.setToolTip('Sakura POS');
+  tray.setToolTip(BRAND.name);
   tray.setContextMenu(contextMenu);
   tray.on('double-click', () => showWindow(`http://localhost:${PORT}/pos`));
 }
@@ -403,15 +412,16 @@ function ensureFirewallRule() {
   } catch (_) {}
 
   // Tek satirlik, idempotent: once sil, sonra profile=any ekle (3 kural).
+  const N = BRAND.name; // firewall kural adi (markaya gore)
   const cmds = [
-    'netsh advfirewall firewall delete rule name="Sakura POS"',
-    'netsh advfirewall firewall add rule name="Sakura POS" dir=in action=allow protocol=TCP localport=3000 profile=any',
-    'netsh advfirewall firewall add rule name="Sakura POS" dir=out action=allow protocol=TCP localport=3000 profile=any',
-    'netsh advfirewall firewall delete rule name="Sakura POS mDNS"',
-    'netsh advfirewall firewall add rule name="Sakura POS mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any',
-    'netsh advfirewall firewall delete rule name="Sakura POS Discovery"',
-    'netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any',
-    'netsh advfirewall firewall add rule name="Sakura POS Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any',
+    `netsh advfirewall firewall delete rule name="${N}"`,
+    `netsh advfirewall firewall add rule name="${N}" dir=in action=allow protocol=TCP localport=${PORT} profile=any`,
+    `netsh advfirewall firewall add rule name="${N}" dir=out action=allow protocol=TCP localport=${PORT} profile=any`,
+    `netsh advfirewall firewall delete rule name="${N} mDNS"`,
+    `netsh advfirewall firewall add rule name="${N} mDNS" dir=in action=allow protocol=UDP localport=5353 profile=any`,
+    `netsh advfirewall firewall delete rule name="${N} Discovery"`,
+    `netsh advfirewall firewall add rule name="${N} Discovery" dir=out action=allow protocol=UDP remoteport=5354 profile=any`,
+    `netsh advfirewall firewall add rule name="${N} Discovery" dir=in action=allow protocol=UDP localport=5354 profile=any`,
   ];
 
   const { exec } = require('child_process');
@@ -429,7 +439,7 @@ function ensureFirewallRule() {
     }
     // 2) Yetki yok — tek seferlik elevated calistir (UAC bir kez sorulur).
     try {
-      const bat = path.join(app.getPath('temp'), `sakura-fw-${Date.now()}.bat`);
+      const bat = path.join(app.getPath('temp'), `${BRAND.key}-fw-${Date.now()}.bat`);
       fs.writeFileSync(bat, '@echo off\r\n' + cmds.map(c => c + ' >nul 2>&1').join('\r\n') + '\r\n');
       const ps = `Start-Process -FilePath '${bat}' -Verb RunAs -WindowStyle Hidden -Wait`;
       exec(`powershell -NoProfile -ExecutionPolicy Bypass -Command "${ps}"`,
@@ -463,7 +473,7 @@ function syncAutoStart() {
 
     // Production'da launcher'i isaret et (varsa); yoksa SakuraPOS.exe
     const installDir = path.dirname(app.getPath('exe'));
-    const launcherExe = path.join(installDir, 'SakuraPOS-Launcher.exe');
+    const launcherExe = path.join(installDir, `${BRAND.productName}-Launcher.exe`);
     const targetExe = fs.existsSync(launcherExe)
       ? launcherExe
       : app.getPath('exe');

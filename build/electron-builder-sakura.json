@@ -1,0 +1,35 @@
+{
+  "appId": "com.sakura.pos",
+  "productName": "SakuraPOS",
+  "directories": { "output": "dist/sakura" },
+  "files": [
+    "electron/**/*",
+    "src/**/*",
+    "brand/**/*",
+    "public/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "data/",
+      "to": "data/",
+      "filter": ["**/*", "!orders.json", "!reports/**", "!backups/**", "!analytics.db*"]
+    }
+  ],
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }],
+    "icon": "electron/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "electron/icon.ico",
+    "uninstallerIcon": "electron/icon.ico",
+    "installerHeaderIcon": "electron/icon.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Sakura POS",
+    "include": "electron/installer.nsh"
+  }
+}

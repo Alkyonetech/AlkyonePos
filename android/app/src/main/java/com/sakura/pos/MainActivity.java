@@ -68,8 +68,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "SAKURA";
-    private static final String PREFS = "sakura";
+    private static final String TAG = "POS";
+    private static final String PREFS = BuildConfig.PREFS_NAME;
     private static final String PREF_IP = "server_ip";
     private static final String PREF_OEM_HINTED = "oem_hinted";
     private static final String PREF_BATTERY_HINTED = "battery_hinted";
@@ -123,11 +123,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
 
-            // Sadece Poco / Xiaomi / Redmi (MIUI / HyperOS) icin destekleniyor.
-            if (!isSupportedDevice()) {
-                showUnsupportedDeviceDialog();
-                return;
-            }
+            // Universal APK: cihaz/uretici kilidi YOK — her Android 7+ cihaza kurulur.
+            // (MIUI/HyperOS'a ozel ipuclari yalnizca o cihazlarda gosterilir.)
 
             // WebView multi-process veri dizini cakismasi (bazi MIUI/HyperOS surumlerinde
             // ayni paket icin iki process baslatilirsa "Using WebView from more than one
@@ -284,10 +281,12 @@ public class MainActivity extends AppCompatActivity {
      */
     private void maybeShowOemHints() {
         try {
+            // Universal build: bu MIUI/HyperOS'a ozel rehber yalnizca o ailede anlamli.
+            if (!isSupportedDevice()) return;
             if (prefs.getBoolean(PREF_OEM_HINTED, false)) return;
             new AlertDialog.Builder(this)
                 .setTitle("HyperOS / MIUI ayarlari")
-                .setMessage("Sakura POS'un sorunsuz calismasi icin:\n\n"
+                .setMessage(BuildConfig.BRAND_NAME + " POS'un sorunsuz calismasi icin:\n\n"
                     + "  1) Pil optimizasyonu istisnasi (asagida acilacak)\n"
                     + "  2) Guvenlik > Izinler > 'Otomatik baslat' → AKTIF\n"
                     + "  3) Son uygulamalar ekraninda Sakura'u kilitleyin (asagi cek -> kilit)\n"
@@ -351,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
                 i.setComponent(new ComponentName(pair[0], pair[1]));
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 if (i.resolveActivity(getPackageManager()) != null) {
-                    showToast("Lutfen Sakura POS uygulamalarini 'autostart' listesine ekleyin");
+                    showToast("Lutfen " + BuildConfig.BRAND_NAME + " uygulamalarini 'autostart' listesine ekleyin");
                     startActivity(i);
                     return;
                 }
@@ -428,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Koyu arkaplan: HyperOS/MIUI beyaz pencere flash'i ve WebView ilk
         // boyama bos beyaz kalmasi sorununu engeller.
-        final int BG_DARK = 0xFF0F0F1A;
+        final int BG_DARK = ContextCompat.getColor(this, R.color.brand_bg);
 
         FrameLayout root = new FrameLayout(this);
         root.setLayoutParams(new ViewGroup.LayoutParams(
@@ -438,8 +437,8 @@ public class MainActivity extends AppCompatActivity {
         // Yerel splash overlay — WebView ilk frame'i basana kadar gorunur.
         // Boylece kullanici beyaz ekran yerine "Sakura yukleniyor..." gorur.
         final android.widget.TextView splash = new android.widget.TextView(this);
-        splash.setText("Sakura " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici") + "\nYukleniyor...");
-        splash.setTextColor(0xFFE8B4B8);
+        splash.setText(BuildConfig.BRAND_NAME + " " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici") + "\nYukleniyor...");
+        splash.setTextColor(ContextCompat.getColor(this, R.color.brand_splash));
         splash.setTextSize(18);
         splash.setGravity(android.view.Gravity.CENTER);
         splash.setBackgroundColor(BG_DARK);
@@ -603,8 +602,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void tryHostname(Runnable onFail) {
-        setSplashSub("sakura.local deneniyor...");
-        serverUrl = "http://sakura.local:" + PORT;
+        setSplashSub(BuildConfig.MDNS_HOST + " deneniyor...");
+        serverUrl = "http://" + BuildConfig.MDNS_HOST + ":" + PORT;
         tryConnect(onFail);
     }
 
@@ -612,7 +611,7 @@ public class MainActivity extends AppCompatActivity {
     private void setSplashSub(String sub) {
         handler.post(() -> {
             if (splashView != null) {
-                splashView.setText("Sakura "
+                splashView.setText(BuildConfig.BRAND_NAME + " "
                     + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici")
                     + "\n" + sub);
             }
@@ -645,7 +644,7 @@ public class MainActivity extends AppCompatActivity {
                         sock.receive(pkt);
                         String msg = new String(pkt.getData(), 0, pkt.getLength());
                         JSONObject json = new JSONObject(msg);
-                        if (!"sakura-pos".equals(json.optString("app"))) continue;
+                        if (!BuildConfig.DISCOVERY_APP.equals(json.optString("app"))) continue;
                         int port = json.optInt("port", PORT);
                         String senderIp = pkt.getAddress().getHostAddress();
                         String ip = senderIp;
@@ -810,7 +809,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onServiceFound(NsdServiceInfo info) {
-                    if (info.getServiceName() != null && info.getServiceName().toLowerCase().contains("sakura")) {
+                    if (info.getServiceName() != null && info.getServiceName().toLowerCase().contains(BuildConfig.BRAND_KEY)) {
                         nsdManager.resolveService(info, new NsdManager.ResolveListener() {
                             @Override public void onResolveFailed(NsdServiceInfo si, int err) {}
 
@@ -870,7 +869,7 @@ public class MainActivity extends AppCompatActivity {
                         // Yerel splash overlay zaten ekranda; dogrudan gercek URL'i yukle.
                         if (splashView != null) {
                             splashView.setVisibility(View.VISIBLE);
-                            splashView.setText("Sakura " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici")
+                            splashView.setText(BuildConfig.BRAND_NAME + " " + (BuildConfig.ROLE.equals("garson") ? "Garson" : "Yonetici")
                                 + "\n" + serverUrl);
                         }
                         if (webView != null) webView.setVisibility(View.INVISIBLE);
@@ -912,7 +911,7 @@ public class MainActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
             .setTitle("Sunucu Adresi")
-            .setMessage("Sakura POS sunucusunun IP adresini girin:")
+            .setMessage(BuildConfig.BRAND_NAME + " POS sunucusunun IP adresini girin:")
             .setView(input)
             .setPositiveButton("Baglan", (d, w) -> {
                 manualIpDialogShown = false; // diyalog kapandı; tekrar açılabilir
@@ -1011,7 +1010,7 @@ public class MainActivity extends AppCompatActivity {
                     pendingApkUrl = url;
                     new AlertDialog.Builder(this)
                         .setTitle("Kurulum izni gerekli")
-                        .setMessage("Sakura POS guncellemesi yukleyebilmek icin 'Bu kaynaktan "
+                        .setMessage(BuildConfig.BRAND_NAME + " POS guncellemesi yukleyebilmek icin 'Bu kaynaktan "
                             + "yuklemeye izin ver' ayarini acmaniz gerekiyor.")
                         .setPositiveButton("Ayarlari Ac", (d, w) -> {
                             try {
@@ -1019,7 +1018,7 @@ public class MainActivity extends AppCompatActivity {
                                     Uri.parse("package:" + getPackageName()));
                                 startActivityForResult(i, REQ_INSTALL_PERMISSION);
                             } catch (Throwable t) {
-                                showToast("Ayar acilamadi — Ayarlar > Uygulamalar > Sakura > "
+                                showToast("Ayar acilamadi — Ayarlar > Uygulamalar > " + BuildConfig.BRAND_NAME + " > "
                                     + "Bilinmeyen uygulamalari yukle");
                             }
                         })
@@ -1031,17 +1030,17 @@ public class MainActivity extends AppCompatActivity {
         }
         try {
             DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            String fileName = "sakura-" + BuildConfig.ROLE + "-" + System.currentTimeMillis() + ".apk";
+            String fileName = BuildConfig.BRAND_KEY + "-" + BuildConfig.ROLE + "-" + System.currentTimeMillis() + ".apk";
 
             // Eski indirmeyi temizle
             File downloads = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
             if (downloads != null) {
-                File[] olds = downloads.listFiles((d, n) -> n.startsWith("sakura-") && n.endsWith(".apk"));
+                File[] olds = downloads.listFiles((d, n) -> n.startsWith(BuildConfig.BRAND_KEY + "-") && n.endsWith(".apk"));
                 if (olds != null) for (File f : olds) f.delete();
             }
 
             DownloadManager.Request req = new DownloadManager.Request(Uri.parse(url));
-            req.setTitle("Sakura POS Guncelleme");
+            req.setTitle(BuildConfig.BRAND_NAME + " POS Guncelleme");
             req.setDescription("Yeni surum indiriliyor...");
             req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
             req.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, fileName);

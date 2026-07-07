@@ -4,8 +4,18 @@ const { loadOrders, saveOrders, loadTables, saveTables, loadSettings } = require
 const { garsonRequired, yoneticiRequired } = require('../utils/auth');
 const { broadcast } = require('../ws/websocket');
 const { autoKitchenPrint } = require('../services/kitchen-auto');
+const { getBrand } = require('../../brand');
 
 const router = express.Router();
+
+// Faz 2 yazma yolu: yalnizca sqlite ozelligi acik markada (Alkyone) kapanan
+// siparisleri 2.0 analitik semasina yazar. Sakura'da tam no-op.
+const _alkyoneSqlite = !!(getBrand().features && getBrand().features.sqlite);
+function recordAnalytics(order) {
+  if (!_alkyoneSqlite) return;
+  if (!order || order.status !== 'closed') return; // yalnizca gerceklesen satis
+  try { require('../alkyone/writer').recordClosedOrder(order); } catch (_) { /* POS'u etkileme */ }
+}
 
 /**
  * Yeni siparis ID olustur
@@ -104,6 +114,7 @@ router.post('/external', garsonRequired, (req, res) => {
 
   broadcast('order:created', order);
   broadcast('order:closed', order);
+  recordAnalytics(order);
   res.json(order);
   // Harici siparislerde otomatik mutfak fisi yok — yalnizca kayit/takip
 });
@@ -193,6 +204,7 @@ router.post('/delivery', garsonRequired, (req, res) => {
 
   broadcast('order:created', order);
   broadcast('order:closed', order);
+  recordAnalytics(order);
   res.json(order);
   // Mutfak fisi otomatik gonderilmez — kullanici listeden manuel tetikler
 });
@@ -442,6 +454,7 @@ router.post('/:tableId/close', yoneticiRequired, (req, res) => {
 
   saveOrders(data);
   broadcast('order:closed', order);
+  recordAnalytics(order);
   res.json(order);
 });
 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{brand} — Fire Girisi</title>
+<style>
+  :root{ --brand-primary:#7C5CFF; --brand-accent:#5CE0D8; --brand-bg:#0B0B14; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--brand-bg);color:#e8e8f0}
+  header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #22223a;flex-wrap:wrap}
+  header img{width:32px;height:32px}
+  header h1{font-size:17px;margin:0}
+  .spacer{flex:1}
+  a.btn,button{background:#17172a;color:#e8e8f0;border:1px solid #2c2c46;border-radius:8px;padding:9px 13px;font-size:14px;cursor:pointer;text-decoration:none}
+  button.pri{background:var(--brand-primary);border-color:var(--brand-primary);color:#fff;font-weight:600}
+  main{padding:20px;max-width:680px;margin:0 auto}
+  .card{background:#12122099;border:1px solid #22223a;border-radius:12px;padding:16px;margin-bottom:18px}
+  h2{font-size:14px;margin:0 0 12px;color:#b9a8ff}
+  label{display:block;font-size:12px;color:#8a8aa5;margin:10px 0 4px}
+  select,input{width:100%;background:#0e0e1c;color:#e8e8f0;border:1px solid #2c2c46;border-radius:8px;padding:10px;font-size:15px}
+  .reasons{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
+  .reasons button{padding:12px;text-align:center}
+  .reasons button.sel{border-color:var(--brand-primary);background:#1c1836}
+  .est{font-size:22px;font-weight:700;color:#e07f7f;margin:14px 0}
+  .muted{color:#6a6a85;font-size:12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1c3a1c;color:#7fe07f;padding:10px 18px;border-radius:8px;opacity:0;transition:.3s}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <img data-brand-logo alt="logo"><h1><span data-brand="short"></span> · Fire Girisi</h1>
+  <div class="spacer"></div>
+  <a class="btn" href="/analitik">← Analitik</a>
+</header>
+<main>
+  <div class="card">
+    <h2>Fire kaydet — kayip maliyetten otomatik hesaplanir</h2>
+    <label>Hammadde</label>
+    <select id="stock"><option value="">— hammadde secin —</option></select>
+    <div class="grid2">
+      <div><label>Miktar</label><input id="qty" type="number" min="0" step="0.01" value="1"></div>
+      <div><label>Tahmini kayip</label><div class="est" id="est">—</div></div>
+    </div>
+    <label>Sebep</label>
+    <div class="reasons" id="reasons">
+      <button data-r="spoilage" class="sel">Bozulma</button>
+      <button data-r="wrong_order">Yanlis siparis</button>
+      <button data-r="overprep">Fazla hazirlik</button>
+      <button data-r="other">Diger</button>
+    </div>
+    <div style="margin-top:16px"><button class="pri" style="width:100%;padding:13px" onclick="submitWaste()">Fireyi Kaydet</button></div>
+  </div>
+
+  <div class="card">
+    <h2>Yeni hammadde ekle</h2>
+    <div class="grid2">
+      <div><label>Ad</label><input id="sname" placeholder="Somon"></div>
+      <div><label>Birim</label><select id="sunit"><option>kg</option><option>adet</option><option>lt</option></select></div>
+    </div>
+    <label>Birim maliyet (TL)</label><input id="scost" type="number" min="0" step="0.01" placeholder="850">
+    <div style="margin-top:12px"><button onclick="addStock()">Hammadde Ekle</button></div>
+    <div class="muted" style="margin-top:8px">Israf hammadde firesidir (somon, pirinc, nori) — bitmis tabak degil. Maliyet buradan gelir.</div>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="/js/brand.js"></script>
+<script>
+const api=(p,o)=>fetch(p,o).then(r=>r.json());
+const fmt=k=>(k/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);}
+let stock=[], reason='spoilage';
+
+document.getElementById('reasons').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-r]'); if(!b)return;
+  document.querySelectorAll('#reasons button').forEach(x=>x.classList.remove('sel'));
+  b.classList.add('sel'); reason=b.dataset.r;
+});
+['qty','stock'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+
+function calc(){
+  const s=stock.find(x=>x.id===document.getElementById('stock').value);
+  const q=+document.getElementById('qty').value||0;
+  document.getElementById('est').textContent = s ? fmt(s.unit_cost*q)+' TL' : '—';
+}
+async function load(){
+  const r=await api('/api/alkyone/stock'); stock=r.items;
+  document.getElementById('stock').innerHTML='<option value="">— hammadde secin —</option>'+
+    stock.map(s=>`<option value="${s.id}">${s.name} (${fmt(s.unit_cost)} TL/${s.unit||'birim'})</option>`).join('');
+  calc();
+}
+async function addStock(){
+  const name=document.getElementById('sname').value.trim();
+  const unit=document.getElementById('sunit').value;
+  const cost=document.getElementById('scost').value;
+  if(!name||cost===''){toast('Ad ve maliyet gerekli');return;}
+  await api('/api/alkyone/stock',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,unit,unitCostTl:+cost})});
+  document.getElementById('sname').value='';document.getElementById('scost').value='';
+  toast('Hammadde eklendi'); load();
+}
+async function submitWaste(){
+  const stockItemId=document.getElementById('stock').value;
+  const qty=+document.getElementById('qty').value;
+  if(!stockItemId){toast('Hammadde secin');return;}
+  if(!(qty>0)){toast('Miktar girin');return;}
+  const r=await api('/api/alkyone/waste',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({stockItemId,qty,reason})});
+  if(r.error){toast(r.error);return;}
+  toast('Fire kaydedildi: '+fmt(r.costValue)+' TL kayip');
+  document.getElementById('qty').value=1; calc();
+}
+load();
+</script>
+</body>
+</html>

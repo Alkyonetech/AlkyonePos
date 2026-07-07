@@ -1,0 +1,28 @@
+{
+  "appId": "com.alkyone.pos",
+  "productName": "AlkyonePOS",
+  "directories": { "output": "dist/alkyone" },
+  "files": [
+    "electron/**/*",
+    "src/**/*",
+    "brand/**/*",
+    "public/**/*",
+    "package.json"
+  ],
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }],
+    "icon": "electron/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "electron/icon.ico",
+    "uninstallerIcon": "electron/icon.ico",
+    "installerHeaderIcon": "electron/icon.ico",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Alkyone POS",
+    "include": "electron/installer-alkyone.nsh"
+  }
+}

@@ -36,8 +36,9 @@ function broadcastAddrFor(addr, netmask) {
   return a.map((octet, i) => (octet & m[i]) | (~m[i] & 0xff)).join('.');
 }
 
-function startDiscoveryBroadcaster(port, version) {
+function startDiscoveryBroadcaster(port, version, appId) {
   if (socket) return;
+  const APP_ID = appId || 'sakura-pos';
   socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
   socket.on('error', (err) => {
@@ -52,7 +53,7 @@ function startDiscoveryBroadcaster(port, version) {
     const ifaces = ipv4Interfaces();
     const ips = ifaces.map(i => i.address);
     const msg = Buffer.from(JSON.stringify({
-      app: 'sakura-pos',
+      app: APP_ID,
       version: version || '1.0.0',
       port: port || 3000,
       ips,
