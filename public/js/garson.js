@@ -156,7 +156,8 @@ function renderTables() {
   if (!grid) return;
   grid.innerHTML = (tables || []).map(t => {
     const order = orders.find(o => o.tableId === t.id && o.status === 'open');
-    const cls = t.status === 'open' ? 'open' : t.status === 'reserved' ? 'reserved' : '';
+    let cls = t.status === 'open' ? 'open' : t.status === 'reserved' ? 'reserved' : '';
+    if (t.id === currentTableId) cls += ' selected';
     return `
       <div class="t-card ${cls}" onclick="openTable(${t.id})">
         <div class="t-dot"></div>

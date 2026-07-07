@@ -218,8 +218,15 @@ function formatReceipt(order, settings) {
     const dt = new Date(order.closedAt || order.openedAt || Date.now());
     p.line('Tarih   : ' + dt.toLocaleString('tr-TR'));
   }
+  const EXT_LABELS = { trendyol: 'TRENDYOL', yemeksepeti: 'YEMEKSEPETI', getir: 'GETIR YEMEK' };
   if (order.source === 'eve') {
     p.line('** EVE TESLIM **');
+    if (order.customer) p.line('Müşteri : ' + order.customer);
+    if (order.phone)    p.line('Telefon : ' + order.phone);
+    if (order.address)  p.line('Adres   : ' + order.address);
+  } else if (EXT_LABELS[order.source]) {
+    p.line('** ' + EXT_LABELS[order.source] + ' **');
+    if (order.platformOrderNo) p.line('Sip. No : ' + order.platformOrderNo);
     if (order.customer) p.line('Müşteri : ' + order.customer);
     if (order.phone)    p.line('Telefon : ' + order.phone);
     if (order.address)  p.line('Adres   : ' + order.address);
@@ -228,7 +235,7 @@ function formatReceipt(order, settings) {
   }
   if (t.showOrderId) p.line('Adisyon : ' + (order.id || '-'));
   p.tall(false);
-  if (t.showDateTime || t.showTableNo || t.showOrderId || order.source === 'eve') p.hr('-');
+  if (t.showDateTime || t.showTableNo || t.showOrderId || order.source === 'eve' || EXT_LABELS[order.source]) p.hr('-');
 
   // Kalemler (ikramlar hariç)
   const activeItems = (order.items || []).filter(i => i.status === 'active');

@@ -83,8 +83,23 @@ function createServer() {
   }));
 
   // Marka (brand) — UI isim/logo/renk/ozellikleri buradan cekilir, hicbir sey
-  // sabit degil. Yeni marka = brand/<key>.json, kod degismez.
-  app.get('/api/brand', (req, res) => res.json(publicBrand()));
+  // sabit degil. Tek build; marka ismi ILK KURULUMDA girilir ve sonraki her
+  // acilista ayarlardan (restaurant.name/logo) okunarak markanin uzerine
+  // yazilir. Boylece EXE/APK icindeki jenerik varsayilan, kurulan restoranin
+  // adiyla "brand update" olarak baslar.
+  app.get('/api/brand', (req, res) => {
+    const b = publicBrand();
+    try {
+      const s = loadSettings();
+      const rname = (s.restaurant?.name || '').trim();
+      if (rname) {
+        b.name = rname;
+        b.shortName = rname;
+      }
+      if (s.restaurant?.logo) b.logoUrl = s.restaurant.logo; // data URL veya yol
+    } catch (_) { /* ayarlar okunamazsa jenerik marka doner */ }
+    res.json(b);
+  });
   app.get('/brand/logo.svg', (req, res) => {
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 'no-cache');

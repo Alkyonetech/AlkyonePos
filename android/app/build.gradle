@@ -10,7 +10,7 @@ def brandKey = (project.hasProperty('posBrand') ? project.posBrand : 'alkyone').
 def brandFile = file("../brands/${brandKey}.properties")
 if (!brandFile.exists()) {
     throw new GradleException("Marka tanimi yok: android/brands/${brandKey}.properties " +
-        "(-PposBrand=alkyone veya -PposBrand=sakura)")
+        "(-PposBrand=alkyone)")
 }
 def brand = new Properties()
 brand.load(new FileInputStream(brandFile))
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         minSdk 24            // universal-apk spec: Android 7+, ~%97 kapsam
         targetSdk 34
-        versionCode 22
+        versionCode 23
         versionName "2.0.0"
         vectorDrawables.useSupportLibrary = true
 

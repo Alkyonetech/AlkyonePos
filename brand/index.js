@@ -1,18 +1,15 @@
 /**
- * Jenerik marka (brand) motoru.
+ * Jenerik marka (brand) motoru — TEK URUN.
  *
- * Tek kod tabani, N adet beyaz-etiket urun. Kod HICBIR yerde marka ismini
- * sabitlemez; isim / logo / renk / appId / veri-dizini hepsi aktif marka
- * config'inden (brand/<key>.json) turer. Yeni marka eklemek = yeni bir
- * brand/<key>.json + brand/assets/<key>/logo.svg birakmak. Sifir kod degisikligi.
+ * Kod HICBIR yerde marka ismini sabitlemez. Varsayilan isim/logo/renk build'e
+ * gomulu jenerik config'ten (brand/<key>.json) gelir; ancak URUNUN GORUNEN ADI
+ * ILK KURULUMDA girilir ve calisma aninda ayarlardan (restaurant.name/logo)
+ * markanin uzerine yazilir (bkz. src/server/app.js -> GET /api/brand).
  *
  * Aktif marka cozum sirasi:
- *   1) POS_BRAND ortam degiskeni  (build script'leri bunu set eder)
- *   2) brand/.active dosyasi       (build sirasinda yazilan sabit marka)
- *   3) 'alkyone'                   (varsayilan / amiral marka)
- *
- * Sakura (mevcut canli musteri) ayri bir marka instance'idir; verisi data/
- * dizininde ve dokunulmaz.
+ *   1) POS_BRAND ortam degiskeni
+ *   2) brand/.active dosyasi (build sirasinda yazilir)
+ *   3) 'alkyone' (tek varsayilan config)
  */
 const fs = require('fs');
 const path = require('path');
@@ -58,14 +55,11 @@ function getBrand() {
   const key = resolveBrandKey();
   const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, `${key}.json`), 'utf8'));
 
-  // Veri dizini: acik override > marka varsayilani. Sakura icin eski
-  // SAKURA_DATA_DIR degiskeni de desteklenir (mevcut kurulumlar bozulmasin).
-  const explicit = process.env.POS_DATA_DIR
-    || (key === 'sakura' ? process.env.SAKURA_DATA_DIR : null);
+  // Veri dizini: acik override > marka varsayilani.
+  const explicit = process.env.POS_DATA_DIR;
   cfg.dataDirAbs = explicit ? path.resolve(explicit) : path.join(ROOT, cfg.dataDir);
 
-  const explicitUpd = process.env.POS_UPDATES_DIR
-    || (key === 'sakura' ? process.env.SAKURA_UPDATES_DIR : null);
+  const explicitUpd = process.env.POS_UPDATES_DIR;
   cfg.updatesDirAbs = explicitUpd ? path.resolve(explicitUpd) : path.join(ROOT, cfg.updatesDir);
 
   cfg.sqliteFileAbs = path.join(cfg.dataDirAbs, 'analytics.db');

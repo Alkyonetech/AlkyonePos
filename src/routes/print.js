@@ -314,8 +314,15 @@ function formatReceiptHTML(order, settings) {
 
   const info = [];
   if (t.showDateTime) info.push('Tarih: ' + new Date(order.closedAt || order.openedAt || Date.now()).toLocaleString('tr-TR'));
+  const EXT_LABELS = { trendyol: 'TRENDYOL', yemeksepeti: 'YEMEKSEPETI', getir: 'GETIR YEMEK' };
   if (order.source === 'eve') {
     info.push('** EVE TESLIM **');
+    if (order.customer) info.push('Müşteri: ' + escapeHtml(order.customer));
+    if (order.phone)    info.push('Telefon: ' + escapeHtml(order.phone));
+    if (order.address)  info.push('Adres: ' + escapeHtml(order.address));
+  } else if (EXT_LABELS[order.source]) {
+    info.push('** ' + EXT_LABELS[order.source] + ' **');
+    if (order.platformOrderNo) info.push('Siparis No: ' + escapeHtml(order.platformOrderNo));
     if (order.customer) info.push('Müşteri: ' + escapeHtml(order.customer));
     if (order.phone)    info.push('Telefon: ' + escapeHtml(order.phone));
     if (order.address)  info.push('Adres: ' + escapeHtml(order.address));

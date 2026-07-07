@@ -1,19 +1,14 @@
 {
   "name": "alkyone-pos",
   "version": "2.0.0",
-  "description": "Alkyone / Sakura POS - tek kod tabani, marka anahtarli restoran POS + analitik",
+  "description": "Alkyone POS - tek kod tabani, tek build; marka adi ilk kurulumda girilir",
   "main": "electron/main.js",
   "scripts": {
-    "start": "node scripts/run.js alkyone",
-    "start:alkyone": "node scripts/run.js alkyone",
-    "start:sakura": "node scripts/run.js sakura",
-    "dev": "node --watch scripts/run.js alkyone",
+    "start": "node scripts/run.js",
+    "dev": "node --watch scripts/run.js",
     "electron": "node scripts/set-brand.js alkyone && electron .",
-    "electron:alkyone": "node scripts/set-brand.js alkyone && electron .",
-    "electron:sakura": "node scripts/set-brand.js sakura && electron .",
-    "build:alkyone": "node scripts/set-brand.js alkyone && electron-builder -c build/electron-builder-alkyone.json",
-    "build:sakura": "node scripts/set-brand.js sakura && electron-builder -c build/electron-builder-sakura.json",
-    "build:all": "npm run build:alkyone && npm run build:sakura",
+    "build": "node scripts/set-brand.js alkyone && electron-builder -c build/electron-builder.json",
+    "build:all": "npm run build",
     "test": "node test/alkyone.test.js",
     "test:api": "node test/api-test.js",
     "test:scenarios": "node test/scenarios.js",
@@ -24,7 +19,7 @@
   "keywords": [
     "pos",
     "restaurant",
-    "sakura"
+    "alkyone"
   ],
   "author": "",
   "license": "ISC",
@@ -41,8 +36,8 @@
     "electron-builder": "^26.8.1"
   },
   "build": {
-    "appId": "com.sakura.pos",
-    "productName": "SakuraPOS",
+    "appId": "com.alkyone.pos",
+    "productName": "AlkyonePOS",
     "directories": {
       "output": "dist"
     },
@@ -85,7 +80,7 @@
       "installerHeaderIcon": "electron/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Sakura POS",
+      "shortcutName": "Alkyone POS",
       "include": "electron/installer.nsh"
     }
   }

@@ -22,14 +22,37 @@
       r.setProperty('--brand-bg', b.colors.bg || '#0B0B14');
       r.setProperty('--brand-splash', b.colors.splashText || b.colors.primary || '#fff');
     }
-    // Baslik: once {brand} yer tutucusu, sonra bilinen adlar (uzun->name, kisa->short)
-    if (document.title.indexOf('{brand}') >= 0) {
-      document.title = document.title.replace(/\{brand\}/g, b.name);
-    } else {
+    // Metindeki bilinen marka adlarini aktif markaya cevir (uzun once).
+    function swap(str) {
+      if (!str) return str;
+      if (str.indexOf('{brand}') >= 0) return str.replace(/\{brand\}/g, b.name);
       REPL.forEach(function (p) {
-        if (p[1] && document.title.indexOf(p[0]) >= 0) document.title = document.title.split(p[0]).join(p[1]);
+        if (p[1] && str.indexOf(p[0]) >= 0) str = str.split(p[0]).join(p[1]);
       });
+      return str;
     }
+
+    // Baslik
+    document.title = swap(document.title);
+
+    // Gorunur marka etiketleri — HTML'de sabit yazan "Sakura/Alkyone" metinlerini
+    // (giris logolari, ust bar basliklari, karsilama) aktif markaya cevir. Yalnizca
+    // tek metin dugumu iceren, marka gostermeye ayrilmis elemanlar hedeflenir.
+    var BRAND_SELECTORS = '.pin-logo, .logo, .header-logo, .success-sub, .app-title, [data-brand-text]';
+    document.querySelectorAll(BRAND_SELECTORS).forEach(function (el) {
+      if (el.children.length === 0) {
+        var t = swap(el.textContent);
+        if (t !== el.textContent) el.textContent = t;
+      }
+    });
+    // index.html gibi baslik ekranlarindaki h1
+    document.querySelectorAll('h1').forEach(function (el) {
+      if (el.children.length === 0) {
+        var t = swap(el.textContent);
+        if (t !== el.textContent) el.textContent = t;
+      }
+    });
+
     document.querySelectorAll('[data-brand]').forEach(function (el) {
       var w = el.getAttribute('data-brand');
       el.textContent = w === 'short' ? b.shortName : w === 'tagline' ? b.tagline : b.name;

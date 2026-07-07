@@ -60,7 +60,7 @@ router.get('/external/list', garsonRequired, (req, res) => {
 
 // POST /api/orders/external — yeni harici siparis (tek seferde tamamlanir)
 router.post('/external', garsonRequired, (req, res) => {
-  const { source, platformOrderNo, customer, note, items } = req.body;
+  const { source, platformOrderNo, customer, phone, address, note, items } = req.body;
 
   if (!EXTERNAL_SOURCES.includes(source)) {
     return res.status(400).json({ error: 'Gecersiz kaynak (trendyol, yemeksepeti veya getir olmali)' });
@@ -94,6 +94,8 @@ router.post('/external', garsonRequired, (req, res) => {
     source,
     platformOrderNo: platformOrderNo || '',
     customer: customer || '',
+    phone: String(phone || '').trim(),
+    address: String(address || '').trim(),
     openedAt: now,
     closedAt: now,
     status: 'closed',
@@ -411,6 +413,37 @@ router.delete('/:tableId/items/:lineId', garsonRequired, (req, res) => {
     broadcast('order:closed', order);
     return res.json(order);
   }
+
+  saveOrders(data);
+  broadcast('order:updated', order);
+  res.json(order);
+});
+
+// POST /api/orders/:tableId/discount - Acik adisyona indirim uygula (yonetici)
+//   body: { discount: number (TL, kuru veya tam) }  -> adisyon uzerinde saklanir,
+//   boylece adisyon fisinde ve hesap kapamada gorunur.
+router.post('/:tableId/discount', yoneticiRequired, (req, res) => {
+  const tableId = parseInt(req.params.tableId);
+  const { discount, version } = req.body;
+
+  const data = loadOrders();
+  const order = data.orders.find(o => o.tableId === tableId && o.status === 'open');
+  if (!order) {
+    return res.status(404).json({ error: 'Bu masada acik adisyon yok' });
+  }
+  if (version !== undefined && version !== order.version) {
+    return res.status(409).json({
+      error: 'Adisyon baska cihazda guncellendi, yenileyin',
+      currentVersion: order.version,
+      order
+    });
+  }
+
+  const d = Math.max(0, Number(discount) || 0);
+  // Indirim ara toplamini asamaz
+  order.discount = Math.min(d, order.subtotal || 0);
+  recalcOrder(order);
+  order.version += 1;
 
   saveOrders(data);
   broadcast('order:updated', order);

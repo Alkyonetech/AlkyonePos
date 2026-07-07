@@ -582,7 +582,10 @@ async function confirmClose() {
     });
     updateOrderInState(res);
     closeModal('close-modal');
+    // Masa kapandi -> secimi birak, kart eski (bos) rengine donsun
+    selectedTableId = null;
     selectedOrder = null;
+    renderTables();
     renderOrderDetail();
     showToast('Hesap kapatildi', 'success');
   } catch (err) {
@@ -689,16 +692,17 @@ async function applyDiscount() {
   }
 
   try {
-    // Indirim uygula ve hesabi guncelle
-    // Simdilik orders API'de discount yok, close'da gonderilecek
-    // Client tarafinda goster
-    selectedOrder.discount = discount;
-    selectedOrder.total = selectedOrder.subtotal - discount;
+    // Indirimi backend'e kaydet -> adisyon fisinde ve hesap kapamada gorunur
+    const res = await api('POST', `/api/orders/${selectedTableId}/discount`, {
+      discount,
+      version: selectedOrder.version
+    });
+    updateOrderInState(res);
     renderOrderDetail();
     closeModal('discount-modal');
-    showToast(`${discount.toFixed(0)} TL indirim uygulandi`, 'success');
+    showToast(`${res.discount.toFixed(0)} TL indirim uygulandi`, 'success');
   } catch (err) {
-    showToast('Hata: ' + err.message, 'error');
+    handleConflict(err);
   }
 }
 
@@ -1014,6 +1018,8 @@ function openExternalOrders() {
   openModal('external-modal');
   document.getElementById('ext-order-no').value = '';
   document.getElementById('ext-customer').value = '';
+  document.getElementById('ext-phone').value = '';
+  document.getElementById('ext-address').value = '';
   document.getElementById('ext-note').value = '';
   extSelectSource('trendyol');
   renderExtCart();
@@ -1142,6 +1148,8 @@ async function submitExternalOrder() {
       source: extOrder.source,
       platformOrderNo: document.getElementById('ext-order-no').value.trim(),
       customer: document.getElementById('ext-customer').value.trim(),
+      phone: document.getElementById('ext-phone').value.trim(),
+      address: document.getElementById('ext-address').value.trim(),
       note: document.getElementById('ext-note').value.trim(),
       items: extOrder.items
     };
@@ -1150,6 +1158,8 @@ async function submitExternalOrder() {
     extOrder = { source: extOrder.source, items: [] };
     document.getElementById('ext-order-no').value = '';
     document.getElementById('ext-customer').value = '';
+    document.getElementById('ext-phone').value = '';
+    document.getElementById('ext-address').value = '';
     document.getElementById('ext-note').value = '';
     renderExtCart();
     loadExternalList();
@@ -1174,10 +1184,14 @@ async function loadExternalList() {
         : 'Yemeksepeti';
       const cnt = (o.items || []).filter(i => i.status === 'active').length;
       const canDel = userRole === 'yonetici';
+      const esc = s => String(s || '').replace(/</g, '&lt;');
+      const addrLine = o.address ? `<div class="item-note">📍 ${esc(o.address)}${o.phone ? ' · ' + esc(o.phone) : ''}</div>`
+        : (o.phone ? `<div class="item-note">☎ ${esc(o.phone)}</div>` : '');
       return `<div class="order-item">
         <div class="item-info">
           <div class="item-name">${srcLabel}${o.platformOrderNo ? ' #' + o.platformOrderNo : ''}</div>
-          <div class="item-note">${t} - ${cnt} kalem${o.customer ? ' - ' + o.customer : ''}</div>
+          <div class="item-note">${t} - ${cnt} kalem${o.customer ? ' - ' + esc(o.customer) : ''}</div>
+          ${addrLine}
         </div>
         <div class="item-price">${(o.total || 0).toFixed(0)} TL</div>
         ${canDel ? `<button class="item-remove" onclick="deleteExternalOrder('${o.id}')" title="Iptal">&times;</button>` : ''}

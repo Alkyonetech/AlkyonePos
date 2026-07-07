@@ -13,6 +13,7 @@
   --text-muted: #555570;
   --amber: #f0b060;
   --green: #60d080;
+  --blue: #4a90e2;
   --red: #e06060;
   --border: #2a2a45;
   --radius: 10px;
@@ -34,6 +35,7 @@ body[data-theme="krem"] {
   --text-muted: #6a6a6a;
   --amber: #7a5a18;
   --green: #3a6a38;
+  --blue: #1c4e8a;
   --red: #883828;
   --border: #909090;
 }
@@ -294,14 +296,20 @@ input, textarea, select, [contenteditable] {
   transform: translateY(-2px);
 }
 
+/* Secili masa -> mavi (aktif/yesil ve bos/eski rengin uzerine yazar) */
 .table-card.selected {
-  border-color: var(--sakura);
-  box-shadow: 0 0 0 2px rgba(232, 180, 184, 0.3);
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 2px var(--blue), 0 0 14px rgba(74, 144, 226, 0.55);
 }
 
 .table-card.status-open {
   border-left: 3px solid var(--green);
   background: rgba(96, 208, 128, 0.08);
+}
+
+.table-card.selected .table-status-dot {
+  background: var(--blue);
+  animation: none;
 }
 
 .table-card.status-reserved {
