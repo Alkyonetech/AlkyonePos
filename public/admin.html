@@ -34,6 +34,7 @@
         <button class="nav-btn" data-s="pins" onclick="switchSection('pins')">PIN</button>
         <button class="nav-btn" data-s="printer" onclick="switchSection('printer')">Yazici</button>
         <button class="nav-btn" data-s="receipt" onclick="switchSection('receipt')">Adisyon</button>
+        <button class="nav-btn" data-s="closed" onclick="switchSection('closed')">Kapatilanlar</button>
         <button class="nav-btn" data-s="backup" onclick="switchSection('backup')">Yedek</button>
         <button class="nav-btn" data-s="system" onclick="switchSection('system')">Sistem</button>
         <button class="nav-btn" data-s="theme" onclick="switchSection('theme')">Tema</button>
@@ -251,6 +252,14 @@
             <div id="rt-preview" class="rt-preview-box"></div>
           </div>
         </div>
+      </section>
+
+      <!-- KAPATILAN ADISYONLAR (bugun) -->
+      <section class="section hidden" id="sec-closed">
+        <h2>Bugun Kapatilan Adisyonlar</h2>
+        <p class="hint">Gun kapatilinca bu liste rapora arsivlenir. Kazara kapatilan bir adisyonu "Yeniden Ac" ile geri getirebilirsiniz.</p>
+        <button class="btn-sm" onclick="renderClosedOrders()">Yenile</button>
+        <div id="closed-list" style="margin-top:12px;"></div>
       </section>
 
       <!-- YEDEK -->

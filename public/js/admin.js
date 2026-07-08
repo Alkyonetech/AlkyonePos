@@ -76,9 +76,56 @@ function switchSection(s) {
   document.querySelectorAll('.nav-btn').forEach(b => {
     if (b && b.classList) b.classList.toggle('active', b.dataset.s === s);
   });
-  ['tables','pins','printer','receipt','backup','system','theme','about'].forEach(id => {
+  ['tables','pins','printer','receipt','closed','backup','system','theme','about'].forEach(id => {
     $$tg('sec-' + id, 'hidden', id !== s);
   });
+  if (s === 'closed') renderClosedOrders();
+}
+
+// ===== KAPATILAN ADISYONLAR (bugun) =====
+const CH_LABELS = { masa: 'Salon', eve: 'Eve Teslim', trendyol: 'Trendyol', yemeksepeti: 'Yemeksepeti', getir: 'Getir Yemek' };
+const PAY_LABELS_A = { nakit: 'Nakit', kart: 'Kart', havale: 'Havale/EFT' };
+
+async function renderClosedOrders() {
+  const el = document.getElementById('closed-list');
+  if (!el) return;
+  el.innerHTML = '<p class="hint">Yukleniyor...</p>';
+  let res;
+  try { res = await api('GET', '/api/orders/closed/list'); }
+  catch (e) { el.innerHTML = `<p class="hint">Hata: ${escapeHtml(e.message)}</p>`; return; }
+  const orders = res.orders || [];
+  if (!orders.length) { el.innerHTML = '<p class="hint">Bugun kapatilmis adisyon yok.</p>'; return; }
+  el.innerHTML = orders.map(o => {
+    const t = o.closedAt ? new Date(o.closedAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '-';
+    const src = CH_LABELS[o.source] || (o.tableId != null ? 'Masa ' + o.tableId : (o.source || '-'));
+    const pay = PAY_LABELS_A[o.payment?.method] || o.payment?.method || '-';
+    const items = (o.items || []).filter(i => i.status === 'active').map(i =>
+      `<div class="co-item">${i.qty} x ${escapeHtml(i.name)}${i.ikram ? ' <span class="tag">IKRAM</span>' : ''} <span class="co-line">${(i.lineTotal || 0).toFixed(2)}</span></div>`
+    ).join('') || '<div class="hint">kalem yok</div>';
+    return `<div class="co-card">
+      <div class="co-head" onclick="this.parentElement.classList.toggle('open')">
+        <div><strong>${escapeHtml(src)}</strong> <span class="hint">#${escapeHtml(o.id)}</span></div>
+        <div class="co-meta">${t} · ${(o.total || 0).toFixed(2)} TL · ${escapeHtml(pay)}</div>
+      </div>
+      <div class="co-body">
+        ${items}
+        <div class="co-actions">
+          <button class="btn-sm" onclick="reopenOrder('${escapeHtml(o.id)}')">Yeniden Ac</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function reopenOrder(id) {
+  if (!confirm('Bu adisyon yeniden acilsin mi? (Kazara kapatilmissa geri getirir)')) return;
+  try {
+    await api('POST', `/api/orders/${id}/reopen`, {});
+    toast('Adisyon yeniden acildi', 'success');
+    renderClosedOrders();
+  } catch (e) {
+    toast('Hata: ' + e.message, 'error');
+  }
 }
 
 // ===== TABLES =====

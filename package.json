@@ -1,6 +1,6 @@
 {
   "name": "alkyone-pos",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Alkyone POS - tek kod tabani, tek build; marka adi ilk kurulumda girilir",
   "main": "electron/main.js",
   "scripts": {

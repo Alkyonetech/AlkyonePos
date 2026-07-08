@@ -27,7 +27,7 @@ function defaultSettings(brand) {
       showItemUnitPrice: true, showItemNotes: true, showSubtotal: true, showDiscount: true,
       showVat: false, showPaymentMethod: true, footerLines: ['Teşekkür ederiz!'], footerFeedLines: 3,
     },
-    appVersion: '2.1.0', apkVersion: '2.1.0', minApkVersion: '1.0.0', setupCompleted: false,
+    appVersion: '2.1.1', apkVersion: '2.1.1', minApkVersion: '1.0.0', setupCompleted: false,
   };
 }
 

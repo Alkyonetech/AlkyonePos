@@ -236,6 +236,55 @@ router.delete('/delivery/:id', yoneticiRequired, (req, res) => {
   res.json({ cancelled: true, id: order.id });
 });
 
+// GET /api/orders/closed/list — BUGUN kapatilan adisyonlar (kazara kapatilani
+// bulmak icin). Gun kapatilinca bu veriler rapora arsivlenir. /:tableId'den ONCE.
+router.get('/closed/list', yoneticiRequired, (req, res) => {
+  const data = loadOrders();
+  // Gun kapatma ile ayni gun tanimi (UTC dilim) — tutarlilik icin.
+  const today = new Date().toISOString().slice(0, 10);
+  const list = (data.orders || [])
+    .filter(o => o.status === 'closed' && o.closedAt && o.closedAt.slice(0, 10) === today)
+    .sort((a, b) => String(b.closedAt).localeCompare(String(a.closedAt)));
+  res.json({ orders: list, count: list.length });
+});
+
+// POST /api/orders/:orderId/reopen — kazara kapatilan adisyonu yeniden ac.
+// Masa adisyonuysa masa bostaysa tekrar o masaya baglar; masa doluysa reddeder.
+router.post('/:orderId/reopen', yoneticiRequired, (req, res) => {
+  const data = loadOrders();
+  const order = (data.orders || []).find(o => o.id === req.params.orderId);
+  if (!order) return res.status(404).json({ error: 'Adisyon bulunamadi' });
+  if (order.status !== 'closed') {
+    return res.status(400).json({ error: 'Yalnizca kapatilmis adisyon yeniden acilabilir' });
+  }
+
+  // Masa adisyonu ise masayi kontrol et
+  if (order.tableId != null) {
+    const tables = loadTables();
+    const table = tables.tables.find(t => t.id === order.tableId);
+    if (table && table.currentOrderId && table.currentOrderId !== order.id) {
+      return res.status(409).json({ error: `Masa ${order.tableId} dolu — once oradaki adisyonu kapatin` });
+    }
+    if (table) {
+      table.currentOrderId = order.id;
+      table.status = 'open';
+      tables.version = (tables.version || 0) + 1;
+      saveTables(tables);
+      broadcast('table:updated', table);
+    }
+  }
+
+  order.status = 'open';
+  order.closedAt = null;
+  order.payment = null;
+  order.version = (order.version || 0) + 1;
+  recalcOrder(order);
+  saveOrders(data);
+
+  broadcast('order:updated', order);
+  res.json(order);
+});
+
 // GET /api/orders/:tableId
 router.get('/:tableId', garsonRequired, (req, res) => {
   const tableId = parseInt(req.params.tableId);
