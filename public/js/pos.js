@@ -128,6 +128,11 @@ async function applyTheme() {
     const s = await api('GET', '/api/settings');
     const theme = (s.ui && s.ui.theme) || 'sakura';
     document.body.setAttribute('data-theme', theme);
+    // Online yakalama ACIKSA manuel "Harici Siparisler" girisi gereksiz — gizle.
+    // Yakalama kapaliyken elle giris icin buton gorunur kalir.
+    const capOn = !!(s.onlineCapture && s.onlineCapture.enabled);
+    const extBtn = document.getElementById('btn-external');
+    if (extBtn) extBtn.style.display = capOn ? 'none' : '';
   } catch (_) {}
 }
 
