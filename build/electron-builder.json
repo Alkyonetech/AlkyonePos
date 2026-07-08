@@ -3,7 +3,7 @@
   "productName": "AlkyonePOS",
   "directories": { "output": "dist/alkyone" },
   "publish": [
-    { "provider": "github", "owner": "Alkyonetech", "repo": "AlkyonePos" }
+    { "provider": "github", "owner": "Alkyonetech", "repo": "AlkyonePos", "releaseType": "release" }
   ],
   "files": [
     "electron/**/*",
