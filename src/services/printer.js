@@ -161,7 +161,7 @@ function mergeSettingsForFormat(settings, resolvedProfile) {
     ...settings,
     printer: {
       paperWidth: resolvedProfile.paperWidth || 58,
-      encoding: resolvedProfile.encoding || 'CP1254_32',
+      encoding: resolvedProfile.encoding || 'PC857',
     },
   };
 }

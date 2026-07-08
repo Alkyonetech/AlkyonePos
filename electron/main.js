@@ -488,10 +488,55 @@ function syncAutoStart() {
   }
 }
 
-// ===== OTOMATIK GUNCELLEME =====
-// Offline surum: internet/GitHub uzerinden otomatik guncelleme KAPALIDIR.
-// Guncelleme yalnizca launcher'in yerel updates/ klasoru uzerinden, elle
-// kopyalanan dosyalarla yapilir (bkz. launcher/launcher.js).
+// ===== OTOMATIK GUNCELLEME (electron-updater / GitHub Releases) =====
+// EXE, GitHub Releases'taki en son surumu kontrol eder; yenisi varsa arka
+// planda indirir ve kullaniciya "simdi guncelle" bildirimi gosterir. Feed
+// URL'i build/electron-builder.json > publish (github) alanindan app-update.yml
+// icine gomulur. Dev modda ve paketlenmemis calismada devre disidir.
+function initAutoUpdater() {
+  if (isDev) return; // gelistirme makinesinde guncelleme arama
+
+  let autoUpdater;
+  try { ({ autoUpdater } = require('electron-updater')); }
+  catch (e) { console.warn('[Update] electron-updater yuklenemedi:', e.message); return; }
+
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+
+  autoUpdater.on('error', (err) => {
+    console.warn('[Update] hata:', (err && err.message) || err);
+  });
+  autoUpdater.on('update-available', (info) => {
+    console.log('[Update] yeni surum bulundu:', info && info.version);
+    // Web arayuzu banner'i /api/version ile kendi gosterir; burada sadece log.
+    try { if (mainWindow) mainWindow.webContents.send('update-available', info.version); } catch (_) {}
+  });
+  autoUpdater.on('update-downloaded', (info) => {
+    const v = (info && info.version) || '';
+    console.log('[Update] indirildi:', v);
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: 'Guncelleme Hazir',
+      message: `${BRAND.name} ${v} indirildi.`,
+      detail: 'Simdi yeniden baslatilip kurulsun mu? (Sonra secerseniz uygulama kapaninca otomatik kurulur.)',
+      buttons: ['Simdi Guncelle', 'Sonra'],
+      defaultId: 0,
+      cancelId: 1,
+    }).then(({ response }) => {
+      if (response === 0) {
+        app.isQuitting = true;
+        try { autoUpdater.quitAndInstall(); } catch (e) { console.warn('[Update] quitAndInstall:', e.message); }
+      }
+    }).catch(() => {});
+  });
+
+  const check = () => {
+    autoUpdater.checkForUpdates().catch(e => console.warn('[Update] kontrol hatasi:', (e && e.message) || e));
+  };
+  // Acilistan ~10 sn sonra ilk kontrol (sunucu/pencere otursun), sonra 6 saatte bir.
+  setTimeout(check, 10000);
+  setInterval(check, 6 * 60 * 60 * 1000);
+}
 
 // ===== APP LIFECYCLE =====
 app.on('ready', async () => {
@@ -509,6 +554,9 @@ app.on('ready', async () => {
 
   // Otomatik baslatma ayarlarini OS ile senkronize et
   syncAutoStart();
+
+  // GitHub Releases'tan otomatik guncelleme kontrolu (paketli surumde)
+  initAutoUpdater();
 
   // settings.json degisirse autoStart + kioskMode ayarlarini yansit
   // (Admin Panel'den degisikligi yakala — kiosk on/off'da uygulamayi yeniden baslat)

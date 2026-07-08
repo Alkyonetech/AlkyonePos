@@ -87,7 +87,7 @@ function listEncodings() {
 }
 
 class EscPos {
-  constructor(width = 32, encodingName = 'CP1254_32') {
+  constructor(width = 32, encodingName = 'PC857') {
     this.width = width;
     this.encoding = getEncoding(encodingName);
     this.chunks = [
@@ -181,8 +181,8 @@ function resolveTemplate(settings) {
 
 function paymentLabel(method) {
   const m = String(method || '').toLowerCase().trim();
-  if (m === 'nakit' || m === 'cash') return 'NAKİT';
-  if (m === 'kart' || m === 'kredi' || m === 'kredi karti' || m === 'kredi kartı' || m === 'card') return 'KREDİ KARTI';
+  if (m === 'nakit' || m === 'cash') return 'NAKIT';
+  if (m === 'kart' || m === 'kredi' || m === 'kredi karti' || m === 'kredi kartı' || m === 'card') return 'KREDI KARTI';
   if (m === 'havale' || m === 'eft') return 'HAVALE/EFT';
   if (!m) return '-';
   return method.toUpperCase();
@@ -192,7 +192,7 @@ function formatReceipt(order, settings) {
   const r = settings.restaurant || {};
   const t = resolveTemplate(settings);
   const W = settings.printer?.paperWidth === 80 ? 48 : 32;
-  const enc = settings.printer?.encoding || 'CP1254_32';
+  const enc = settings.printer?.encoding || 'PC857';
   const p = new EscPos(W, enc);
 
   // Üst ekstra satırlar
@@ -256,11 +256,11 @@ function formatReceipt(order, settings) {
 
   // İkramlar (sadece varsa ayrı bölüm, tutar 0)
   if (ikramItems.length) {
-    p.hr('-').bold(true).tall(true).line('İKRAMLAR').tall(false).bold(false);
+    p.hr('-').bold(true).tall(true).line('IKRAMLAR').tall(false).bold(false);
     for (const item of ikramItems) {
       p.tall(true);
       const name = item.name.length > W - 12 ? item.name.slice(0, W - 13) + '.' : item.name;
-      p.twoCol(name, 'İKRAM');
+      p.twoCol(name, 'IKRAM');
       p.line('  ' + item.qty + ' x 0.00');
       if (t.showItemNotes && item.note) p.line('  (' + item.note + ')');
       p.tall(false);
@@ -269,7 +269,7 @@ function formatReceipt(order, settings) {
 
   p.hr('-').tall(true);
   if (t.showSubtotal) p.twoCol('ARA TOPLAM', (order.subtotal || 0).toFixed(2));
-  if (t.showDiscount && order.discount > 0) p.twoCol('İNDİRİM', '-' + order.discount.toFixed(2));
+  if (t.showDiscount && order.discount > 0) p.twoCol('INDIRIM', '-' + order.discount.toFixed(2));
   if (t.showVat) {
     const rate = settings.operations?.vatRate || 0;
     const total = order.total || 0;
@@ -302,7 +302,7 @@ function formatReceipt(order, settings) {
  */
 function formatKitchenTicket(order, settings, opts = {}) {
   const W = settings.printer?.paperWidth === 80 ? 48 : 32;
-  const enc = settings.printer?.encoding || 'CP1254_32';
+  const enc = settings.printer?.encoding || 'PC857';
   const p = new EscPos(W, enc);
 
   p.align('center').bold(true).double(true)
@@ -313,8 +313,8 @@ function formatKitchenTicket(order, settings, opts = {}) {
   p.align('left').bold(true).tall(true);
   if (order.source && order.source !== 'masa') {
     const label = order.source === 'trendyol' ? 'TRENDYOL'
-      : order.source === 'yemeksepeti' ? 'YEMEKSEPETİ'
-      : order.source === 'getir' ? 'GETİR YEMEK'
+      : order.source === 'yemeksepeti' ? 'YEMEKSEPETI'
+      : order.source === 'getir' ? 'GETIR YEMEK'
       : order.source === 'eve' ? 'EVE TESLIM'
       : String(order.source).toUpperCase();
     p.tall(false).double(true).line('** ' + label + ' **').double(false).tall(true);
@@ -347,7 +347,7 @@ function formatKitchenTicket(order, settings, opts = {}) {
       p.bold(true).double(true);
       p.line(item.qty + ' x ' + item.name);
       p.double(false).bold(false);
-      if (item.ikram) p.bold(true).tall(true).line('  ** İKRAM **').tall(false).bold(false);
+      if (item.ikram) p.bold(true).tall(true).line('  ** IKRAM **').tall(false).bold(false);
       if (item.note) p.tall(true).line('  NOT: ' + item.note).tall(false);
       p.newline();
     }

@@ -3,14 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakura POS</title>
+  <title>POS</title>
   <style>
     body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a2e; color: #e8b4b8; }
     h1 { font-size: 2rem; }
+    .ver { font-size: 1rem; opacity: 0.7; margin-left: 8px; }
   </style>
 </head>
 <body>
-  <h1>Sakura POS v1.0.0</h1>
+  <h1><span data-brand="short">POS</span> POS<span class="ver" id="ver"></span></h1>
+<script>
+  // Surumu calisan koddan (/api/version -> package.json) al; sabit yazma.
+  fetch('/api/version').then(r => r.json()).then(v => {
+    if (v && v.appVersion) document.getElementById('ver').textContent = 'v' + v.appVersion;
+  }).catch(() => {});
+</script>
 <script src="/js/brand.js"></script>
 </body>
 </html>

@@ -918,3 +918,20 @@ input, textarea, select, [contenteditable] {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===== Eve-teslim kayitli adres cipleri (2.1) ===== */
+.dlv-saved { display: flex; flex-direction: column; gap: 6px; }
+.dlv-saved .dlv-saved-label { font-size: 0.78rem; color: var(--text-dim); }
+.dlv-saved .dlv-chip {
+  text-align: left;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  line-height: 1.3;
+}
+.dlv-saved .dlv-chip:hover { border-color: var(--sakura); }
+.dlv-saved .dlv-chip .dlv-chip-note { color: var(--text-dim); font-size: 0.78rem; }

@@ -11,6 +11,10 @@
 const dgram = require('dgram');
 const os = require('os');
 
+const PKG_VERSION = (() => {
+  try { return require('../../package.json').version; } catch (_) { return '0.0.0'; }
+})();
+
 const DISCOVERY_PORT = 5354;
 const BROADCAST_INTERVAL = 2000;
 
@@ -54,7 +58,7 @@ function startDiscoveryBroadcaster(port, version, appId) {
     const ips = ifaces.map(i => i.address);
     const msg = Buffer.from(JSON.stringify({
       app: APP_ID,
-      version: version || '1.0.0',
+      version: PKG_VERSION,
       port: port || 3000,
       ips,
       ts: Date.now(),

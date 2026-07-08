@@ -151,7 +151,7 @@ router.get('/delivery/list', garsonRequired, (req, res) => {
 
 // POST /api/orders/delivery — yeni eve teslim siparisi
 router.post('/delivery', garsonRequired, (req, res) => {
-  const { customer, phone, address, note, items, paymentMethod } = req.body;
+  const { customer, phone, address, note, items, paymentMethod, saveCustomer } = req.body;
 
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'En az bir urun gerekli' });
@@ -207,6 +207,17 @@ router.post('/delivery', garsonRequired, (req, res) => {
   broadcast('order:created', order);
   broadcast('order:closed', order);
   recordAnalytics(order);
+
+  // Adres defterine kaydet (manuel onay kutusu) — POS'u etkilemesin diye try
+  if (saveCustomer) {
+    try {
+      require('./customers').upsertCustomer({
+        name: order.customer, phone: order.phone,
+        address: order.address, note: order.note, touchOrder: true,
+      });
+    } catch (e) { console.error('[Musteri] kayit hatasi:', e.message); }
+  }
+
   res.json(order);
   // Mutfak fisi otomatik gonderilmez — kullanici listeden manuel tetikler
 });

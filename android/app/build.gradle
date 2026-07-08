@@ -24,8 +24,8 @@ android {
     defaultConfig {
         minSdk 24            // universal-apk spec: Android 7+, ~%97 kapsam
         targetSdk 34
-        versionCode 23
-        versionName "2.0.0"
+        versionCode 24
+        versionName "2.1.0"
         vectorDrawables.useSupportLibrary = true
 
         // Marka -> BuildConfig alanlari (MainActivity bunlari okur, hicbir sey sabit degil)

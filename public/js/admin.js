@@ -602,11 +602,15 @@ async function saveTheme() {
 }
 
 // ===== ABOUT =====
-function renderAbout() {
+async function renderAbout() {
+  // Surum ve marka adi calisan koddan cekilir (sabit yazma).
+  let ver = {}, brand = {};
+  try { ver = await (await fetch('/api/version')).json(); } catch (_) {}
+  try { brand = await (await fetch('/api/brand')).json(); } catch (_) {}
   document.getElementById('about-info').innerHTML = `
-    <p>Uygulama: <strong>Sakura POS</strong></p>
-    <p>Surum: <strong>${settings.appVersion || '1.0.0'}</strong></p>
-    <p>Min APK: <strong>${settings.minApkVersion || '1.0.0'}</strong></p>
+    <p>Uygulama: <strong>${(brand.name || 'POS')}</strong></p>
+    <p>Surum: <strong>${ver.appVersion || settings.appVersion || '-'}</strong></p>
+    <p>Min APK: <strong>${ver.minApkVersion || settings.minApkVersion || '-'}</strong></p>
     <p>Restoran: <strong>${settings.restaurant?.name || '-'}</strong></p>
     <p>Adres: <strong>${settings.restaurant?.address || '-'}</strong></p>
     <p>Port: <strong>${settings.network?.port || 3000}</strong></p>

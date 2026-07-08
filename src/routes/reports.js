@@ -67,6 +67,61 @@ router.get('/monthly/:year/:month', yoneticiRequired, (req, res) => {
   });
 });
 
+// GET /api/reports/range?from=YYYY-MM-DD&to=YYYY-MM-DD
+//   Aralikta kaydedilmis gunluk (Z) raporlari toplar. /:date'ten ONCE tanimli.
+router.get('/range', yoneticiRequired, (req, res) => {
+  const from = String(req.query.from || '').slice(0, 10);
+  const to = String(req.query.to || '').slice(0, 10);
+  if (!from || !to) return res.status(400).json({ error: 'from ve to (YYYY-MM-DD) gerekli' });
+
+  const dates = listReports().filter(d => d >= from && d <= to).sort();
+
+  let totalRevenue = 0, totalOrders = 0, totalItems = 0;
+  const dailyData = [];
+  const productMap = {};
+  const channelMap = {};
+  const paymentMap = {};
+
+  for (const date of dates) {
+    const report = loadReport(date);
+    if (!report) continue;
+    const s = report.summary || {};
+    totalRevenue += s.totalRevenue || 0;
+    totalOrders += s.totalOrders || 0;
+    totalItems += s.totalItems || 0;
+    dailyData.push({ date, revenue: s.totalRevenue || 0, orders: s.totalOrders || 0 });
+
+    for (const p of (report.byProduct || [])) {
+      if (!productMap[p.id]) productMap[p.id] = { id: p.id, name: p.name, qty: 0, revenue: 0 };
+      productMap[p.id].qty += p.qty || 0;
+      productMap[p.id].revenue += p.revenue || 0;
+    }
+    for (const ch of (report.byChannel || Object.values(s.byChannel || {}))) {
+      const key = ch.channel || 'masa';
+      if (!channelMap[key]) channelMap[key] = { channel: key, orders: 0, revenue: 0, items: 0 };
+      channelMap[key].orders += ch.orders || 0;
+      channelMap[key].revenue += ch.revenue || 0;
+      channelMap[key].items += ch.items || 0;
+    }
+    for (const [m, v] of Object.entries(s.byPayment || {})) {
+      paymentMap[m] = (paymentMap[m] || 0) + (v || 0);
+    }
+  }
+
+  const topProducts = Object.values(productMap).sort((a, b) => b.revenue - a.revenue).slice(0, 20);
+
+  res.json({
+    from, to,
+    days: dates.length,
+    totalRevenue, totalOrders, totalItems,
+    avgOrderValue: totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0,
+    dailyData,
+    topProducts,
+    byChannel: Object.values(channelMap).sort((a, b) => b.revenue - a.revenue),
+    byPayment: paymentMap,
+  });
+});
+
 // POST /api/reports/close-day  (Z raporu — DIKKAT: /:date'ten ONCE tanimli olmali
 // yoksa Express :date='close-day' olarak yakalar)
 // Bugune ait kapanmis adisyonlardan ozet rapor olustur ve data/reports/<bugun>.json

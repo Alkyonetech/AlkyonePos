@@ -93,6 +93,31 @@ function saveOrders(data) {
 }
 
 /**
+ * Musteri/adres defterini oku (yoksa bos yapi)
+ */
+function loadCustomers() {
+  return readJSON('customers.json') || { customers: [] };
+}
+
+/**
+ * Musteri/adres defterini kaydet
+ */
+function saveCustomers(data) {
+  writeJSON('customers.json', data);
+}
+
+/**
+ * Telefonu normalize et — sadece rakamlar (lookup anahtari).
+ * Bas '0' ve ulke kodu '90' onekleri sadelestirilir ki 0555.. == 90555.. == 555..
+ */
+function normPhone(s) {
+  let d = String(s || '').replace(/\D/g, '');
+  if (d.startsWith('90') && d.length > 10) d = d.slice(2);
+  if (d.startsWith('0')) d = d.slice(1);
+  return d;
+}
+
+/**
  * Rapor kaydet
  */
 function saveReport(date, data) {
@@ -219,6 +244,9 @@ module.exports = {
   saveTables,
   loadOrders,
   saveOrders,
+  loadCustomers,
+  saveCustomers,
+  normPhone,
   saveReport,
   loadReport,
   listReports,

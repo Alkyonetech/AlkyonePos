@@ -39,7 +39,8 @@ async function run() {
     assert(h.status === 200 && h.data.status === 'ok', 'GET /api/health → 200');
 
     const v = await api('GET', '/api/version');
-    assert(v.status === 200 && v.data.appVersion === '1.0.0', 'GET /api/version → 1.0.0');
+    // appVersion artik package.json'dan gelir (sabit degil) — semver formatinda olmali
+    assert(v.status === 200 && /^\d+\.\d+\.\d+$/.test(v.data.appVersion || ''), 'GET /api/version → semver');
   }
 
   // 2. AUTH

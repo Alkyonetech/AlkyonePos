@@ -1224,9 +1224,61 @@ function openDeliveryOrders() {
   document.getElementById('dlv-phone').value = '';
   document.getElementById('dlv-address').value = '';
   document.getElementById('dlv-note').value = '';
+  const saveCb = document.getElementById('dlv-save');
+  if (saveCb) saveCb.checked = false;
+  clearDlvSaved();
   dlvSelectPayment('nakit');
   renderDlvCart();
   loadDeliveryList();
+}
+
+// ===== Kayitli adres: telefonla otomatik arama (2.1) =====
+let dlvLookupTimer = null;
+
+function clearDlvSaved() {
+  const box = document.getElementById('dlv-saved');
+  if (box) { box.innerHTML = ''; box.style.display = 'none'; }
+}
+
+function onDlvPhoneInput() {
+  clearTimeout(dlvLookupTimer);
+  const phone = document.getElementById('dlv-phone').value.trim();
+  if (phone.replace(/\D/g, '').length < 3) { clearDlvSaved(); return; }
+  dlvLookupTimer = setTimeout(() => dlvLookupPhone(phone), 300);
+}
+
+async function dlvLookupPhone(phone) {
+  try {
+    const res = await api('GET', '/api/customers/lookup?phone=' + encodeURIComponent(phone));
+    if (!res || !res.found) { clearDlvSaved(); return; }
+    const c = res.customer;
+    const nameInput = document.getElementById('dlv-customer');
+    if (nameInput && !nameInput.value.trim() && c.name) nameInput.value = c.name;
+    renderDlvSaved(c.addresses || []);
+  } catch (_) { clearDlvSaved(); }
+}
+
+function renderDlvSaved(addresses) {
+  const box = document.getElementById('dlv-saved');
+  if (!box) return;
+  if (!addresses.length) { clearDlvSaved(); return; }
+  const chips = addresses.map(a => {
+    const note = a.note ? `<div class="dlv-chip-note">${esc(a.note)}</div>` : '';
+    return `<button type="button" class="dlv-chip" onclick="pickDlvAddress('${esc(a.id)}')">📍 ${esc(a.text)}${note}</button>`;
+  }).join('');
+  box._addresses = addresses;
+  box.innerHTML = `<div class="dlv-saved-label">Kayitli adresler — secmek icin dokunun</div>` + chips;
+  box.style.display = 'flex';
+}
+
+function pickDlvAddress(addrId) {
+  const box = document.getElementById('dlv-saved');
+  const a = (box && box._addresses || []).find(x => x.id === addrId);
+  if (!a) return;
+  document.getElementById('dlv-address').value = a.text;
+  if (a.note && !document.getElementById('dlv-note').value.trim()) {
+    document.getElementById('dlv-note').value = a.note;
+  }
 }
 
 function dlvSelectPayment(method) {
@@ -1350,6 +1402,7 @@ async function submitDeliveryOrder() {
       address,
       note: document.getElementById('dlv-note').value.trim(),
       paymentMethod: dlvOrder.paymentMethod,
+      saveCustomer: !!(document.getElementById('dlv-save') && document.getElementById('dlv-save').checked),
       items: dlvOrder.items
     };
     const order = await api('POST', '/api/orders/delivery', payload);
@@ -1370,6 +1423,9 @@ async function submitDeliveryOrder() {
     document.getElementById('dlv-phone').value = '';
     document.getElementById('dlv-address').value = '';
     document.getElementById('dlv-note').value = '';
+    const saveCb = document.getElementById('dlv-save');
+    if (saveCb) saveCb.checked = false;
+    clearDlvSaved();
     renderDlvCart();
     loadDeliveryList();
   } catch (err) {

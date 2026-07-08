@@ -245,7 +245,7 @@
     </div>
   </div>
 
-  <div class="version-info" id="version-info">v1.0.0</div>
+  <div class="version-info" id="version-info"></div>
 
   <script>
     const progress = document.getElementById('progress');
@@ -295,11 +295,11 @@
         try {
           const vRes = await fetch('/api/version');
           const vData = await vRes.json();
-          document.getElementById('version-info').textContent = 'v' + (vData.appVersion || '1.0.0');
+          document.getElementById('version-info').textContent = vData.appVersion ? 'v' + vData.appVersion : '';
 
           // Burada gelecekte uzak sunucudan guncelleme kontrolu yapilabilir
           // Simdilik lokal surum bilgisini gosteriyoruz
-          setProgress(60, 'Surum: v' + (vData.appVersion || '1.0.0') + ' — Guncel');
+          setProgress(60, 'Surum: ' + (vData.appVersion ? 'v' + vData.appVersion : '') + ' — Guncel');
           await sleep(500);
         } catch (e) {
           // Surum kontrol basarisiz, devam et

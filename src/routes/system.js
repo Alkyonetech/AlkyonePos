@@ -10,6 +10,12 @@ const router = express.Router();
 const UPDATES_DIR = process.env.SAKURA_UPDATES_DIR
   || path.join(__dirname, '../../updates');
 
+// Calisan kodun gercek surumu — tek dogruluk kaynagi. settings.appVersion
+// eskiyebildigi icin (kurulumdan sonra guncellenmez) her yerde bunu kullan.
+const PKG_VERSION = (() => {
+  try { return require('../../package.json').version; } catch (_) { return '0.0.0'; }
+})();
+
 function readLatestManifest() {
   try {
     const p = path.join(UPDATES_DIR, 'latest.json');
@@ -37,17 +43,33 @@ router.get('/version', (req, res) => {
   const apkVersion =
     manifest?.apk?.version
     || settings.apkVersion
-    || settings.appVersion;
+    || PKG_VERSION;
   const minApkVersion =
     manifest?.apk?.minApkVersion
     || settings.minApkVersion
     || '0.0.0';
+  // POS (EXE/sunucu) surumu: calisan kod = PKG_VERSION. manifest.pos.version
+  // GitHub'daki en son yayin — banner "guncelleme var mi" karsilastirmasi icin.
+  const latestPosVersion = manifest?.pos?.version || null;
   res.json({
-    appVersion: settings.appVersion,
+    appVersion: PKG_VERSION,
     apkVersion,
-    minApkVersion
+    minApkVersion,
+    latestPosVersion,
+    posUpdateAvailable: !!(latestPosVersion && cmpVer(latestPosVersion, PKG_VERSION) > 0),
   });
 });
+
+// Basit semver karsilastirmasi (a>b -> 1, a<b -> -1, esit -> 0)
+function cmpVer(a, b) {
+  const pa = String(a).split('.').map(n => parseInt(n) || 0);
+  const pb = String(b).split('.').map(n => parseInt(n) || 0);
+  for (let i = 0; i < 3; i++) {
+    if ((pa[i] || 0) > (pb[i] || 0)) return 1;
+    if ((pa[i] || 0) < (pb[i] || 0)) return -1;
+  }
+  return 0;
+}
 
 // POST /api/day/close - Gunu kapat
 router.post('/day/close', yoneticiRequired, (req, res) => {

@@ -2,6 +2,9 @@
   "appId": "com.alkyone.pos",
   "productName": "AlkyonePOS",
   "directories": { "output": "dist/alkyone" },
+  "publish": [
+    { "provider": "github", "owner": "Alkyonetech", "repo": "alkyonepos" }
+  ],
   "files": [
     "electron/**/*",
     "src/**/*",

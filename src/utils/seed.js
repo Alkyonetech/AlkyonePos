@@ -16,10 +16,10 @@ function defaultSettings(brand) {
     auth: { garsonPin: '1234', yoneticiPin: '9999', jwtSecret: `${brand.key}-pos-secret-change-me`, pinChangedAt: null },
     operations: { dayCloseHour: 4, vatRate: 10, currency: 'TL' },
     startup: { autoStart: true, kioskMode: false, kioskUrl: '/pos' },
-    printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'CP1254_32' },
+    printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'PC857' },
     printers: {
-      receipt: { enabled: true, model: 'POS-80C', connection: 'usb', device: 'auto', paperWidth: 80, encoding: 'CP1254_32' },
-      kitchen: { enabled: true, connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'CP1254_32' },
+      receipt: { enabled: true, model: 'POS-80C', connection: 'usb', device: 'auto', paperWidth: 80, encoding: 'PC857' },
+      kitchen: { enabled: true, connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'PC857' },
     },
     receiptTemplate: {
       headerLines: [], showRestaurantName: true, showAddress: true, showPhone: true,
@@ -27,7 +27,7 @@ function defaultSettings(brand) {
       showItemUnitPrice: true, showItemNotes: true, showSubtotal: true, showDiscount: true,
       showVat: false, showPaymentMethod: true, footerLines: ['Teşekkür ederiz!'], footerFeedLines: 3,
     },
-    appVersion: '2.0.0', apkVersion: '2.0.0', minApkVersion: '1.0.0', setupCompleted: false,
+    appVersion: '2.1.0', apkVersion: '2.1.0', minApkVersion: '1.0.0', setupCompleted: false,
   };
 }
 

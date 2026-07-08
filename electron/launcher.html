@@ -183,7 +183,7 @@
     <button class="btn-retry" id="retry" onclick="start()">Tekrar Dene</button>
   </div>
 
-  <div class="ver" id="ver">v1.0.0</div>
+  <div class="ver" id="ver"></div>
 
   <script>
     const PORT = 3000;
@@ -277,9 +277,9 @@
       try {
         const vr = await fetch(BASE + '/api/version');
         const vd = await vr.json();
-        document.getElementById('ver').textContent = 'v' + (vd.appVersion || '1.0.0');
+        document.getElementById('ver').textContent = vd.appVersion ? 'v' + vd.appVersion : '';
         setBar(60);
-        setStatus('v' + (vd.appVersion || '1.0.0') + ' — Guncel', 'ok');
+        setStatus((vd.appVersion ? 'v' + vd.appVersion : '') + ' — Guncel', 'ok');
         await new Promise(r => setTimeout(r, 600));
       } catch (e) {
         setBar(60);

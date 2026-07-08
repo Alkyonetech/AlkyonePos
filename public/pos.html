@@ -407,9 +407,13 @@
           <strong style="color:var(--text);font-size:0.95rem;">Yeni Eve Teslim Siparisi</strong>
 
           <input type="text" id="dlv-customer" placeholder="Musteri adi" class="note-input" style="margin-top:10px;">
-          <input type="tel" id="dlv-phone" placeholder="Telefon" class="note-input" style="margin-top:8px;">
+          <input type="tel" id="dlv-phone" placeholder="Telefon" class="note-input" style="margin-top:8px;" autocomplete="off" oninput="onDlvPhoneInput()">
+          <div id="dlv-saved" class="dlv-saved" style="display:none;margin-top:8px;"></div>
           <textarea id="dlv-address" placeholder="Teslimat adresi (zorunlu)" class="note-input" style="margin-top:8px;min-height:60px;resize:vertical;"></textarea>
           <input type="text" id="dlv-note" placeholder="Siparis notu (opsiyonel)" class="note-input" style="margin-top:8px;">
+          <label class="dlv-save-row" style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;color:var(--text);font-size:0.9rem;">
+            <input type="checkbox" id="dlv-save" style="width:18px;height:18px;"> Bu adresi kaydet
+          </label>
 
           <div class="payment-methods" style="margin-top:10px;">
             <button class="payment-btn active" data-dlv-pay="nakit" onclick="dlvSelectPayment('nakit')">Nakit</button>

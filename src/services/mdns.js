@@ -1,5 +1,9 @@
 const Bonjour = require('bonjour-service');
 
+const PKG_VERSION = (() => {
+  try { return require('../../package.json').version; } catch (_) { return '0.0.0'; }
+})();
+
 let bonjourInstance = null;
 
 /**
@@ -12,7 +16,7 @@ function initMdns(name, port) {
     name: name || 'sakura',
     type: 'http',
     port: port || 3000,
-    txt: { path: '/', version: '1.0.0' }
+    txt: { path: '/', version: PKG_VERSION }
   });
 }
 

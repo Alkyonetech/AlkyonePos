@@ -111,6 +111,7 @@ function createServer() {
   app.use('/api/menu', require('../routes/menu'));
   app.use('/api/tables', require('../routes/tables'));
   app.use('/api/orders', require('../routes/orders'));
+  app.use('/api/customers', require('../routes/customers'));
   app.use('/api/reports', require('../routes/reports'));
   app.use('/api/settings', require('../routes/settings'));
   app.use('/api/print', require('../routes/print'));

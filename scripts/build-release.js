@@ -27,6 +27,15 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const RELEASE_DIR = path.join(ROOT, 'release');
 
+// Marka bilgisi electron-builder config'inden (productName + cikti dizini) —
+// boylece isimlendirme sabit "SakuraPOS" degil, aktif markadan turer.
+const EB_CONFIG = path.join(ROOT, 'build/electron-builder.json');
+const EB = (() => {
+  try { return JSON.parse(fs.readFileSync(EB_CONFIG, 'utf8')); } catch (_) { return {}; }
+})();
+const PRODUCT = EB.productName || 'AlkyonePOS';
+const DIST_DIR = path.join(ROOT, (EB.directories && EB.directories.output) || 'dist');
+
 const args = new Set(process.argv.slice(2));
 const SKIP_ELECTRON = args.has('--skip-electron');
 const SKIP_ANDROID = args.has('--skip-android');
@@ -107,11 +116,11 @@ function buildElectron() {
     // GH_TOKEN env var (veya gh auth token) gerekli
     log('--publish aktif: GitHub Releases\'a yukleniyor');
     if (!process.env.GH_TOKEN && !process.env.GITHUB_TOKEN) {
-      log('UYARI: GH_TOKEN bulunamadi. PowerShell: $env:GH_TOKEN = gh auth token');
+      log('UYARI: GH_TOKEN bulunamadi. Linux/mac: export GH_TOKEN=$(gh auth token)');
     }
-    run('npx electron-builder --win --publish always');
+    run('npx electron-builder --win --publish always -c build/electron-builder.json');
   } else {
-    run('npm run build:win');
+    run('npm run build');
   }
 }
 
@@ -139,7 +148,7 @@ function buildAndroid() {
 }
 
 function collectArtifacts(version) {
-  const outDir = path.join(RELEASE_DIR, `SakuraPOS-${version}`);
+  const outDir = path.join(RELEASE_DIR, `${PRODUCT}-${version}`);
   // DEGISIKLIKLER.txt mevcut ve elle doldurulmussa onu kaybetmemek icin
   // baska klasore koymadan once okuyoruz.
   const changelogPath = path.join(outDir, 'DEGISIKLIKLER.txt');
@@ -161,11 +170,11 @@ function collectArtifacts(version) {
   if (!SKIP_ELECTRON) {
     // Once tam versiyon eslesmesi ara, yoksa herhangi bir Setup *.exe (eski build'lerden
     // yanlislikla almamak icin onayla)
-    let setupExe = findFile(path.join(ROOT, 'dist'),
-      (n) => n === `SakuraPOS Setup ${version}.exe`);
+    let setupExe = findFile(DIST_DIR,
+      (n) => n === `${PRODUCT} Setup ${version}.exe`);
     if (!setupExe) {
-      setupExe = findFile(path.join(ROOT, 'dist'),
-        (n) => n.match(/^SakuraPOS Setup .*\.exe$/i));
+      setupExe = findFile(DIST_DIR,
+        (n) => n.match(new RegExp(`^${PRODUCT} Setup .*\\.exe$`, 'i')));
     }
     if (!setupExe) throw new Error('Setup exe bulunamadi (dist/ icine bakin)');
     fs.copyFileSync(setupExe, path.join(outDir, 'pos', path.basename(setupExe)));
@@ -180,8 +189,8 @@ function collectArtifacts(version) {
     }
 
     // Launcher (varsa)
-    const launcher = findFile(path.join(ROOT, 'dist'),
-      (n) => n.match(/^SakuraPOS-Launcher.*\.exe$/i));
+    const launcher = findFile(DIST_DIR,
+      (n) => n.match(new RegExp(`^${PRODUCT}-Launcher.*\\.exe$`, 'i')));
     if (launcher) {
       fs.copyFileSync(launcher, path.join(outDir, 'pos', path.basename(launcher)));
       log(`+ pos/${path.basename(launcher)}`);
@@ -211,7 +220,7 @@ function collectArtifacts(version) {
   const manifest = {
     pos: {
       version,
-      file: `pos/SakuraPOS Setup ${version}.exe`,
+      file: `pos/${PRODUCT} Setup ${version}.exe`,
       releaseDate: new Date().toISOString().slice(0, 10),
       notes: 'DEGISIKLIKLER.txt dosyasina bakin',
     },
@@ -241,7 +250,7 @@ function collectArtifacts(version) {
   // 5. DEGISIKLIKLER.txt placeholder — VARSA DOKUNMA (kullanici elle doldurmus olabilir)
   if (!fs.existsSync(changelogPath)) {
     fs.writeFileSync(changelogPath,
-      `Sakura POS ${version}\n` +
+      `${PRODUCT} ${version}\n` +
       `Tarih: ${new Date().toISOString().slice(0, 10)}\n\n` +
       `[BU DOSYAYI ELLE DUZENLEYIN — KULLANICIYA NE DEGISTIGINI ANLATIN]\n\n` +
       `Yenilikler:\n  - ...\n\n` +
@@ -305,7 +314,7 @@ function publishApksToGitHub(version, outDir) {
 
 function main() {
   log('='.repeat(60));
-  log('SAKURA POS — RELEASE PAKETLEYICI');
+  log(`${PRODUCT} — RELEASE PAKETLEYICI`);
   log('='.repeat(60));
 
   const version = checkVersionsMatch();
