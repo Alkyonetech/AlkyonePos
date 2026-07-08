@@ -196,6 +196,51 @@
           </div>
           <p class="hint" id="manual-result"></p>
         </div>
+
+        <div class="printer-card">
+          <h3>Online Siparis Yakalama (Yemeksepeti / Trendyol / Getir)</h3>
+          <p class="hint">Platformlarin <strong>yaziciya</strong> gonderdigi siparis baskisini yakalar; masalar ekraninda onay bekleyen siparis olarak gorunur. <strong>Varsayilan kapalidir.</strong> Actiginizda: TCP modunda platform cihazi bu bilgisayarin IP'sine (port 9100) baski gonderecek sekilde ayarlanmali; USB modunda baski verisini yayan cihaz dugumu okunur.</p>
+          <div class="form-group">
+            <label>Durum</label>
+            <select id="oc-enabled">
+              <option value="false">Kapali (varsayilan)</option>
+              <option value="true">Acik</option>
+            </select>
+          </div>
+          <div class="form-row" style="gap:8px;flex-wrap:wrap;align-items:flex-end;">
+            <div class="form-group" style="flex:0 0 150px;margin:0;">
+              <label>TCP (ag yazicisi)</label>
+              <select id="oc-tcp"><option value="true">Aktif</option><option value="false">Kapali</option></select>
+            </div>
+            <div class="form-group" style="flex:0 0 110px;margin:0;">
+              <label>TCP Port</label>
+              <input type="number" id="oc-port" value="9100">
+            </div>
+          </div>
+          <div class="form-row" style="gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:10px;">
+            <div class="form-group" style="flex:0 0 150px;margin:0;">
+              <label>USB / Seri</label>
+              <select id="oc-usb"><option value="false">Kapali</option><option value="true">Aktif</option></select>
+            </div>
+            <div class="form-group" style="flex:2;min-width:180px;margin:0;">
+              <label>USB / seri cihaz yolu (veri akitan kutu)</label>
+              <input type="text" id="oc-usb-device" placeholder="Linux: /dev/ttyUSB0 &nbsp; Windows: COM3">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:10px;">
+            <label>Fiziksel yaziciya da bas (tee)</label>
+            <select id="oc-tee">
+              <option value="false">Hayir (sadece yakala)</option>
+              <option value="true">Evet (yakalanan fisi adisyon yazicisina da bas)</option>
+            </select>
+          </div>
+          <div class="form-row" style="margin-top:12px;gap:8px;flex-wrap:wrap;">
+            <button class="btn-primary" onclick="saveOnlineCapture()">Kaydet</button>
+            <button class="btn-secondary" onclick="setupWinCapturePrinter()" title="Windows'ta 127.0.0.1:port RAW yazici olusturur; platformu buna yonlendirin (spooler tee)">Windows Yakalama Yazicisini Kur</button>
+          </div>
+          <p class="hint">Windows spooler tee: Platform baskiyi <strong>USB termal yaziciya</strong> gonderiyorsa, once bu butonla "Alkyone Online Yakalama" yazicisini kurun, sonra platform panelinde otomatik-baski yazicisini bu yaziciya secin. Baski 127.0.0.1:{port} uzerinden yakalanir; "tee" acikken fis fiziksel yaziciya da basilir.</p>
+          <p class="printer-status" id="oc-status"></p>
+        </div>
       </section>
 
       <!-- ADISYON SABLONU -->

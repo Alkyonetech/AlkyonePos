@@ -32,6 +32,7 @@ let orders = [];
 let menu = { categories: [] };
 let selectedTableId = null;
 let selectedOrder = null;
+let incomingOrders = [];
 let ws = null;
 let wsReconnectDelay = 1000;
 
@@ -142,6 +143,7 @@ async function loadAllData() {
     menu = menuData;
     renderTables();
     updateStats();
+    loadIncomingOrders();
   } catch (err) {
     if (err.status === 401) {
       logout();
@@ -191,6 +193,13 @@ function handleWSEvent(msg) {
       break;
     case 'table:updated':
       updateTableInState(msg.data);
+      break;
+    case 'incoming:new':
+      showToast('🛵 Yeni online sipariş geldi — onay bekliyor', 'info');
+      loadIncomingOrders();
+      break;
+    case 'incoming:removed':
+      loadIncomingOrders();
       break;
     case 'tables:refresh':
       tables = msg.data.tables || [];
@@ -289,6 +298,120 @@ function selectTable(tableId) {
 
   renderTables();
   renderOrderDetail();
+}
+
+// ===== GELEN ONLINE SIPARISLER (yazicidan yakalanan, onay bekleyen) =====
+const SRC_LABEL = { trendyol: 'Trendyol', yemeksepeti: 'Yemeksepeti', getir: 'Getir Yemek' };
+
+async function loadIncomingOrders() {
+  try {
+    const res = await api('GET', '/api/incoming');
+    incomingOrders = res.pending || [];
+  } catch (e) {
+    incomingOrders = [];
+  }
+  renderIncoming();
+}
+
+function renderIncoming() {
+  const panel = $$id('incoming-panel');
+  const list = $$id('incoming-list');
+  const badge = $$id('incoming-count');
+  if (!panel || !list) return;
+
+  if (!incomingOrders.length) {
+    panel.classList.add('hidden');
+    list.innerHTML = '';
+    return;
+  }
+  panel.classList.remove('hidden');
+  if (badge) badge.textContent = String(incomingOrders.length);
+
+  const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  list.innerHTML = incomingOrders.map(rec => {
+    const t = new Date(rec.receivedAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    const known = !!SRC_LABEL[rec.source];
+    const srcTxt = known ? SRC_LABEL[rec.source] : 'Kaynak? seçin';
+    const itemsHtml = (rec.items || []).length
+      ? (rec.items || []).map(i =>
+          `<div class="li"><span>${i.qty} × ${esc(i.name)}</span><span>${(i.qty * (i.unitPrice || 0)).toFixed(0)} TL</span></div>`
+        ).join('')
+      : '<div class="li" style="color:var(--amber)">Ürün ayrıştırılamadı — ham metni açıp kontrol edin</div>';
+    const total = (rec.items || []).reduce((s, i) => s + i.qty * (i.unitPrice || 0), 0)
+      || rec.parsedTotal || 0;
+    const meta = [];
+    if (rec.customer) meta.push('👤 ' + esc(rec.customer));
+    if (rec.phone) meta.push('☎ ' + esc(rec.phone));
+    if (rec.address) meta.push('📍 ' + esc(rec.address));
+    const srcPick = `<div class="incoming-src-pick" data-id="${rec.id}">
+      ${['trendyol','yemeksepeti','getir'].map(s =>
+        `<button class="${rec.source===s?'active':''}" onclick="incPickSource('${rec.id}','${s}')">${SRC_LABEL[s]}</button>`
+      ).join('')}</div>`;
+    return `
+      <div class="incoming-card" data-id="${rec.id}">
+        <div class="incoming-card-top">
+          <span class="incoming-src ${known?'':'unknown'}">${srcTxt}</span>
+          <span class="incoming-time">${t}</span>
+          <span class="incoming-total">${total.toFixed(0)} TL</span>
+        </div>
+        ${meta.length ? `<div class="incoming-meta">${meta.join(' · ')}</div>` : ''}
+        <div class="incoming-items">${itemsHtml}</div>
+        ${srcPick}
+        <div class="incoming-raw" id="raw-${rec.id}">${esc(rec.rawText)}</div>
+        <div class="incoming-actions">
+          <button class="inc-raw-toggle" onclick="incToggleRaw('${rec.id}')">Ham</button>
+          <button class="inc-reject" onclick="incReject('${rec.id}')">Reddet</button>
+          <button class="inc-approve" onclick="incApprove('${rec.id}')">Onayla</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function incPickSource(id, src) {
+  const rec = incomingOrders.find(r => r.id === id);
+  if (rec) { rec.source = src; renderIncoming(); }
+}
+
+function incToggleRaw(id) {
+  const el = $$id('raw-' + id);
+  if (el) el.classList.toggle('show');
+}
+
+async function incApprove(id) {
+  const rec = incomingOrders.find(r => r.id === id);
+  if (!rec) return;
+  if (!SRC_LABEL[rec.source]) {
+    showToast('Önce kaynağı seçin (Trendyol / Yemeksepeti / Getir)', 'warning');
+    return;
+  }
+  if (!(rec.items || []).length) {
+    showToast('Ürün ayrıştırılamadı — bu siparişi harici siparişlerden elle girin, sonra reddedin', 'warning');
+    return;
+  }
+  try {
+    await api('POST', `/api/incoming/${id}/approve`, {
+      source: rec.source,
+      customer: rec.customer, phone: rec.phone, address: rec.address,
+      items: rec.items,
+    });
+    showToast('Sipariş onaylandı ve rapora işlendi', 'success');
+    incomingOrders = incomingOrders.filter(r => r.id !== id);
+    renderIncoming();
+  } catch (err) {
+    showToast('Onay hatası: ' + err.message, 'error');
+  }
+}
+
+async function incReject(id) {
+  if (!confirm('Bu online siparişi reddetmek (silmek) istediğinize emin misiniz?')) return;
+  try {
+    await api('POST', `/api/incoming/${id}/reject`);
+    showToast('Sipariş reddedildi', 'info');
+    incomingOrders = incomingOrders.filter(r => r.id !== id);
+    renderIncoming();
+  } catch (err) {
+    showToast('Hata: ' + err.message, 'error');
+  }
 }
 
 // ===== RENDER ORDER DETAIL =====

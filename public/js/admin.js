@@ -246,6 +246,49 @@ function renderPrinter() {
     const encEl = document.getElementById(role + '-encoding');
     if (encEl) encEl.value = p.encoding || 'CP1254_18';
   }
+
+  // Online siparis yakalama
+  const oc = settings.onlineCapture || {};
+  const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
+  setV('oc-enabled', String(oc.enabled === true));
+  setV('oc-tcp', String(oc.tcpEnabled !== false));
+  setV('oc-port', String(oc.port || 9100));
+  setV('oc-usb', String(oc.usbEnabled === true));
+  setV('oc-usb-device', oc.usbDevice || '');
+  setV('oc-tee', String(oc.teeEnabled === true));
+}
+
+async function saveOnlineCapture() {
+  const oc = {
+    enabled: document.getElementById('oc-enabled').value === 'true',
+    tcpEnabled: document.getElementById('oc-tcp').value === 'true',
+    port: parseInt(document.getElementById('oc-port').value, 10) || 9100,
+    usbEnabled: document.getElementById('oc-usb').value === 'true',
+    usbDevice: document.getElementById('oc-usb-device').value.trim(),
+    teeEnabled: document.getElementById('oc-tee').value === 'true',
+  };
+  try {
+    await api('PUT', '/api/settings', { onlineCapture: oc });
+    settings.onlineCapture = { ...(settings.onlineCapture || {}), ...oc };
+    const st = document.getElementById('oc-status');
+    if (st) st.textContent = oc.enabled
+      ? `Kaydedildi — yakalama AKTIF (${oc.tcpEnabled ? 'TCP ' + oc.port : ''}${oc.usbEnabled ? ' USB ' + oc.usbDevice : ''}${oc.teeEnabled ? ' +tee' : ''})`
+      : 'Kaydedildi — yakalama KAPALI';
+    toast('Online yakalama ayari kaydedildi', 'success');
+  } catch (e) { toast('Hata: ' + e.message, 'error'); }
+}
+
+async function setupWinCapturePrinter() {
+  const st = document.getElementById('oc-status');
+  if (st) st.textContent = 'Windows yakalama yazicisi kuruluyor (UAC onayi gerekebilir)...';
+  try {
+    const res = await api('POST', '/api/incoming/setup-windows-printer');
+    if (st) st.textContent = res.message || 'Yakalama yazicisi kuruldu.';
+    toast('Windows yakalama yazicisi kuruldu', 'success');
+  } catch (e) {
+    if (st) st.textContent = 'Kurulum hatasi: ' + e.message;
+    toast('Hata: ' + e.message, 'error');
+  }
 }
 
 async function savePrinterProfile(role) {

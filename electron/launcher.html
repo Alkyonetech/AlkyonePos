@@ -186,7 +186,8 @@
   <div class="ver" id="ver"></div>
 
   <script>
-    const PORT = 3000;
+    // Port main.js'ten query ile gelir (marka portu; alkyone=3100). Fallback 3000.
+    const PORT = Number(new URLSearchParams(location.search).get('port')) || 3000;
     const BASE = 'http://localhost:' + PORT;
     const bar = document.getElementById('bar');
     const stat = document.getElementById('status');

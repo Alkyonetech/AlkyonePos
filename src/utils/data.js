@@ -107,6 +107,21 @@ function saveCustomers(data) {
 }
 
 /**
+ * Bekleyen online (yazicidan yakalanan) siparisleri oku — yoksa bos yapi.
+ * Bunlar HENUZ satisa/rapora islenmemis, onay bekleyen ham yakalamalardir.
+ */
+function loadIncoming() {
+  return readJSON('incoming.json') || { pending: [] };
+}
+
+/**
+ * Bekleyen online siparisleri kaydet
+ */
+function saveIncoming(data) {
+  writeJSON('incoming.json', data);
+}
+
+/**
  * Telefonu normalize et — sadece rakamlar (lookup anahtari).
  * Bas '0' ve ulke kodu '90' onekleri sadelestirilir ki 0555.. == 90555.. == 555..
  */
@@ -246,6 +261,8 @@ module.exports = {
   saveOrders,
   loadCustomers,
   saveCustomers,
+  loadIncoming,
+  saveIncoming,
   normPhone,
   saveReport,
   loadReport,

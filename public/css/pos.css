@@ -935,3 +935,58 @@ input, textarea, select, [contenteditable] {
 }
 .dlv-saved .dlv-chip:hover { border-color: var(--sakura); }
 .dlv-saved .dlv-chip .dlv-chip-note { color: var(--text-dim); font-size: 0.78rem; }
+
+/* ===== GELEN ONLINE SIPARISLER (yazicidan yakalanan) ===== */
+.incoming-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--amber, #e0a030);
+  border-radius: var(--radius, 10px);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px rgba(224,160,48,0.15);
+}
+.incoming-panel.hidden { display: none; }
+.incoming-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: rgba(224,160,48,0.12);
+  border-bottom: 1px solid var(--border);
+}
+.incoming-title { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+.incoming-badge {
+  margin-left: auto;
+  min-width: 22px; height: 22px; padding: 0 7px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--red, #d24); color: #fff;
+  border-radius: 11px; font-size: 0.8rem; font-weight: 700;
+}
+.incoming-list { padding: 8px; display: flex; flex-direction: column; gap: 8px; max-height: 46vh; overflow-y: auto; }
+.incoming-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 8px); padding: 10px;
+}
+.incoming-card-top { display: flex; align-items: baseline; gap: 8px; }
+.incoming-src { font-weight: 700; color: var(--text); }
+.incoming-src.unknown { color: var(--amber, #e0a030); }
+.incoming-time { color: var(--text-muted); font-size: 0.78rem; }
+.incoming-total { margin-left: auto; font-weight: 700; color: var(--green, #2ea043); }
+.incoming-items { margin: 6px 0; font-size: 0.85rem; color: var(--text-dim); }
+.incoming-items .li { display: flex; justify-content: space-between; gap: 8px; }
+.incoming-meta { font-size: 0.8rem; color: var(--text-muted); margin: 2px 0; }
+.incoming-raw {
+  margin-top: 6px; font-size: 0.72rem; color: var(--text-muted);
+  white-space: pre-wrap; max-height: 120px; overflow-y: auto;
+  background: var(--bg-input); border-radius: 6px; padding: 6px; display: none;
+}
+.incoming-raw.show { display: block; }
+.incoming-src-pick { display: flex; gap: 6px; margin: 6px 0; }
+.incoming-src-pick button {
+  flex: 1; padding: 6px; font-size: 0.78rem; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--bg-input); color: var(--text); cursor: pointer;
+}
+.incoming-src-pick button.active { background: var(--sakura); color: #fff; border-color: var(--sakura); }
+.incoming-actions { display: flex; gap: 8px; margin-top: 8px; }
+.incoming-actions button { flex: 1; padding: 9px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.inc-approve { background: var(--green, #2ea043); color: #fff; }
+.inc-reject { background: var(--red, #d24); color: #fff; }
+.inc-raw-toggle { background: var(--bg-input); color: var(--text-muted); flex: 0 0 auto !important; padding: 9px 12px; }

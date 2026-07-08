@@ -66,6 +66,14 @@ async function main() {
     initBackupScheduler();
     console.log(`${TAG} Otomatik yedek zamanlayici aktif`);
 
+    // Online siparis yakalama (yazicidan) — VARSAYILAN KAPALI, admin'den acilir.
+    // settings.onlineCapture = { enabled, tcpEnabled, port, usbEnabled, usbDevice }
+    try {
+      require('../services/online-capture').reconcileCapture(settings);
+    } catch (err) {
+      console.warn(`${TAG} Online yakalama baslatma hatasi:`, err.message);
+    }
+
     // Offline surum: tablet APK'lari yalnizca yerel agdan /updates/apk/ uzerinden
     // dagitilir; bu klasore dosyalar elle yerlestirilir.
   });

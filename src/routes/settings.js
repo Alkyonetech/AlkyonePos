@@ -43,6 +43,12 @@ router.put('/', yoneticiRequired, (req, res) => {
     broadcast('settings:theme', { theme: current.ui.theme });
   }
 
+  // Online yakalama ayari degistiyse tasimalari canli yeniden yapilandir
+  if (updates.onlineCapture) {
+    try { require('../services/online-capture').reconcileCapture(current); }
+    catch (e) { console.warn('[Yakalama] yeniden yapilandirma hatasi:', e.message); }
+  }
+
   res.json({ success: true });
 });
 

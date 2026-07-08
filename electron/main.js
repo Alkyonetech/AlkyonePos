@@ -28,10 +28,67 @@ const DATA_DIR = isDev
 const UPDATES_DIR = isDev
   ? path.join(__dirname, '..', 'updates')
   : path.join(path.dirname(app.getPath('exe')), 'updates');
-const PORT = BRAND.defaultPort || 3000;
+// Port: sunucu (src/server) settings.network.port kullanir; launcher/kiosk/killPort/
+// firewall de AYNI portu kullanmali. Bu yuzden ayarlardan okuruz (yoksa marka
+// varsayilani). ready icinde ensureDataDir sonrasi kesinlestirilir.
+let PORT = BRAND.defaultPort || 3000;
+function resolvePort() {
+  try {
+    const sp = path.join(DATA_DIR, 'settings.json');
+    if (fs.existsSync(sp)) {
+      const s = JSON.parse(fs.readFileSync(sp, 'utf8'));
+      const p = s.network && parseInt(s.network.port, 10);
+      if (p) return p;
+    }
+  } catch (_) {}
+  return BRAND.defaultPort || 3000;
+}
+
+// ===== ESKI SAKURA VERISINI TASI (tek seferlik marka gecisi) =====
+// Marka Sakura->Alkyone degisince appId/productName ve dolayisiyla userData
+// klasoru degisti. Bu yuzden yeni AlkyonePOS bos veriyle acilir. Ilk acilista
+// eski SakuraPOS userData'sindaki menu/masa/siparis/ayar/musteri/rapor verisini
+// Alkyone dizinine KOPYALAR (eski kurulum silinse bile veri korunur).
+function migrateFromLegacy() {
+  try {
+    if (isDev) return;
+    const settingsPath = path.join(DATA_DIR, 'settings.json');
+    if (fs.existsSync(settingsPath)) return; // Alkyone verisi zaten var — dokunma
+
+    const appData = app.getPath('appData');
+    const candidates = ['SakuraPOS', 'Sakura POS', 'sakura-pos'];
+    let legacyData = null;
+    for (const c of candidates) {
+      const p = path.join(appData, c, 'data');
+      if (fs.existsSync(path.join(p, 'settings.json'))) { legacyData = p; break; }
+    }
+    if (!legacyData) return;
+
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    // menu/tables/orders/settings/customers + reports/ backups/ hepsini kopyala
+    fs.cpSync(legacyData, DATA_DIR, { recursive: true, force: false, errorOnExist: false });
+
+    // Marka-ozgu ag ayarlarini Alkyone'a hizala — aksi halde eski port (3000)
+    // tasinir ve launcher/sunucu portu uyusmaz.
+    try {
+      const s = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+      s.network = s.network || {};
+      s.network.port = PORT;                 // Alkyone portu (3100)
+      s.network.mdnsName = BRAND.mdnsName;
+      if (!s.onlineCapture) s.onlineCapture = { enabled: false, tcpEnabled: true, port: 9100, usbEnabled: false, usbDevice: '', teeEnabled: false };
+      fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2));
+    } catch (_) { /* settings okunamazsa defaults devreye girer */ }
+
+    console.log(`[Goc] Eski Sakura verisi tasindi: ${legacyData} -> ${DATA_DIR}`);
+  } catch (e) {
+    console.warn('[Goc] Veri gocu hatasi:', e.message);
+  }
+}
 
 // Data klasorunu hazirla
 function ensureDataDir() {
+  migrateFromLegacy();
+
   const dirs = [DATA_DIR, path.join(DATA_DIR, 'reports'), path.join(DATA_DIR, 'backups')];
   for (const d of dirs) {
     if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
@@ -50,6 +107,9 @@ function ensureDataDir() {
       operations: { dayCloseHour: 4, vatRate: 10, currency: 'TL' },
       printer: { enabled: false, type: 'escpos', connection: 'usb', device: 'auto', paperWidth: 58, encoding: 'CP1254_32' },
       startup: { autoStart: true, kioskMode: false, kioskUrl: '/pos' },
+      // Online siparis yakalama (Yemeksepeti/Trendyol/Getir baskisi).
+      // VARSAYILAN KAPALI — admin > Yazici ayarlarindan acilir.
+      onlineCapture: { enabled: false, tcpEnabled: true, port: 9100, usbEnabled: false, usbDevice: '', teeEnabled: false },
       printers: {
         receipt: {
           enabled: true,
@@ -283,7 +343,7 @@ function createWindow() {
   } else {
     // Normal mod: Launcher'i LOKAL dosya olarak ac (sunucu bagimsiz)
     const launcherPath = path.join(__dirname, 'launcher.html');
-    mainWindow.loadFile(launcherPath);
+    mainWindow.loadFile(launcherPath, { query: { port: String(PORT) } });
   }
 
   // Kapatinca tray'e kucult (kiosk modunda da app.isQuitting set edilmeden cikilamaz)
@@ -541,6 +601,7 @@ function initAutoUpdater() {
 // ===== APP LIFECYCLE =====
 app.on('ready', async () => {
   ensureDataDir();
+  PORT = resolvePort(); // launcher/kiosk/server ayni portta bulussun
 
   // Once pencereyi ac (launcher lokal dosya, sunucu gerektirmez)
   createWindow();
